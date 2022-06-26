@@ -1,53 +1,6 @@
-<rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0">
-    <channel>
-        <title>C - Tag - George&#39;s Blog</title>
-        <link>georgesims21.github.io/tags/c/</link>
-        <description>C - Tag - George&#39;s Blog</description>
-        <generator>Hugo -- gohugo.io</generator><language>en-us</language><managingEditor>george.sims.nl@gmail.com (George Sims)</managingEditor>
-            <webMaster>george.sims.nl@gmail.com (George Sims)</webMaster><atom:link href="georgesims21.github.io/tags/c/" rel="self" type="application/rss+xml" /><item>
-    <title>64-bit-GCC Runtime Stack Usage</title>
-    <link>georgesims21.github.io/posts/64-bit-gcc_runtime_stack_usage/</link>
-    <pubDate>Mon, 01 Jan 0001 00:00:00 &#43;0000</pubDate>
-    <author>George Sims</author>
-    <guid>georgesims21.github.io/posts/64-bit-gcc_runtime_stack_usage/</guid>
-    <description><![CDATA[CPU registers in 64-bit mode * rax * rbx * rbp * rsp first * rdi &lt;--+ * rsi | in 64-bit mode the first 6 parameters are placed in * rdx | these registers from rdi to r9 when calling a function, * rcx | any extra params are passed through the stack like in * r8 | 32-bit mode * r9 &lt;--+ last * r10-r15 Simple C program in assembly #include &lt;stdio.]]></description>
-</item>
-<item>
-    <title>C function calls (32-bit)</title>
-    <link>georgesims21.github.io/posts/c_function_calls/</link>
-    <pubDate>Mon, 01 Jan 0001 00:00:00 &#43;0000</pubDate>
-    <author>George Sims</author>
-    <guid>georgesims21.github.io/posts/c_function_calls/</guid>
-    <description><![CDATA[Each CPU has the following registers (64-bit in parantheses):
-PC (IP): Instruction pointer - Points to next instruction for the CPU to execute SP (SP): Stack pointer - Points to the top of the stack FP (BP): Base pointer - Points to the stack frame of the current active function RVR (AX): Return value - Points to the function return value main() | int sub(int x, int y) { | { int a, b, c; | int u, v; a = 1; b = 2; c = 3; | u = 4; v = 5; c = sub(a, b); | return x+y+u+v; printf(&#34;c=%d\n&#34;, c); | } } | When a C program is envoked, the return address (current PC) is pushed onto the stack and then the value stored in the PC register is replaced with the function we wish the CPU to execute.]]></description>
-</item>
-<item>
-    <title>Networking basics</title>
-    <link>georgesims21.github.io/posts/networking_basics/</link>
-    <pubDate>Mon, 01 Jan 0001 00:00:00 &#43;0000</pubDate>
-    <author>George Sims</author>
-    <guid>georgesims21.github.io/posts/networking_basics/</guid>
-    <description><![CDATA[TCP (Transmission Control Protocol)/IP (Internet Protocol) is the backbone of the internet. There are 2 versions: IPv4 (32-bit addresses) and IPv6 (64-bit). The figure below shows the TCP/IP layers:
-The top layer shows applications which use networking to transfer/collect data. They either use TCP or UDP (mentioned later). Data transfer at this level is only logical, the real transferring takes place at the bottom two layers (Internet and Link layers). This is where the data packets are divided into data frames for transmission over physical networks.]]></description>
-</item>
-<item>
-    <title>pthreads in C</title>
-    <link>georgesims21.github.io/posts/pthreads/</link>
-    <pubDate>Mon, 01 Jan 0001 00:00:00 &#43;0000</pubDate>
-    <author>George Sims</author>
-    <guid>georgesims21.github.io/posts/pthreads/</guid>
-    <description><![CDATA[This tutorial assumes you know the basic concepts of multithreading. It is based on this short video series by Dr. Brian Fraser
+<rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title>C - Tag - George's Blog</title><link>georgesims21.github.io/tags/c/</link><description>C - Tag - George's Blog</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><managingEditor>george.sims.nl@gmail.com (George Sims)</managingEditor><webMaster>george.sims.nl@gmail.com (George Sims)</webMaster><atom:link href="georgesims21.github.io/tags/c/" rel="self" type="application/rss+xml"/><item><title>64-bit-GCC Runtime Stack Usage</title><link>georgesims21.github.io/posts/64-bit-gcc_runtime_stack_usage/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><author>George Sims</author><guid>georgesims21.github.io/posts/64-bit-gcc_runtime_stack_usage/</guid><description>CPU registers in 64-bit mode * rax * rbx * rbp * rsp first * rdi &amp;lt;--+ * rsi | in 64-bit mode the first 6 parameters are placed in * rdx | these registers from rdi to r9 when calling a function, * rcx | any extra params are passed through the stack like in * r8 | 32-bit mode * r9 &amp;lt;--+ last * r10-r15 Simple C program in assembly #include &amp;lt;stdio.</description></item><item><title>C function calls (32-bit)</title><link>georgesims21.github.io/posts/c_function_calls/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><author>George Sims</author><guid>georgesims21.github.io/posts/c_function_calls/</guid><description>Each CPU has the following registers (64-bit in parantheses):
+PC (IP): Instruction pointer - Points to next instruction for the CPU to execute SP (SP): Stack pointer - Points to the top of the stack FP (BP): Base pointer - Points to the stack frame of the current active function RVR (AX): Return value - Points to the function return value main() | int sub(int x, int y) { | { int a, b, c; | int u, v; a = 1; b = 2; c = 3; | u = 4; v = 5; c = sub(a, b); | return x+y+u+v; printf(&amp;#34;c=%d\n&amp;#34;, c); | } } | When a C program is envoked, the return address (current PC) is pushed onto the stack and then the value stored in the PC register is replaced with the function we wish the CPU to execute.</description></item><item><title>Networking basics</title><link>georgesims21.github.io/posts/networking_basics/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><author>George Sims</author><guid>georgesims21.github.io/posts/networking_basics/</guid><description>TCP (Transmission Control Protocol)/IP (Internet Protocol) is the backbone of the internet. There are 2 versions: IPv4 (32-bit addresses) and IPv6 (64-bit). The figure below shows the TCP/IP layers:
+The top layer shows applications which use networking to transfer/collect data. They either use TCP or UDP (mentioned later). Data transfer at this level is only logical, the real transferring takes place at the bottom two layers (Internet and Link layers). This is where the data packets are divided into data frames for transmission over physical networks.</description></item><item><title>pthreads in C</title><link>georgesims21.github.io/posts/pthreads/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><author>George Sims</author><guid>georgesims21.github.io/posts/pthreads/</guid><description><![CDATA[This tutorial assumes you know the basic concepts of multithreading. It is based on this short video series by Dr. Brian Fraser
 Creating single threads The pthread library (POSTIX thread) allows C programmers to use multithreading capabilities. First you must define the &lt;pthread.h&gt; header, and link -pthread when compiling the program. The function to create a thread is the pthread_create():
-&lt;pthread.h&gt; int pthread_create(pthread_t *thread, const pthread_attr_t *attr, void *(*start_routine) (void *), void *arg); This takes 4 different parameters:]]></description>
-</item>
-<item>
-    <title>Socket Programming (TCP)</title>
-    <link>georgesims21.github.io/posts/socket_programming/</link>
-    <pubDate>Mon, 01 Jan 0001 00:00:00 &#43;0000</pubDate>
-    <author>George Sims</author>
-    <guid>georgesims21.github.io/posts/socket_programming/</guid>
-    <description><![CDATA[The C socket API allows a developer to design and build a TCP/IP client/server program. To begin with a socket address structure is needed (&lt;sys/socket.h&gt;):
-struct sockaddr_in { sa_family_t sin_family; // AF_INET for TCP/IP in_port_t sin_port; // port number struct in_addr sin_addr; // IP address }; struct in_addr { // internet address (in_addr) uint32_t s_addr; // IP address in network byte order }; for TCP/IP connections sin_family is always set to AF_INET, sin_port contains the port number (in network byte order) and finally sin_addr is the host IP address, also in network byte order.]]></description>
-</item>
-</channel>
-</rss>
+&lt;pthread.h&gt; int pthread_create(pthread_t *thread, const pthread_attr_t *attr, void *(*start_routine) (void *), void *arg); This takes 4 different parameters:]]></description></item><item><title>Socket Programming (TCP)</title><link>georgesims21.github.io/posts/socket_programming/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><author>George Sims</author><guid>georgesims21.github.io/posts/socket_programming/</guid><description>The C socket API allows a developer to design and build a TCP/IP client/server program. To begin with a socket address structure is needed (&amp;lt;sys/socket.h&amp;gt;):
+struct sockaddr_in { sa_family_t sin_family; // AF_INET for TCP/IP in_port_t sin_port; // port number struct in_addr sin_addr; // IP address }; struct in_addr { // internet address (in_addr) uint32_t s_addr; // IP address in network byte order }; for TCP/IP connections sin_family is always set to AF_INET, sin_port contains the port number (in network byte order) and finally sin_addr is the host IP address, also in network byte order.</description></item></channel></rss>

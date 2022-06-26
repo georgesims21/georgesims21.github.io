@@ -1,126 +1,15 @@
-<!DOCTYPE html>
-<html lang="en-us">
-    <head>
-        <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        <meta name="robots" content="noodp" />
-        <title>64-bit-GCC Runtime Stack Usage - George&#39;s Blog</title><meta name="Description" content="Welcome to George&#39;s Blog"><meta property="og:title" content="64-bit-GCC Runtime Stack Usage" />
-<meta property="og:description" content="CPU registers in 64-bit mode * rax * rbx * rbp * rsp first * rdi &lt;--&#43; * rsi | in 64-bit mode the first 6 parameters are placed in * rdx | these registers from rdi to r9 when calling a function, * rcx | any extra params are passed through the stack like in * r8 | 32-bit mode * r9 &lt;--&#43; last * r10-r15 Simple C program in assembly #include &lt;stdio." />
-<meta property="og:type" content="article" />
-<meta property="og:url" content="georgesims21.github.io/posts/64-bit-gcc_runtime_stack_usage/" /><meta property="og:image" content="/logo.png"/><meta property="article:section" content="posts" />
-
-<meta property="og:site_name" content="George&#39;s Blog" />
-
-<meta name="twitter:card" content="summary_large_image"/>
-<meta name="twitter:image" content="/logo.png"/>
-
-<meta name="twitter:title" content="64-bit-GCC Runtime Stack Usage"/>
-<meta name="twitter:description" content="CPU registers in 64-bit mode * rax * rbx * rbp * rsp first * rdi &lt;--&#43; * rsi | in 64-bit mode the first 6 parameters are placed in * rdx | these registers from rdi to r9 when calling a function, * rcx | any extra params are passed through the stack like in * r8 | 32-bit mode * r9 &lt;--&#43; last * r10-r15 Simple C program in assembly #include &lt;stdio."/>
-<meta name="application-name" content="George&#39;s Blog">
-<meta name="apple-mobile-web-app-title" content="George&#39;s Blog"><meta name="theme-color" content="#ffffff"><meta name="msapplication-TileColor" content="#da532c"><link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" />
-        <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
-        <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png"><link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png"><link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5"><link rel="manifest" href="/site.webmanifest"><link rel="canonical" href="georgesims21.github.io/posts/64-bit-gcc_runtime_stack_usage/" /><link rel="prev" href="georgesims21.github.io/posts/c_function_calls/" /><link rel="stylesheet" href="/georgesims21.github.io/css/style.min.css"><link rel="preload" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.1.1/css/all.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
-        <noscript><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.1.1/css/all.min.css"></noscript><link rel="preload" href="https://cdn.jsdelivr.net/npm/animate.css@4.1.1/animate.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
-        <noscript><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/animate.css@4.1.1/animate.min.css"></noscript><script type="application/ld+json">
-    {
-        "@context": "http://schema.org",
-        "@type": "BlogPosting",
-        "headline": "64-bit-GCC Runtime Stack Usage",
-        "inLanguage": "en-us",
-        "mainEntityOfPage": {
-            "@type": "WebPage",
-            "@id": "georgesims21.github.io\/posts\/64-bit-gcc_runtime_stack_usage\/"
-        },"genre": "posts","keywords": "C, Systems Programming, Assembly","wordcount":  1030 ,
-        "url": "georgesims21.github.io\/posts\/64-bit-gcc_runtime_stack_usage\/","publisher": {
-            "@type": "Organization",
-            "name": ""},"author": {
-                "@type": "Person",
-                "name": "George Sims"
-            },"description": ""
-    }
-    </script></head>
-    <body data-header-desktop="fixed" data-header-mobile="auto"><script type="text/javascript">(window.localStorage && localStorage.getItem('theme') ? localStorage.getItem('theme') === 'dark' : ('auto' === 'auto' ? window.matchMedia('(prefers-color-scheme: dark)').matches : 'auto' === 'dark')) && document.body.setAttribute('theme', 'dark');</script>
-
-        <div id="mask"></div><div class="wrapper"><header class="desktop" id="header-desktop">
-    <div class="header-wrapper">
-        <div class="header-title">
-            <a href="georgesims21.github.io/" title="George&#39;s Blog"><span id="id-1" class="typeit"></span></a>
-        </div>
-        <div class="menu">
-            <div class="menu-inner"><a class="menu-item" href="/georgesims21.github.io/posts/" title="Posts"> Posts </a><a class="menu-item" href="/georgesims21.github.io/tags/"> Tags </a><a class="menu-item" href="/georgesims21.github.io/categories/"> Categories </a><span class="menu-item delimiter"></span><span class="menu-item search" id="search-desktop">
-                        <input type="text" placeholder="Search titles or contents..." id="search-input-desktop">
-                        <a href="javascript:void(0);" class="search-button search-toggle" id="search-toggle-desktop" title="Search">
-                            <i class="fas fa-search fa-fw" aria-hidden="true"></i>
-                        </a>
-                        <a href="javascript:void(0);" class="search-button search-clear" id="search-clear-desktop" title="Clear">
-                            <i class="fas fa-times-circle fa-fw" aria-hidden="true"></i>
-                        </a>
-                        <span class="search-button search-loading" id="search-loading-desktop">
-                            <i class="fas fa-spinner fa-fw fa-spin" aria-hidden="true"></i>
-                        </span>
-                    </span><a href="javascript:void(0);" class="menu-item theme-switch" title="Switch Theme">
-                    <i class="fas fa-adjust fa-fw" aria-hidden="true"></i>
-                </a>
-            </div>
-        </div>
-    </div>
-</header><header class="mobile" id="header-mobile">
-    <div class="header-container">
-        <div class="header-wrapper">
-            <div class="header-title">
-                <a href="georgesims21.github.io/" title="George&#39;s Blog"><span id="id-2" class="typeit"></span></a>
-            </div>
-            <div class="menu-toggle" id="menu-toggle-mobile">
-                <span></span><span></span><span></span>
-            </div>
-        </div>
-        <div class="menu" id="menu-mobile"><div class="search-wrapper">
-                    <div class="search mobile" id="search-mobile">
-                        <input type="text" placeholder="Search titles or contents..." id="search-input-mobile">
-                        <a href="javascript:void(0);" class="search-button search-toggle" id="search-toggle-mobile" title="Search">
-                            <i class="fas fa-search fa-fw" aria-hidden="true"></i>
-                        </a>
-                        <a href="javascript:void(0);" class="search-button search-clear" id="search-clear-mobile" title="Clear">
-                            <i class="fas fa-times-circle fa-fw" aria-hidden="true"></i>
-                        </a>
-                        <span class="search-button search-loading" id="search-loading-mobile">
-                            <i class="fas fa-spinner fa-fw fa-spin" aria-hidden="true"></i>
-                        </span>
-                    </div>
-                    <a href="javascript:void(0);" class="search-cancel" id="search-cancel-mobile">
-                        Cancel
-                    </a>
-                </div><a class="menu-item" href="/georgesims21.github.io/posts/" title="Posts">Posts</a><a class="menu-item" href="/georgesims21.github.io/tags/" title="">Tags</a><a class="menu-item" href="/georgesims21.github.io/categories/" title="">Categories</a><a href="javascript:void(0);" class="menu-item theme-switch" title="Switch Theme">
-                <i class="fas fa-adjust fa-fw" aria-hidden="true"></i>
-            </a></div>
-    </div>
-</header><div class="search-dropdown desktop">
-        <div id="search-dropdown-desktop"></div>
-    </div>
-    <div class="search-dropdown mobile">
-        <div id="search-dropdown-mobile"></div>
-    </div><main class="main">
-                <div class="container"><div class="toc" id="toc-auto">
-            <h2 class="toc-title">Contents</h2>
-            <div class="toc-content" id="toc-content-auto"></div>
-        </div><article class="page single"><h1 class="single-title animate__animated animate__flipInX">64-bit-GCC Runtime Stack Usage</h1><div class="post-meta">
-            <div class="post-meta-line"><span class="post-author"><a href="https://github.com/georgesims21" title="Author" target="_blank" rel="noopener noreffer author" class="author"><i class="fas fa-user-circle fa-fw" aria-hidden="true"></i>George Sims</a></span>&nbsp;<span class="post-category">included in <a href="georgesims21.github.io/categories/theory/"><i class="far fa-folder fa-fw" aria-hidden="true"></i>Theory</a></span></div>
-            <div class="post-meta-line"><i class="far fa-calendar-alt fa-fw" aria-hidden="true"></i>&nbsp;<time datetime="0001-01-01">0001-01-01</time>&nbsp;<i class="fas fa-pencil-alt fa-fw" aria-hidden="true"></i>&nbsp;1030 words&nbsp;
-                <i class="far fa-clock fa-fw" aria-hidden="true"></i>&nbsp;5 minutes&nbsp;</div>
-        </div><div class="details toc" id="toc-static"  data-kept="">
-                <div class="details-summary toc-title">
-                    <span>Contents</span>
-                    <span><i class="details-icon fas fa-angle-right" aria-hidden="true"></i></span>
-                </div>
-                <div class="details-content toc-content" id="toc-content-static"><nav id="TableOfContents">
-  <ul>
-    <li><a href="#cpu-registers-in-64-bit-mode">CPU registers in 64-bit mode</a></li>
-    <li><a href="#simple-c-program-in-assembly">Simple C program in assembly</a></li>
-    <li><a href="#function-call-convention">Function call convention</a></li>
-  </ul>
-</nav></div>
-            </div><div class="content" id="content"><h2 id="cpu-registers-in-64-bit-mode">CPU registers in 64-bit mode</h2>
-<pre tabindex="0"><code>* rax
+<!doctype html><html lang=en-us><head><meta charset=utf-8><meta name=viewport content="width=device-width,initial-scale=1"><meta name=robots content="noodp"><title>64-bit-GCC Runtime Stack Usage - George's Blog</title><meta name=Description content="Welcome to George's Blog"><meta property="og:title" content="64-bit-GCC Runtime Stack Usage"><meta property="og:description" content="CPU registers in 64-bit mode * rax * rbx * rbp * rsp first * rdi <--+ * rsi | in 64-bit mode the first 6 parameters are placed in * rdx | these registers from rdi to r9 when calling a function, * rcx | any extra params are passed through the stack like in * r8 | 32-bit mode * r9 <--+ last * r10-r15 Simple C program in assembly #include <stdio."><meta property="og:type" content="article"><meta property="og:url" content="georgesims21.github.io/posts/64-bit-gcc_runtime_stack_usage/"><meta property="og:image" content="/logo.png"><meta property="article:section" content="posts"><meta property="og:site_name" content="George's Blog"><meta name=twitter:card content="summary_large_image"><meta name=twitter:image content="/logo.png"><meta name=twitter:title content="64-bit-GCC Runtime Stack Usage"><meta name=twitter:description content="CPU registers in 64-bit mode * rax * rbx * rbp * rsp first * rdi <--+ * rsi | in 64-bit mode the first 6 parameters are placed in * rdx | these registers from rdi to r9 when calling a function, * rcx | any extra params are passed through the stack like in * r8 | 32-bit mode * r9 <--+ last * r10-r15 Simple C program in assembly #include <stdio."><meta name=application-name content="George's Blog"><meta name=apple-mobile-web-app-title content="George's Blog"><meta name=theme-color content="#ffffff"><meta name=msapplication-TileColor content="#da532c"><link rel="shortcut icon" type=image/x-icon href=/favicon.ico><link rel=icon type=image/png sizes=32x32 href=/favicon-32x32.png><link rel=icon type=image/png sizes=16x16 href=/favicon-16x16.png><link rel=apple-touch-icon sizes=180x180 href=/apple-touch-icon.png><link rel=mask-icon href=/safari-pinned-tab.svg color=#5bbad5><link rel=manifest href=/site.webmanifest><link rel=canonical href=georgesims21.github.io/posts/64-bit-gcc_runtime_stack_usage/><link rel=prev href=georgesims21.github.io/posts/c_function_calls/><link rel=stylesheet href=/georgesims21.github.io/css/style.min.css><link rel=preload href=https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.1.1/css/all.min.css as=style onload='this.onload=null,this.rel="stylesheet"'><noscript><link rel=stylesheet href=https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.1.1/css/all.min.css></noscript><link rel=preload href=https://cdn.jsdelivr.net/npm/animate.css@4.1.1/animate.min.css as=style onload='this.onload=null,this.rel="stylesheet"'><noscript><link rel=stylesheet href=https://cdn.jsdelivr.net/npm/animate.css@4.1.1/animate.min.css></noscript><script type=application/ld+json>{"@context":"http://schema.org","@type":"BlogPosting","headline":"64-bit-GCC Runtime Stack Usage","inLanguage":"en-us","mainEntityOfPage":{"@type":"WebPage","@id":"georgesims21.github.io\/posts\/64-bit-gcc_runtime_stack_usage\/"},"genre":"posts","keywords":"C, Systems Programming, Assembly","wordcount":1030,"url":"georgesims21.github.io\/posts\/64-bit-gcc_runtime_stack_usage\/","publisher":{"@type":"Organization","name":""},"author":{"@type":"Person","name":"George Sims"},"description":""}</script></head><body data-header-desktop=fixed data-header-mobile=auto><script type=text/javascript>(window.localStorage&&localStorage.getItem("theme")?localStorage.getItem("theme")==="dark":"auto"==="auto"?window.matchMedia("(prefers-color-scheme: dark)").matches:"auto"==="dark")&&document.body.setAttribute("theme","dark")</script><div id=mask></div><div class=wrapper><header class=desktop id=header-desktop><div class=header-wrapper><div class=header-title><a href=georgesims21.github.io/ title="George's Blog"><span id=id-1 class=typeit></span></a></div><div class=menu><div class=menu-inner><a class=menu-item href=/georgesims21.github.io/posts/ title=Posts>Posts </a><a class=menu-item href=/georgesims21.github.io/tags/>Tags </a><a class=menu-item href=/georgesims21.github.io/categories/>Categories </a><span class="menu-item delimiter"></span><span class="menu-item search" id=search-desktop>
+<input type=text placeholder="Search titles or contents..." id=search-input-desktop>
+<a href=javascript:void(0); class="search-button search-toggle" id=search-toggle-desktop title=Search><i class="fas fa-search fa-fw" aria-hidden=true></i></a>
+<a href=javascript:void(0); class="search-button search-clear" id=search-clear-desktop title=Clear><i class="fas fa-times-circle fa-fw" aria-hidden=true></i></a>
+<span class="search-button search-loading" id=search-loading-desktop><i class="fas fa-spinner fa-fw fa-spin" aria-hidden=true></i></span>
+</span><a href=javascript:void(0); class="menu-item theme-switch" title="Switch Theme"><i class="fas fa-adjust fa-fw" aria-hidden=true></i></a></div></div></div></header><header class=mobile id=header-mobile><div class=header-container><div class=header-wrapper><div class=header-title><a href=georgesims21.github.io/ title="George's Blog"><span id=id-2 class=typeit></span></a></div><div class=menu-toggle id=menu-toggle-mobile><span></span><span></span><span></span></div></div><div class=menu id=menu-mobile><div class=search-wrapper><div class="search mobile" id=search-mobile><input type=text placeholder="Search titles or contents..." id=search-input-mobile>
+<a href=javascript:void(0); class="search-button search-toggle" id=search-toggle-mobile title=Search><i class="fas fa-search fa-fw" aria-hidden=true></i></a>
+<a href=javascript:void(0); class="search-button search-clear" id=search-clear-mobile title=Clear><i class="fas fa-times-circle fa-fw" aria-hidden=true></i></a>
+<span class="search-button search-loading" id=search-loading-mobile><i class="fas fa-spinner fa-fw fa-spin" aria-hidden=true></i></span></div><a href=javascript:void(0); class=search-cancel id=search-cancel-mobile>Cancel</a></div><a class=menu-item href=/georgesims21.github.io/posts/ title=Posts>Posts</a><a class=menu-item href=/georgesims21.github.io/tags/ title>Tags</a><a class=menu-item href=/georgesims21.github.io/categories/ title>Categories</a><a href=javascript:void(0); class="menu-item theme-switch" title="Switch Theme">
+<i class="fas fa-adjust fa-fw" aria-hidden=true></i></a></div></div></header><div class="search-dropdown desktop"><div id=search-dropdown-desktop></div></div><div class="search-dropdown mobile"><div id=search-dropdown-mobile></div></div><main class=main><div class=container><div class=toc id=toc-auto><h2 class=toc-title>Contents</h2><div class=toc-content id=toc-content-auto></div></div><article class="page single"><h1 class="single-title animate__animated animate__flipInX">64-bit-GCC Runtime Stack Usage</h1><div class=post-meta><div class=post-meta-line><span class=post-author><a href=https://github.com/georgesims21 title=Author target=_blank rel="noopener noreffer author" class=author><i class="fas fa-user-circle fa-fw" aria-hidden=true></i>George Sims</a></span>&nbsp;<span class=post-category>included in <a href=georgesims21.github.io/categories/theory/><i class="far fa-folder fa-fw" aria-hidden=true></i>Theory</a></span></div><div class=post-meta-line><i class="far fa-calendar-alt fa-fw" aria-hidden=true></i>&nbsp;<time datetime=0001-01-01>0001-01-01</time>&nbsp;<i class="fas fa-pencil-alt fa-fw" aria-hidden=true></i>&nbsp;1030 words&nbsp;
+<i class="far fa-clock fa-fw" aria-hidden=true></i>&nbsp;5 minutes&nbsp;</div></div><div class="details toc" id=toc-static data-kept><div class="details-summary toc-title"><span>Contents</span>
+<span><i class="details-icon fas fa-angle-right" aria-hidden=true></i></span></div><div class="details-content toc-content" id=toc-content-static><nav id=TableOfContents><ul><li><a href=#cpu-registers-in-64-bit-mode>CPU registers in 64-bit mode</a></li><li><a href=#simple-c-program-in-assembly>Simple C program in assembly</a></li><li><a href=#function-call-convention>Function call convention</a></li></ul></nav></div></div><div class=content id=content><h2 id=cpu-registers-in-64-bit-mode>CPU registers in 64-bit mode</h2><pre tabindex=0><code>* rax
 * rbx
 * rbp
 * rsp
@@ -133,240 +22,176 @@
 * r9  &lt;--+
         last
 * r10-r15
-</code></pre><h2 id="simple-c-program-in-assembly">Simple C program in assembly</h2>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#75715e">#include</span> <span style="color:#75715e">&lt;stdio.h&gt;</span><span style="color:#75715e">
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#66d9ef">extern</span> <span style="color:#66d9ef">int</span> <span style="color:#a6e22e">B</span>();
-</span></span><span style="display:flex;"><span><span style="color:#66d9ef">int</span> <span style="color:#a6e22e">A</span>(<span style="color:#66d9ef">int</span> x, <span style="color:#66d9ef">int</span> y) {
-</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">int</span> d, e, f;
-</span></span><span style="display:flex;"><span>    d <span style="color:#f92672">=</span> <span style="color:#ae81ff">4</span>; e <span style="color:#f92672">=</span> <span style="color:#ae81ff">5</span>; f <span style="color:#f92672">=</span> <span style="color:#ae81ff">6</span>;
-</span></span><span style="display:flex;"><span>    f <span style="color:#f92672">=</span> B(d,e);
-</span></span><span style="display:flex;"><span>}
-</span></span></code></pre></div><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>cc -m32 -S &lt;cprog&gt;.c <span style="color:#75715e"># compile into 32-bit assembly code</span>
-</span></span></code></pre></div><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-asm" data-lang="asm"><span style="display:flex;"><span>    <span style="color:#a6e22e">.text</span>
-</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">.globl</span> <span style="color:#66d9ef">A</span>
-</span></span><span style="display:flex;"><span><span style="color:#75715e">; ------------- Entry: -------------+
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>A:                          <span style="color:#75715e"># A() start code location
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#a6e22e">pushl</span>    %ebp
-</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">movl</span>     %esp, %ebp     <span style="color:#75715e"># establishing the stack frame
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>                                
-</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">subl</span>     <span style="color:#66d9ef">$24</span>, %esp      <span style="color:#75715e"># allocate space for local vars etc
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e">; ----------------------------------+
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>
-</span></span><span style="display:flex;"><span><span style="color:#75715e">; ------- Function body code: ------+
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#a6e22e">movl</span>     <span style="color:#66d9ef">$4</span>, -<span style="color:#ae81ff">20</span>(%ebp)   <span style="color:#75715e"># d = 4
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#66d9ef">movl</span>     <span style="color:#66d9ef">$5</span>, -<span style="color:#ae81ff">16</span>(%ebp)   <span style="color:#75715e"># e = 5
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#66d9ef">movl</span>     <span style="color:#66d9ef">$6</span>, -<span style="color:#ae81ff">12</span>(%ebp)   <span style="color:#75715e"># f = 6
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>
-</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">subl</span>     <span style="color:#66d9ef">$8</span>, %esp        <span style="color:#75715e"># create 8 byte slot for tmp
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#66d9ef">pushl</span>    -<span style="color:#ae81ff">16</span>(%ebp)       <span style="color:#75715e"># push e
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#66d9ef">pushl</span>    -<span style="color:#ae81ff">20</span>(%ebp)       <span style="color:#75715e"># push d
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#66d9ef">call</span>     <span style="color:#66d9ef">B</span>
-</span></span><span style="display:flex;"><span>    
-</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">addl</span>     <span style="color:#66d9ef">$16</span>, %esp       <span style="color:#75715e"># clean stack
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#66d9ef">movl</span>     %eax, -<span style="color:#ae81ff">4</span>(%ebp)  <span style="color:#75715e"># f = return value in AX register
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e">; ----------------------------------+
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    
-</span></span><span style="display:flex;"><span><span style="color:#75715e">; ----------- Exit code: -----------+
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#66d9ef">leave</span>
-</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">ret</span>
-</span></span><span style="display:flex;"><span><span style="color:#75715e">; ----------------------------------+
-</span></span></span></code></pre></div><p>There are 3 parts to the assembly code:</p>
-<ol>
-<li><em>Entry</em>: the stack frame is established, local variables and working space are
-allocated on the stack.</li>
-</ol>
-<ul>
-<li>First FP is saved on the stack (%ebp)</li>
-<li>Second point SP (%esp) to that saved FP, the stack looks like:</li>
-</ul>
-<pre tabindex="0"><code>--------------------- &gt; low address
+</code></pre><h2 id=simple-c-program-in-assembly>Simple C program in assembly</h2><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-c data-lang=c><span style=display:flex><span><span style=color:#75715e>#include</span> <span style=color:#75715e>&lt;stdio.h&gt;</span><span style=color:#75715e>
+</span></span></span><span style=display:flex><span><span style=color:#75715e></span><span style=color:#66d9ef>extern</span> <span style=color:#66d9ef>int</span> <span style=color:#a6e22e>B</span>();
+</span></span><span style=display:flex><span><span style=color:#66d9ef>int</span> <span style=color:#a6e22e>A</span>(<span style=color:#66d9ef>int</span> x, <span style=color:#66d9ef>int</span> y) {
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>int</span> d, e, f;
+</span></span><span style=display:flex><span>    d <span style=color:#f92672>=</span> <span style=color:#ae81ff>4</span>; e <span style=color:#f92672>=</span> <span style=color:#ae81ff>5</span>; f <span style=color:#f92672>=</span> <span style=color:#ae81ff>6</span>;
+</span></span><span style=display:flex><span>    f <span style=color:#f92672>=</span> B(d,e);
+</span></span><span style=display:flex><span>}
+</span></span></code></pre></div><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span>cc -m32 -S &lt;cprog&gt;.c <span style=color:#75715e># compile into 32-bit assembly code</span>
+</span></span></code></pre></div><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-asm data-lang=asm><span style=display:flex><span>    <span style=color:#a6e22e>.text</span>
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>.globl</span> <span style=color:#66d9ef>A</span>
+</span></span><span style=display:flex><span><span style=color:#75715e>; ------------- Entry: -------------+
+</span></span></span><span style=display:flex><span><span style=color:#75715e></span>A:                          <span style=color:#75715e># A() start code location
+</span></span></span><span style=display:flex><span><span style=color:#75715e></span>    <span style=color:#a6e22e>pushl</span>    %ebp
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>movl</span>     %esp, %ebp     <span style=color:#75715e># establishing the stack frame
+</span></span></span><span style=display:flex><span><span style=color:#75715e></span>                                
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>subl</span>     <span style=color:#66d9ef>$24</span>, %esp      <span style=color:#75715e># allocate space for local vars etc
+</span></span></span><span style=display:flex><span><span style=color:#75715e>; ----------------------------------+
+</span></span></span><span style=display:flex><span><span style=color:#75715e></span>
+</span></span><span style=display:flex><span><span style=color:#75715e>; ------- Function body code: ------+
+</span></span></span><span style=display:flex><span><span style=color:#75715e></span>    <span style=color:#a6e22e>movl</span>     <span style=color:#66d9ef>$4</span>, -<span style=color:#ae81ff>20</span>(%ebp)   <span style=color:#75715e># d = 4
+</span></span></span><span style=display:flex><span><span style=color:#75715e></span>    <span style=color:#66d9ef>movl</span>     <span style=color:#66d9ef>$5</span>, -<span style=color:#ae81ff>16</span>(%ebp)   <span style=color:#75715e># e = 5
+</span></span></span><span style=display:flex><span><span style=color:#75715e></span>    <span style=color:#66d9ef>movl</span>     <span style=color:#66d9ef>$6</span>, -<span style=color:#ae81ff>12</span>(%ebp)   <span style=color:#75715e># f = 6
+</span></span></span><span style=display:flex><span><span style=color:#75715e></span>
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>subl</span>     <span style=color:#66d9ef>$8</span>, %esp        <span style=color:#75715e># create 8 byte slot for tmp
+</span></span></span><span style=display:flex><span><span style=color:#75715e></span>    <span style=color:#66d9ef>pushl</span>    -<span style=color:#ae81ff>16</span>(%ebp)       <span style=color:#75715e># push e
+</span></span></span><span style=display:flex><span><span style=color:#75715e></span>    <span style=color:#66d9ef>pushl</span>    -<span style=color:#ae81ff>20</span>(%ebp)       <span style=color:#75715e># push d
+</span></span></span><span style=display:flex><span><span style=color:#75715e></span>    <span style=color:#66d9ef>call</span>     <span style=color:#66d9ef>B</span>
+</span></span><span style=display:flex><span>    
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>addl</span>     <span style=color:#66d9ef>$16</span>, %esp       <span style=color:#75715e># clean stack
+</span></span></span><span style=display:flex><span><span style=color:#75715e></span>    <span style=color:#66d9ef>movl</span>     %eax, -<span style=color:#ae81ff>4</span>(%ebp)  <span style=color:#75715e># f = return value in AX register
+</span></span></span><span style=display:flex><span><span style=color:#75715e>; ----------------------------------+
+</span></span></span><span style=display:flex><span><span style=color:#75715e></span>    
+</span></span><span style=display:flex><span><span style=color:#75715e>; ----------- Exit code: -----------+
+</span></span></span><span style=display:flex><span><span style=color:#75715e></span>    <span style=color:#66d9ef>leave</span>
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>ret</span>
+</span></span><span style=display:flex><span><span style=color:#75715e>; ----------------------------------+
+</span></span></span></code></pre></div><p>There are 3 parts to the assembly code:</p><ol><li><em>Entry</em>: the stack frame is established, local variables and working space are
+allocated on the stack.</li></ol><ul><li>First FP is saved on the stack (%ebp)</li><li>Second point SP (%esp) to that saved FP, the stack looks like:</li></ul><pre tabindex=0><code>--------------------- &gt; low address
 XXXX | PC | FP |
                ^
            FP,SP
 ---------------------
-</code></pre><ul>
-<li>Then allocate 24 bytes of space for the local variables and working area by
-shifting SP (%esp) downward</li>
-</ul>
-<ol start="2">
-<li><em>Function Body Code</em>: assign the values to the variables and extra for tmp space.</li>
-</ol>
-<ul>
-<li>FP is used to locate the local variables, as they are all ints (sizeof(int)
-== 4) just do -4(FP), &hellip; descending in multiples of 4. The stack looks like:</li>
-</ul>
-<pre tabindex="0"><code>---------------- -4 -8  -12 -16 -20 -24 ----- 
+</code></pre><ul><li>Then allocate 24 bytes of space for the local variables and working area by
+shifting SP (%esp) downward</li></ul><ol start=2><li><em>Function Body Code</em>: assign the values to the variables and extra for tmp space.</li></ol><ul><li>FP is used to locate the local variables, as they are all ints (sizeof(int)
+== 4) just do -4(FP), &mldr; descending in multiples of 4. The stack looks like:</li></ul><pre tabindex=0><code>---------------- -4 -8  -12 -16 -20 -24 ----- 
 XXXX | PC | FP | ? | ? | 6 | 5 | 4 | ? |
                ^         f   e   d     ^
               FP                      SP
 ---------------------------------------------
-</code></pre><ul>
-<li>Then add the tmp space, using SP (%esp) as the guide before finally B is
-called, pushing the parameters onto the stack (in reverse order)</li>
-</ul>
-<pre tabindex="0"><code>---------------- -4 -8  -12 -16 -20 -24 ------------------
+</code></pre><ul><li>Then add the tmp space, using SP (%esp) as the guide before finally B is
+called, pushing the parameters onto the stack (in reverse order)</li></ul><pre tabindex=0><code>---------------- -4 -8  -12 -16 -20 -24 ------------------
 XXXX | PC | FP | ? | ? | 6 | 5 | 4 | ? | ?? | ?? | e | d |
                ^         f   e   d      TMP SPACE        ^
               FP                                        SP
 ----------------------------------------------------------
-</code></pre><ol start="3">
-<li><em>Exit Code</em>: returning the stack frame to the caller</li>
-</ol>
-<ul>
-<li>leave is the same as doing:</li>
-</ul>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-asm" data-lang="asm"><span style="display:flex;"><span><span style="color:#75715e">;leave
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#a6e22e">movl</span>    %ebp, %esp
-</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">popl</span>    %ebp
-</span></span></code></pre></div><h2 id="function-call-convention">Function call convention</h2>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#75715e">/********* t.c file ********/</span>
-</span></span><span style="display:flex;"><span><span style="color:#75715e">#include</span> <span style="color:#75715e">&lt;stdio.h&gt;</span><span style="color:#75715e">
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#66d9ef">int</span> <span style="color:#a6e22e">sub</span>(<span style="color:#66d9ef">int</span> a, <span style="color:#66d9ef">int</span> b, <span style="color:#66d9ef">int</span> c, <span style="color:#66d9ef">int</span> d, <span style="color:#66d9ef">int</span> e, <span style="color:#66d9ef">int</span> f, <span style="color:#66d9ef">int</span> g, <span style="color:#66d9ef">int</span> h) {
-</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">int</span> u, v, w;
-</span></span><span style="display:flex;"><span>    u <span style="color:#f92672">=</span> <span style="color:#ae81ff">9</span>;
-</span></span><span style="display:flex;"><span>    v <span style="color:#f92672">=</span> <span style="color:#ae81ff">10</span>;
-</span></span><span style="display:flex;"><span>    w <span style="color:#f92672">=</span> <span style="color:#ae81ff">11</span>;
-</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> a<span style="color:#f92672">+</span>g<span style="color:#f92672">+</span>u<span style="color:#f92672">+</span>v; <span style="color:#75715e">// use first and extra parameter, locals
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>}
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#66d9ef">int</span> <span style="color:#a6e22e">main</span>() {
-</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">int</span> a, b, c, d, e, f, g, h, i;
-</span></span><span style="display:flex;"><span>    a <span style="color:#f92672">=</span> <span style="color:#ae81ff">1</span>;
-</span></span><span style="display:flex;"><span>    b <span style="color:#f92672">=</span> <span style="color:#ae81ff">2</span>;
-</span></span><span style="display:flex;"><span>    c <span style="color:#f92672">=</span> <span style="color:#ae81ff">3</span>;
-</span></span><span style="display:flex;"><span>    d <span style="color:#f92672">=</span> <span style="color:#ae81ff">4</span>;
-</span></span><span style="display:flex;"><span>    e <span style="color:#f92672">=</span> <span style="color:#ae81ff">5</span>;
-</span></span><span style="display:flex;"><span>    f <span style="color:#f92672">=</span> <span style="color:#ae81ff">6</span>;
-</span></span><span style="display:flex;"><span>    g <span style="color:#f92672">=</span> <span style="color:#ae81ff">7</span>;
-</span></span><span style="display:flex;"><span>    h <span style="color:#f92672">=</span> <span style="color:#ae81ff">8</span>;
-</span></span><span style="display:flex;"><span>    i <span style="color:#f92672">=</span> sub(a,b,c,d,e,f,g,h);
-</span></span><span style="display:flex;"><span>}
-</span></span></code></pre></div><p>First, to compile the c program and output the assembly code:</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>gcc -S &lt;cprog&gt;.c <span style="color:#75715e"># it will output a &lt;cprog&gt;.s file</span>
-</span></span></code></pre></div><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-asm" data-lang="asm"><span style="display:flex;"><span><span style="color:#75715e">#------------ t.s file generated by 64-bit GCC compiler ------------–
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#a6e22e">.globl</span> <span style="color:#66d9ef">sub</span>
-</span></span><span style="display:flex;"><span>sub: <span style="color:#75715e"># int sub(int a,b,c,d,e,f,g,h)
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"># first 6 parameters | a |,| b |,| c |,| d |,| e |,| f | 
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e">#   in registers:    |rdi|,|rsi|,|rdx|,|rcx|,|r8d|,|r9d|
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>
-</span></span><span style="display:flex;"><span><span style="color:#75715e"># 2 extra parameters g,h are on stack.
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"># Upon entry, stack top contains g, h
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e">#    -------------------------------------
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e">#    . . . ...| h | g | PC |     LOW address
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>                           <span style="color:#960050;background-color:#1e0010">^</span>
-</span></span><span style="display:flex;"><span><span style="color:#75715e">#                        RSP
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e">#    ------------------------------------
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>
-</span></span><span style="display:flex;"><span><span style="color:#75715e"># establish stack frame
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#a6e22e">pushq</span> %rbp
-</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">movq</span>  %rsp, %rbp
-</span></span><span style="display:flex;"><span><span style="color:#75715e"># no need to shift rsp down because each function has a 128 bytes
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"># reserved stack area.
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"># rsp will be shifted down if function define more locals
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>
-</span></span><span style="display:flex;"><span><span style="color:#75715e"># save first 6 parameters in registers on stack
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#a6e22e">movl</span> %edi, -<span style="color:#ae81ff">20</span>(%rbp) <span style="color:#75715e"># a
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#66d9ef">movl</span> %esi, -<span style="color:#ae81ff">24</span>(%rbp) <span style="color:#75715e"># b
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#66d9ef">movl</span> %edx, -<span style="color:#ae81ff">28</span>(%rbp) <span style="color:#75715e"># C
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#66d9ef">movl</span> %ecx, -<span style="color:#ae81ff">32</span>(%rbp) <span style="color:#75715e"># d
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#66d9ef">movl</span> %r8d, -<span style="color:#ae81ff">36</span>(%rbp) <span style="color:#75715e"># e
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#66d9ef">movl</span> %r9d, -<span style="color:#ae81ff">40</span>(%rbp) <span style="color:#75715e"># f
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>
-</span></span><span style="display:flex;"><span><span style="color:#75715e"># access locals u, v, w at rbp -4 to -12
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#a6e22e">movl</span> <span style="color:#66d9ef">$9</span>,  -<span style="color:#ae81ff">4</span>(%rbp)
-</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">movl</span> <span style="color:#66d9ef">$10</span>, -<span style="color:#ae81ff">8</span>(%rbp)
-</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">movl</span> <span style="color:#66d9ef">$11</span>, -<span style="color:#ae81ff">12</span>(%rbp)
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#75715e"># compute x + g + u + v:
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#a6e22e">movl</span> -<span style="color:#ae81ff">20</span>(%rbp), %edx <span style="color:#75715e"># saved a on stack
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#66d9ef">movl</span> <span style="color:#ae81ff">16</span>(%rbp),  %eax <span style="color:#75715e"># g at 16(rbp)
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#66d9ef">addl</span> %eax, %edx
-</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">movl</span> -<span style="color:#ae81ff">4</span>(%rbp),  %eax <span style="color:#75715e"># u at -4(rbp)
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#66d9ef">addl</span> %eax, %edx
-</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">movl</span> -<span style="color:#ae81ff">8</span>(%rbp),  %eax <span style="color:#75715e"># v at -8(rbp)
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#66d9ef">addl</span> %edx, %eax
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#75715e"># did not shift rsp down, so just popQ to restore rbp
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#a6e22e">popq</span> %rbp
-</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">ret</span>
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#75715e"># ====== main function code in assembly ======
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#a6e22e">.globl</span>    <span style="color:#66d9ef">main</span>
-</span></span><span style="display:flex;"><span>main:
-</span></span><span style="display:flex;"><span><span style="color:#75715e"># establish stack frame
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#a6e22e">pushq</span> %rbp
-</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">movq</span> %rsp, %rbp
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#75715e"># shift rsp down 48 bytes for locals
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#a6e22e">subq</span> <span style="color:#66d9ef">$48</span>, %rsp
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#75715e"># locals are at rbp -4 to -32
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#a6e22e">movl</span> <span style="color:#66d9ef">$1</span>, -<span style="color:#ae81ff">4</span>(%rbp)  <span style="color:#75715e"># a=1
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#66d9ef">movl</span> <span style="color:#66d9ef">$2</span>, -<span style="color:#ae81ff">8</span>(%rbp)  <span style="color:#75715e"># b=2
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#66d9ef">movl</span> <span style="color:#66d9ef">$3</span>, -<span style="color:#ae81ff">12</span>(%rbp) <span style="color:#75715e"># c=3
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#66d9ef">movl</span> <span style="color:#66d9ef">$4</span>, -<span style="color:#ae81ff">16</span>(%rbp) <span style="color:#75715e"># d=4
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#66d9ef">movl</span> <span style="color:#66d9ef">$5</span>, -<span style="color:#ae81ff">20</span>(%rbp) <span style="color:#75715e"># e=5
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#66d9ef">movl</span> <span style="color:#66d9ef">$6</span>, -<span style="color:#ae81ff">24</span>(%rbp) <span style="color:#75715e"># f=6
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#66d9ef">movl</span> <span style="color:#66d9ef">$7</span>, -<span style="color:#ae81ff">28</span>(%rbp) <span style="color:#75715e"># g=7
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#66d9ef">movl</span> <span style="color:#66d9ef">$8</span>, -<span style="color:#ae81ff">32</span>(%rbp) <span style="color:#75715e"># h=8
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>
-</span></span><span style="display:flex;"><span><span style="color:#75715e"># call sub(a,b,c,d,e,f,g,h): first 6 parameters in registers
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#a6e22e">movl</span> -<span style="color:#ae81ff">24</span>(%rbp), %r9d <span style="color:#75715e"># f in r9
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#66d9ef">movl</span> -<span style="color:#ae81ff">20</span>(%rbp), %r8d <span style="color:#75715e"># e in r8
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#66d9ef">movl</span> -<span style="color:#ae81ff">16</span>(%rbp), %ecx <span style="color:#75715e"># d in ecx
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#66d9ef">movl</span> -<span style="color:#ae81ff">12</span>(%rbp), %edx <span style="color:#75715e"># c in edx
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#66d9ef">movl</span> -<span style="color:#ae81ff">8</span>(%rbp),  %esi <span style="color:#75715e"># b in esi
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#66d9ef">movl</span> -<span style="color:#ae81ff">4</span>(%rbp),  %eax <span style="color:#75715e"># a in eax but will be in edi
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>
-</span></span><span style="display:flex;"><span><span style="color:#75715e"># push 2 extra parameters h,g on stack
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#a6e22e">movl</span> -<span style="color:#ae81ff">32</span>(%rbp), %edi <span style="color:#75715e"># int h in edi
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#66d9ef">pushq</span> %rdi <span style="color:#75715e"># pushQ rdi ; only low 32-bits = h
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#66d9ef">movl</span> -<span style="color:#ae81ff">28</span>(%rbp), %edi <span style="color:#75715e"># int g in edi
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#66d9ef">pushq</span> %rdi <span style="color:#75715e"># pushQ rdi ; low 32-bits = g
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>
-</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">movl</span> %eax, %edi <span style="color:#75715e"># parameter a in edi
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#66d9ef">call</span> <span style="color:#66d9ef">sub</span> <span style="color:#75715e"># call sub(a,b,c,d,e,f,g,h)
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>
-</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">addq</span> <span style="color:#66d9ef">$16</span>, %rsp <span style="color:#75715e"># pop stack: h,g, 16 bytes
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#66d9ef">movl</span> %eax, -<span style="color:#ae81ff">36</span>(%rbp) <span style="color:#75715e"># i = sub return value in eax
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>
-</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">movl</span> <span style="color:#66d9ef">$0</span>, %eax <span style="color:#75715e"># return 0 to crt0.o
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#66d9ef">leave</span>
-</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">ret</span>
-</span></span></code></pre></div></div><div class="post-footer" id="post-footer">
-    <div class="post-info">
-        <div class="post-info-line">
-            <div class="post-info-mod">
-                <span>Updated on 0001-01-01</span>
-            </div></div>
-        <div class="post-info-line">
-            <div class="post-info-md"></div>
-            <div class="post-info-share">
-                <span><a href="javascript:void(0);" title="Share on Twitter" data-sharer="twitter" data-url="georgesims21.github.io/posts/64-bit-gcc_runtime_stack_usage/" data-title="64-bit-GCC Runtime Stack Usage" data-hashtags="C,Systems Programming,Assembly"><i class="fab fa-twitter fa-fw" aria-hidden="true"></i></a><a href="javascript:void(0);" title="Share on Facebook" data-sharer="facebook" data-url="georgesims21.github.io/posts/64-bit-gcc_runtime_stack_usage/" data-hashtag="C"><i class="fab fa-facebook-square fa-fw" aria-hidden="true"></i></a><a href="javascript:void(0);" title="Share on Hacker News" data-sharer="hackernews" data-url="georgesims21.github.io/posts/64-bit-gcc_runtime_stack_usage/" data-title="64-bit-GCC Runtime Stack Usage"><i class="fab fa-hacker-news fa-fw" aria-hidden="true"></i></a><a href="javascript:void(0);" title="Share on Line" data-sharer="line" data-url="georgesims21.github.io/posts/64-bit-gcc_runtime_stack_usage/" data-title="64-bit-GCC Runtime Stack Usage"><i data-svg-src="https://cdn.jsdelivr.net/npm/simple-icons@7.0.0/icons/line.svg" aria-hidden="true"></i></a><a href="javascript:void(0);" title="Share on 微博" data-sharer="weibo" data-url="georgesims21.github.io/posts/64-bit-gcc_runtime_stack_usage/" data-title="64-bit-GCC Runtime Stack Usage"><i class="fab fa-weibo fa-fw" aria-hidden="true"></i></a></span>
-            </div>
-        </div>
-    </div>
-
-    <div class="post-info-more">
-        <section class="post-tags"><i class="fas fa-tags fa-fw" aria-hidden="true"></i>&nbsp;<a href="georgesims21.github.io/tags/c/">C</a>,&nbsp;<a href="georgesims21.github.io/tags/systems-programming/">Systems Programming</a>,&nbsp;<a href="georgesims21.github.io/tags/assembly/">Assembly</a></section>
-        <section>
-            <span><a href="javascript:void(0);" onclick="window.history.back();">Back</a></span>&nbsp;|&nbsp;<span><a href="georgesims21.github.io/">Home</a></span>
-        </section>
-    </div>
-
-    <div class="post-nav"><a href="georgesims21.github.io/posts/c_function_calls/" class="prev" rel="prev" title="C function calls (32-bit)"><i class="fas fa-angle-left fa-fw" aria-hidden="true"></i>C function calls (32-bit)</a></div>
-</div>
-</article></div>
-            </main><footer class="footer">
-        <div class="footer-container"><div class="footer-line">Powered by <a href="https://gohugo.io/" target="_blank" rel="noopener noreffer" title="Hugo 0.100.2">Hugo</a> | Theme - <a href="https://github.com/dillonzq/LoveIt" target="_blank" rel="noopener noreffer" title="LoveIt 0.2.11"><i class="far fa-kiss-wink-heart fa-fw" aria-hidden="true"></i> LoveIt</a>
-                </div><div class="footer-line" itemscope itemtype="http://schema.org/CreativeWork"><i class="far fa-copyright fa-fw" aria-hidden="true"></i><span itemprop="copyrightYear">2022</span><span class="author" itemprop="copyrightHolder">&nbsp;<a href="https://github.com/georgesims21" target="_blank">George Sims</a></span>&nbsp;|&nbsp;<span class="license"><a rel="license external nofollow noopener noreffer" href="https://creativecommons.org/licenses/by-nc/4.0/" target="_blank">CC BY-NC 4.0</a></span></div>
-        </div>
-    </footer></div>
-
-        <div id="fixed-buttons"><a href="#" id="back-to-top" class="fixed-button" title="Back to Top">
-                <i class="fas fa-arrow-up fa-fw" aria-hidden="true"></i>
-            </a><a href="#" id="view-comments" class="fixed-button" title="View Comments">
-                <i class="fas fa-comment fa-fw" aria-hidden="true"></i>
-            </a>
-        </div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/cookieconsent@3.1.1/build/cookieconsent.min.css"><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/autocomplete.js@0.38.1/dist/autocomplete.min.js"></script><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/lunr@2.3.9/lunr.min.js"></script><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/lazysizes@5.3.2/lazysizes.min.js"></script><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/clipboard@2.0.11/dist/clipboard.min.js"></script><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/sharer.js@0.5.1/sharer.min.js"></script><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/typeit@8.6.0/dist/index.umd.js"></script><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/cookieconsent@3.1.1/build/cookieconsent.min.js"></script><script type="text/javascript">window.config={"code":{"copyTitle":"Copy to clipboard","maxShownLines":50},"comment":{},"cookieconsent":{"content":{"dismiss":"Got it!","link":"Learn more","message":"This website uses Cookies to improve your experience."},"enable":true,"palette":{"button":{"background":"#f0f0f0"},"popup":{"background":"#1aa3ff"}},"theme":"edgeless"},"data":{"id-1":"George's Blog","id-2":"George's Blog"},"search":{"highlightTag":"em","maxResultLength":10,"noResultsFound":"No results found","snippetLength":30},"typeit":{"cursorChar":"|","cursorSpeed":1000,"data":{"id-1":["id-1"],"id-2":["id-2"]},"duration":-1,"speed":100}};</script><script type="text/javascript" src="/georgesims21.github.io/js/theme.min.js"></script></body>
-</html>
+</code></pre><ol start=3><li><em>Exit Code</em>: returning the stack frame to the caller</li></ol><ul><li>leave is the same as doing:</li></ul><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-asm data-lang=asm><span style=display:flex><span><span style=color:#75715e>;leave
+</span></span></span><span style=display:flex><span><span style=color:#75715e></span>    <span style=color:#a6e22e>movl</span>    %ebp, %esp
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>popl</span>    %ebp
+</span></span></code></pre></div><h2 id=function-call-convention>Function call convention</h2><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-c data-lang=c><span style=display:flex><span><span style=color:#75715e>/********* t.c file ********/</span>
+</span></span><span style=display:flex><span><span style=color:#75715e>#include</span> <span style=color:#75715e>&lt;stdio.h&gt;</span><span style=color:#75715e>
+</span></span></span><span style=display:flex><span><span style=color:#75715e></span><span style=color:#66d9ef>int</span> <span style=color:#a6e22e>sub</span>(<span style=color:#66d9ef>int</span> a, <span style=color:#66d9ef>int</span> b, <span style=color:#66d9ef>int</span> c, <span style=color:#66d9ef>int</span> d, <span style=color:#66d9ef>int</span> e, <span style=color:#66d9ef>int</span> f, <span style=color:#66d9ef>int</span> g, <span style=color:#66d9ef>int</span> h) {
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>int</span> u, v, w;
+</span></span><span style=display:flex><span>    u <span style=color:#f92672>=</span> <span style=color:#ae81ff>9</span>;
+</span></span><span style=display:flex><span>    v <span style=color:#f92672>=</span> <span style=color:#ae81ff>10</span>;
+</span></span><span style=display:flex><span>    w <span style=color:#f92672>=</span> <span style=color:#ae81ff>11</span>;
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>return</span> a<span style=color:#f92672>+</span>g<span style=color:#f92672>+</span>u<span style=color:#f92672>+</span>v; <span style=color:#75715e>// use first and extra parameter, locals
+</span></span></span><span style=display:flex><span><span style=color:#75715e></span>}
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>int</span> <span style=color:#a6e22e>main</span>() {
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>int</span> a, b, c, d, e, f, g, h, i;
+</span></span><span style=display:flex><span>    a <span style=color:#f92672>=</span> <span style=color:#ae81ff>1</span>;
+</span></span><span style=display:flex><span>    b <span style=color:#f92672>=</span> <span style=color:#ae81ff>2</span>;
+</span></span><span style=display:flex><span>    c <span style=color:#f92672>=</span> <span style=color:#ae81ff>3</span>;
+</span></span><span style=display:flex><span>    d <span style=color:#f92672>=</span> <span style=color:#ae81ff>4</span>;
+</span></span><span style=display:flex><span>    e <span style=color:#f92672>=</span> <span style=color:#ae81ff>5</span>;
+</span></span><span style=display:flex><span>    f <span style=color:#f92672>=</span> <span style=color:#ae81ff>6</span>;
+</span></span><span style=display:flex><span>    g <span style=color:#f92672>=</span> <span style=color:#ae81ff>7</span>;
+</span></span><span style=display:flex><span>    h <span style=color:#f92672>=</span> <span style=color:#ae81ff>8</span>;
+</span></span><span style=display:flex><span>    i <span style=color:#f92672>=</span> sub(a,b,c,d,e,f,g,h);
+</span></span><span style=display:flex><span>}
+</span></span></code></pre></div><p>First, to compile the c program and output the assembly code:</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span>gcc -S &lt;cprog&gt;.c <span style=color:#75715e># it will output a &lt;cprog&gt;.s file</span>
+</span></span></code></pre></div><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-asm data-lang=asm><span style=display:flex><span><span style=color:#75715e>#------------ t.s file generated by 64-bit GCC compiler ------------–
+</span></span></span><span style=display:flex><span><span style=color:#75715e></span><span style=color:#a6e22e>.globl</span> <span style=color:#66d9ef>sub</span>
+</span></span><span style=display:flex><span>sub: <span style=color:#75715e># int sub(int a,b,c,d,e,f,g,h)
+</span></span></span><span style=display:flex><span><span style=color:#75715e># first 6 parameters | a |,| b |,| c |,| d |,| e |,| f | 
+</span></span></span><span style=display:flex><span><span style=color:#75715e>#   in registers:    |rdi|,|rsi|,|rdx|,|rcx|,|r8d|,|r9d|
+</span></span></span><span style=display:flex><span><span style=color:#75715e></span>
+</span></span><span style=display:flex><span><span style=color:#75715e># 2 extra parameters g,h are on stack.
+</span></span></span><span style=display:flex><span><span style=color:#75715e># Upon entry, stack top contains g, h
+</span></span></span><span style=display:flex><span><span style=color:#75715e>#    -------------------------------------
+</span></span></span><span style=display:flex><span><span style=color:#75715e>#    . . . ...| h | g | PC |     LOW address
+</span></span></span><span style=display:flex><span><span style=color:#75715e></span>                           <span style=color:#960050;background-color:#1e0010>^</span>
+</span></span><span style=display:flex><span><span style=color:#75715e>#                        RSP
+</span></span></span><span style=display:flex><span><span style=color:#75715e>#    ------------------------------------
+</span></span></span><span style=display:flex><span><span style=color:#75715e></span>
+</span></span><span style=display:flex><span><span style=color:#75715e># establish stack frame
+</span></span></span><span style=display:flex><span><span style=color:#75715e></span>    <span style=color:#a6e22e>pushq</span> %rbp
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>movq</span>  %rsp, %rbp
+</span></span><span style=display:flex><span><span style=color:#75715e># no need to shift rsp down because each function has a 128 bytes
+</span></span></span><span style=display:flex><span><span style=color:#75715e># reserved stack area.
+</span></span></span><span style=display:flex><span><span style=color:#75715e># rsp will be shifted down if function define more locals
+</span></span></span><span style=display:flex><span><span style=color:#75715e></span>
+</span></span><span style=display:flex><span><span style=color:#75715e># save first 6 parameters in registers on stack
+</span></span></span><span style=display:flex><span><span style=color:#75715e></span>    <span style=color:#a6e22e>movl</span> %edi, -<span style=color:#ae81ff>20</span>(%rbp) <span style=color:#75715e># a
+</span></span></span><span style=display:flex><span><span style=color:#75715e></span>    <span style=color:#66d9ef>movl</span> %esi, -<span style=color:#ae81ff>24</span>(%rbp) <span style=color:#75715e># b
+</span></span></span><span style=display:flex><span><span style=color:#75715e></span>    <span style=color:#66d9ef>movl</span> %edx, -<span style=color:#ae81ff>28</span>(%rbp) <span style=color:#75715e># C
+</span></span></span><span style=display:flex><span><span style=color:#75715e></span>    <span style=color:#66d9ef>movl</span> %ecx, -<span style=color:#ae81ff>32</span>(%rbp) <span style=color:#75715e># d
+</span></span></span><span style=display:flex><span><span style=color:#75715e></span>    <span style=color:#66d9ef>movl</span> %r8d, -<span style=color:#ae81ff>36</span>(%rbp) <span style=color:#75715e># e
+</span></span></span><span style=display:flex><span><span style=color:#75715e></span>    <span style=color:#66d9ef>movl</span> %r9d, -<span style=color:#ae81ff>40</span>(%rbp) <span style=color:#75715e># f
+</span></span></span><span style=display:flex><span><span style=color:#75715e></span>
+</span></span><span style=display:flex><span><span style=color:#75715e># access locals u, v, w at rbp -4 to -12
+</span></span></span><span style=display:flex><span><span style=color:#75715e></span>    <span style=color:#a6e22e>movl</span> <span style=color:#66d9ef>$9</span>,  -<span style=color:#ae81ff>4</span>(%rbp)
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>movl</span> <span style=color:#66d9ef>$10</span>, -<span style=color:#ae81ff>8</span>(%rbp)
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>movl</span> <span style=color:#66d9ef>$11</span>, -<span style=color:#ae81ff>12</span>(%rbp)
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e># compute x + g + u + v:
+</span></span></span><span style=display:flex><span><span style=color:#75715e></span>    <span style=color:#a6e22e>movl</span> -<span style=color:#ae81ff>20</span>(%rbp), %edx <span style=color:#75715e># saved a on stack
+</span></span></span><span style=display:flex><span><span style=color:#75715e></span>    <span style=color:#66d9ef>movl</span> <span style=color:#ae81ff>16</span>(%rbp),  %eax <span style=color:#75715e># g at 16(rbp)
+</span></span></span><span style=display:flex><span><span style=color:#75715e></span>    <span style=color:#66d9ef>addl</span> %eax, %edx
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>movl</span> -<span style=color:#ae81ff>4</span>(%rbp),  %eax <span style=color:#75715e># u at -4(rbp)
+</span></span></span><span style=display:flex><span><span style=color:#75715e></span>    <span style=color:#66d9ef>addl</span> %eax, %edx
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>movl</span> -<span style=color:#ae81ff>8</span>(%rbp),  %eax <span style=color:#75715e># v at -8(rbp)
+</span></span></span><span style=display:flex><span><span style=color:#75715e></span>    <span style=color:#66d9ef>addl</span> %edx, %eax
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e># did not shift rsp down, so just popQ to restore rbp
+</span></span></span><span style=display:flex><span><span style=color:#75715e></span>    <span style=color:#a6e22e>popq</span> %rbp
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>ret</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e># ====== main function code in assembly ======
+</span></span></span><span style=display:flex><span><span style=color:#75715e></span>    <span style=color:#a6e22e>.globl</span>    <span style=color:#66d9ef>main</span>
+</span></span><span style=display:flex><span>main:
+</span></span><span style=display:flex><span><span style=color:#75715e># establish stack frame
+</span></span></span><span style=display:flex><span><span style=color:#75715e></span>    <span style=color:#a6e22e>pushq</span> %rbp
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>movq</span> %rsp, %rbp
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e># shift rsp down 48 bytes for locals
+</span></span></span><span style=display:flex><span><span style=color:#75715e></span>    <span style=color:#a6e22e>subq</span> <span style=color:#66d9ef>$48</span>, %rsp
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e># locals are at rbp -4 to -32
+</span></span></span><span style=display:flex><span><span style=color:#75715e></span>    <span style=color:#a6e22e>movl</span> <span style=color:#66d9ef>$1</span>, -<span style=color:#ae81ff>4</span>(%rbp)  <span style=color:#75715e># a=1
+</span></span></span><span style=display:flex><span><span style=color:#75715e></span>    <span style=color:#66d9ef>movl</span> <span style=color:#66d9ef>$2</span>, -<span style=color:#ae81ff>8</span>(%rbp)  <span style=color:#75715e># b=2
+</span></span></span><span style=display:flex><span><span style=color:#75715e></span>    <span style=color:#66d9ef>movl</span> <span style=color:#66d9ef>$3</span>, -<span style=color:#ae81ff>12</span>(%rbp) <span style=color:#75715e># c=3
+</span></span></span><span style=display:flex><span><span style=color:#75715e></span>    <span style=color:#66d9ef>movl</span> <span style=color:#66d9ef>$4</span>, -<span style=color:#ae81ff>16</span>(%rbp) <span style=color:#75715e># d=4
+</span></span></span><span style=display:flex><span><span style=color:#75715e></span>    <span style=color:#66d9ef>movl</span> <span style=color:#66d9ef>$5</span>, -<span style=color:#ae81ff>20</span>(%rbp) <span style=color:#75715e># e=5
+</span></span></span><span style=display:flex><span><span style=color:#75715e></span>    <span style=color:#66d9ef>movl</span> <span style=color:#66d9ef>$6</span>, -<span style=color:#ae81ff>24</span>(%rbp) <span style=color:#75715e># f=6
+</span></span></span><span style=display:flex><span><span style=color:#75715e></span>    <span style=color:#66d9ef>movl</span> <span style=color:#66d9ef>$7</span>, -<span style=color:#ae81ff>28</span>(%rbp) <span style=color:#75715e># g=7
+</span></span></span><span style=display:flex><span><span style=color:#75715e></span>    <span style=color:#66d9ef>movl</span> <span style=color:#66d9ef>$8</span>, -<span style=color:#ae81ff>32</span>(%rbp) <span style=color:#75715e># h=8
+</span></span></span><span style=display:flex><span><span style=color:#75715e></span>
+</span></span><span style=display:flex><span><span style=color:#75715e># call sub(a,b,c,d,e,f,g,h): first 6 parameters in registers
+</span></span></span><span style=display:flex><span><span style=color:#75715e></span>    <span style=color:#a6e22e>movl</span> -<span style=color:#ae81ff>24</span>(%rbp), %r9d <span style=color:#75715e># f in r9
+</span></span></span><span style=display:flex><span><span style=color:#75715e></span>    <span style=color:#66d9ef>movl</span> -<span style=color:#ae81ff>20</span>(%rbp), %r8d <span style=color:#75715e># e in r8
+</span></span></span><span style=display:flex><span><span style=color:#75715e></span>    <span style=color:#66d9ef>movl</span> -<span style=color:#ae81ff>16</span>(%rbp), %ecx <span style=color:#75715e># d in ecx
+</span></span></span><span style=display:flex><span><span style=color:#75715e></span>    <span style=color:#66d9ef>movl</span> -<span style=color:#ae81ff>12</span>(%rbp), %edx <span style=color:#75715e># c in edx
+</span></span></span><span style=display:flex><span><span style=color:#75715e></span>    <span style=color:#66d9ef>movl</span> -<span style=color:#ae81ff>8</span>(%rbp),  %esi <span style=color:#75715e># b in esi
+</span></span></span><span style=display:flex><span><span style=color:#75715e></span>    <span style=color:#66d9ef>movl</span> -<span style=color:#ae81ff>4</span>(%rbp),  %eax <span style=color:#75715e># a in eax but will be in edi
+</span></span></span><span style=display:flex><span><span style=color:#75715e></span>
+</span></span><span style=display:flex><span><span style=color:#75715e># push 2 extra parameters h,g on stack
+</span></span></span><span style=display:flex><span><span style=color:#75715e></span>    <span style=color:#a6e22e>movl</span> -<span style=color:#ae81ff>32</span>(%rbp), %edi <span style=color:#75715e># int h in edi
+</span></span></span><span style=display:flex><span><span style=color:#75715e></span>    <span style=color:#66d9ef>pushq</span> %rdi <span style=color:#75715e># pushQ rdi ; only low 32-bits = h
+</span></span></span><span style=display:flex><span><span style=color:#75715e></span>    <span style=color:#66d9ef>movl</span> -<span style=color:#ae81ff>28</span>(%rbp), %edi <span style=color:#75715e># int g in edi
+</span></span></span><span style=display:flex><span><span style=color:#75715e></span>    <span style=color:#66d9ef>pushq</span> %rdi <span style=color:#75715e># pushQ rdi ; low 32-bits = g
+</span></span></span><span style=display:flex><span><span style=color:#75715e></span>
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>movl</span> %eax, %edi <span style=color:#75715e># parameter a in edi
+</span></span></span><span style=display:flex><span><span style=color:#75715e></span>    <span style=color:#66d9ef>call</span> <span style=color:#66d9ef>sub</span> <span style=color:#75715e># call sub(a,b,c,d,e,f,g,h)
+</span></span></span><span style=display:flex><span><span style=color:#75715e></span>
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>addq</span> <span style=color:#66d9ef>$16</span>, %rsp <span style=color:#75715e># pop stack: h,g, 16 bytes
+</span></span></span><span style=display:flex><span><span style=color:#75715e></span>    <span style=color:#66d9ef>movl</span> %eax, -<span style=color:#ae81ff>36</span>(%rbp) <span style=color:#75715e># i = sub return value in eax
+</span></span></span><span style=display:flex><span><span style=color:#75715e></span>
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>movl</span> <span style=color:#66d9ef>$0</span>, %eax <span style=color:#75715e># return 0 to crt0.o
+</span></span></span><span style=display:flex><span><span style=color:#75715e></span>    <span style=color:#66d9ef>leave</span>
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>ret</span>
+</span></span></code></pre></div></div><div class=post-footer id=post-footer><div class=post-info><div class=post-info-line><div class=post-info-mod><span>Updated on 0001-01-01</span></div></div><div class=post-info-line><div class=post-info-md></div><div class=post-info-share><span><a href=javascript:void(0); title="Share on Twitter" data-sharer=twitter data-url=georgesims21.github.io/posts/64-bit-gcc_runtime_stack_usage/ data-title="64-bit-GCC Runtime Stack Usage" data-hashtags="C,Systems Programming,Assembly"><i class="fab fa-twitter fa-fw" aria-hidden=true></i></a><a href=javascript:void(0); title="Share on Facebook" data-sharer=facebook data-url=georgesims21.github.io/posts/64-bit-gcc_runtime_stack_usage/ data-hashtag=C><i class="fab fa-facebook-square fa-fw" aria-hidden=true></i></a><a href=javascript:void(0); title="Share on Hacker News" data-sharer=hackernews data-url=georgesims21.github.io/posts/64-bit-gcc_runtime_stack_usage/ data-title="64-bit-GCC Runtime Stack Usage"><i class="fab fa-hacker-news fa-fw" aria-hidden=true></i></a><a href=javascript:void(0); title="Share on Line" data-sharer=line data-url=georgesims21.github.io/posts/64-bit-gcc_runtime_stack_usage/ data-title="64-bit-GCC Runtime Stack Usage"><i data-svg-src=https://cdn.jsdelivr.net/npm/simple-icons@7.0.0/icons/line.svg aria-hidden=true></i></a><a href=javascript:void(0); title="Share on 微博" data-sharer=weibo data-url=georgesims21.github.io/posts/64-bit-gcc_runtime_stack_usage/ data-title="64-bit-GCC Runtime Stack Usage"><i class="fab fa-weibo fa-fw" aria-hidden=true></i></a></span></div></div></div><div class=post-info-more><section class=post-tags><i class="fas fa-tags fa-fw" aria-hidden=true></i>&nbsp;<a href=georgesims21.github.io/tags/c/>C</a>,&nbsp;<a href=georgesims21.github.io/tags/systems-programming/>Systems Programming</a>,&nbsp;<a href=georgesims21.github.io/tags/assembly/>Assembly</a></section><section><span><a href=javascript:void(0); onclick=window.history.back()>Back</a></span>&nbsp;|&nbsp;<span><a href=georgesims21.github.io/>Home</a></span></section></div><div class=post-nav><a href=georgesims21.github.io/posts/c_function_calls/ class=prev rel=prev title="C function calls (32-bit)"><i class="fas fa-angle-left fa-fw" aria-hidden=true></i>C function calls (32-bit)</a></div></div></article></div></main><footer class=footer><div class=footer-container><div class=footer-line>Powered by <a href=https://gohugo.io/ target=_blank rel="noopener noreffer" title="Hugo 0.101.0">Hugo</a> | Theme - <a href=https://github.com/dillonzq/LoveIt target=_blank rel="noopener noreffer" title="LoveIt 0.2.11"><i class="far fa-kiss-wink-heart fa-fw" aria-hidden=true></i> LoveIt</a></div><div class=footer-line itemscope itemtype=http://schema.org/CreativeWork><i class="far fa-copyright fa-fw" aria-hidden=true></i><span itemprop=copyrightYear>2022</span><span class=author itemprop=copyrightHolder>&nbsp;<a href=https://github.com/georgesims21 target=_blank>George Sims</a></span>&nbsp;|&nbsp;<span class=license><a rel="license external nofollow noopener noreffer" href=https://creativecommons.org/licenses/by-nc/4.0/ target=_blank>CC BY-NC 4.0</a></span></div></div></footer></div><div id=fixed-buttons><a href=# id=back-to-top class=fixed-button title="Back to Top"><i class="fas fa-arrow-up fa-fw" aria-hidden=true></i>
+</a><a href=# id=view-comments class=fixed-button title="View Comments"><i class="fas fa-comment fa-fw" aria-hidden=true></i></a></div><link rel=stylesheet href=https://cdn.jsdelivr.net/npm/cookieconsent@3.1.1/build/cookieconsent.min.css><script type=text/javascript src=https://cdn.jsdelivr.net/npm/autocomplete.js@0.38.1/dist/autocomplete.min.js></script><script type=text/javascript src=https://cdn.jsdelivr.net/npm/lunr@2.3.9/lunr.min.js></script><script type=text/javascript src=https://cdn.jsdelivr.net/npm/lazysizes@5.3.2/lazysizes.min.js></script><script type=text/javascript src=https://cdn.jsdelivr.net/npm/clipboard@2.0.11/dist/clipboard.min.js></script><script type=text/javascript src=https://cdn.jsdelivr.net/npm/sharer.js@0.5.1/sharer.min.js></script><script type=text/javascript src=https://cdn.jsdelivr.net/npm/typeit@8.6.0/dist/index.umd.js></script><script type=text/javascript src=https://cdn.jsdelivr.net/npm/cookieconsent@3.1.1/build/cookieconsent.min.js></script><script type=text/javascript>window.config={code:{copyTitle:"Copy to clipboard",maxShownLines:50},comment:{},cookieconsent:{content:{dismiss:"Got it!",link:"Learn more",message:"This website uses Cookies to improve your experience."},enable:!0,palette:{button:{background:"#f0f0f0"},popup:{background:"#1aa3ff"}},theme:"edgeless"},data:{"id-1":"George's Blog","id-2":"George's Blog"},search:{highlightTag:"em",maxResultLength:10,noResultsFound:"No results found",snippetLength:30},typeit:{cursorChar:"|",cursorSpeed:1e3,data:{"id-1":["id-1"],"id-2":["id-2"]},duration:-1,speed:100}}</script><script type=text/javascript src=/georgesims21.github.io/js/theme.min.js></script></body></html>
