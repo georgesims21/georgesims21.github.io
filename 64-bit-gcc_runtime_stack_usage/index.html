@@ -1,0 +1,620 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="robots" content="noodp" />
+        <title>64-bit-GCC Runtime Stack Usage - George&#39;s Blog</title><meta name="Description" content="This is my cool site"><meta property="og:title" content="64-bit-GCC Runtime Stack Usage" />
+<meta property="og:description" content="CPU registers in 64-bit mode 1 2 3 4 5 6 7 8 9 10 11 12 13 * rax * rbx * rbp * rsp first * rdi &lt;--&#43; * rsi | in 64-bit mode the first 6 parameters are placed in * rdx | these registers from rdi to r9 when calling a function, * rcx | any extra params are passed through the stack like in * r8 | 32-bit mode * r9 &lt;--&#43; last * r10-r15 Simple C program in assembly 1 2 3 4 5 6 7 #include &lt;stdio." />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://georgesims21.github.io/64-bit-gcc_runtime_stack_usage/" /><meta property="og:image" content="https://georgesims21.github.io/logo.png"/><meta property="article:section" content="posts" />
+
+<meta property="og:site_name" content="My cool site" />
+
+<meta name="twitter:card" content="summary_large_image"/>
+<meta name="twitter:image" content="https://georgesims21.github.io/logo.png"/>
+
+<meta name="twitter:title" content="64-bit-GCC Runtime Stack Usage"/>
+<meta name="twitter:description" content="CPU registers in 64-bit mode 1 2 3 4 5 6 7 8 9 10 11 12 13 * rax * rbx * rbp * rsp first * rdi &lt;--&#43; * rsi | in 64-bit mode the first 6 parameters are placed in * rdx | these registers from rdi to r9 when calling a function, * rcx | any extra params are passed through the stack like in * r8 | 32-bit mode * r9 &lt;--&#43; last * r10-r15 Simple C program in assembly 1 2 3 4 5 6 7 #include &lt;stdio."/>
+<meta name="application-name" content="My cool site">
+<meta name="apple-mobile-web-app-title" content="My cool site"><meta name="theme-color" content="#ffffff"><meta name="msapplication-TileColor" content="#da532c"><link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" />
+        <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+        <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png"><link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png"><link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5"><link rel="manifest" href="/site.webmanifest"><link rel="canonical" href="https://georgesims21.github.io/64-bit-gcc_runtime_stack_usage/" /><link rel="prev" href="https://georgesims21.github.io/c_function_calls/" /><link rel="stylesheet" href="/css/style.min.css"><link rel="preload" href="/lib/fontawesome-free/all.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+        <noscript><link rel="stylesheet" href="/lib/fontawesome-free/all.min.css"></noscript><link rel="preload" href="/lib/animate/animate.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+        <noscript><link rel="stylesheet" href="/lib/animate/animate.min.css"></noscript><script type="application/ld+json">
+    {
+        "@context": "http://schema.org",
+        "@type": "BlogPosting",
+        "headline": "64-bit-GCC Runtime Stack Usage",
+        "inLanguage": "en",
+        "mainEntityOfPage": {
+            "@type": "WebPage",
+            "@id": "https:\/\/georgesims21.github.io\/64-bit-gcc_runtime_stack_usage\/"
+        },"genre": "posts","keywords": "C, Systems Programming, Assembly","wordcount":  1210 ,
+        "url": "https:\/\/georgesims21.github.io\/64-bit-gcc_runtime_stack_usage\/","license": "©2019 Notepadium.","publisher": {
+            "@type": "Organization",
+            "name": ""},"author": {
+                "@type": "Person",
+                "name": "George Sims"
+            },"description": ""
+    }
+    </script></head>
+    <body data-header-desktop="fixed" data-header-mobile="auto"><script type="text/javascript">(window.localStorage && localStorage.getItem('theme') ? localStorage.getItem('theme') === 'dark' : ('auto' === 'auto' ? window.matchMedia('(prefers-color-scheme: dark)').matches : 'auto' === 'dark')) && document.body.setAttribute('theme', 'dark');</script>
+
+        <div id="mask"></div><div class="wrapper"><header class="desktop" id="header-desktop">
+    <div class="header-wrapper">
+        <div class="header-title">
+            <a href="/" title="George&#39;s Blog"></a>
+        </div>
+        <div class="menu">
+            <div class="menu-inner"><a class="menu-item" href="/posts/"> Posts </a><a class="menu-item" href="/tags/"> Tags </a><a class="menu-item" href="/categories/"> Categories </a><span class="menu-item delimiter"></span><span class="menu-item search" id="search-desktop">
+                        <input type="text" placeholder="Search titles or contents..." id="search-input-desktop">
+                        <a href="javascript:void(0);" class="search-button search-toggle" id="search-toggle-desktop" title="Search">
+                            <i class="fas fa-search fa-fw" aria-hidden="true"></i>
+                        </a>
+                        <a href="javascript:void(0);" class="search-button search-clear" id="search-clear-desktop" title="Clear">
+                            <i class="fas fa-times-circle fa-fw" aria-hidden="true"></i>
+                        </a>
+                        <span class="search-button search-loading" id="search-loading-desktop">
+                            <i class="fas fa-spinner fa-fw fa-spin" aria-hidden="true"></i>
+                        </span>
+                    </span><a href="javascript:void(0);" class="menu-item theme-switch" title="Switch Theme">
+                    <i class="fas fa-adjust fa-fw" aria-hidden="true"></i>
+                </a>
+            </div>
+        </div>
+    </div>
+</header><header class="mobile" id="header-mobile">
+    <div class="header-container">
+        <div class="header-wrapper">
+            <div class="header-title">
+                <a href="/" title="George&#39;s Blog"></a>
+            </div>
+            <div class="menu-toggle" id="menu-toggle-mobile">
+                <span></span><span></span><span></span>
+            </div>
+        </div>
+        <div class="menu" id="menu-mobile"><div class="search-wrapper">
+                    <div class="search mobile" id="search-mobile">
+                        <input type="text" placeholder="Search titles or contents..." id="search-input-mobile">
+                        <a href="javascript:void(0);" class="search-button search-toggle" id="search-toggle-mobile" title="Search">
+                            <i class="fas fa-search fa-fw" aria-hidden="true"></i>
+                        </a>
+                        <a href="javascript:void(0);" class="search-button search-clear" id="search-clear-mobile" title="Clear">
+                            <i class="fas fa-times-circle fa-fw" aria-hidden="true"></i>
+                        </a>
+                        <span class="search-button search-loading" id="search-loading-mobile">
+                            <i class="fas fa-spinner fa-fw fa-spin" aria-hidden="true"></i>
+                        </span>
+                    </div>
+                    <a href="javascript:void(0);" class="search-cancel" id="search-cancel-mobile">
+                        Cancel
+                    </a>
+                </div><a class="menu-item" href="/posts/" title="">Posts</a><a class="menu-item" href="/tags/" title="">Tags</a><a class="menu-item" href="/categories/" title="">Categories</a><a href="javascript:void(0);" class="menu-item theme-switch" title="Switch Theme">
+                <i class="fas fa-adjust fa-fw" aria-hidden="true"></i>
+            </a></div>
+    </div>
+</header><div class="search-dropdown desktop">
+        <div id="search-dropdown-desktop"></div>
+    </div>
+    <div class="search-dropdown mobile">
+        <div id="search-dropdown-mobile"></div>
+    </div><main class="main">
+                <div class="container"><div class="toc" id="toc-auto">
+            <h2 class="toc-title">Contents</h2>
+            <div class="toc-content" id="toc-content-auto"></div>
+        </div><article class="page single"><h1 class="single-title animate__animated animate__flipInX">64-bit-GCC Runtime Stack Usage</h1><div class="post-meta">
+            <div class="post-meta-line"><span class="post-author"><a href="/" title="Author" rel="author" class="author"><i class="fas fa-user-circle fa-fw" aria-hidden="true"></i>George Sims</a></span>&nbsp;<span class="post-category">included in <a href="/categories/theory/"><i class="far fa-folder fa-fw" aria-hidden="true"></i>Theory</a></span></div>
+            <div class="post-meta-line"><i class="far fa-calendar-alt fa-fw" aria-hidden="true"></i>&nbsp;<time datetime="0001-01-01">0001-01-01</time>&nbsp;<i class="fas fa-pencil-alt fa-fw" aria-hidden="true"></i>&nbsp;1210 words&nbsp;
+                <i class="far fa-clock fa-fw" aria-hidden="true"></i>&nbsp;6 minutes&nbsp;</div>
+        </div><div class="details toc" id="toc-static"  data-kept="true">
+                <div class="details-summary toc-title">
+                    <span>Contents</span>
+                    <span><i class="details-icon fas fa-angle-right" aria-hidden="true"></i></span>
+                </div>
+                <div class="details-content toc-content" id="toc-content-static"><nav id="TableOfContents">
+  <ul>
+    <li><a href="#cpu-registers-in-64-bit-mode">CPU registers in 64-bit mode</a></li>
+    <li><a href="#simple-c-program-in-assembly">Simple C program in assembly</a></li>
+    <li><a href="#function-call-convention">Function call convention</a></li>
+  </ul>
+</nav></div>
+            </div><div class="content" id="content"><h2 id="cpu-registers-in-64-bit-mode">CPU registers in 64-bit mode</h2>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">* rax
+</span></span><span class="line"><span class="cl">* rbx
+</span></span><span class="line"><span class="cl">* rbp
+</span></span><span class="line"><span class="cl">* rsp
+</span></span><span class="line"><span class="cl">        first
+</span></span><span class="line"><span class="cl">* rdi &lt;--+
+</span></span><span class="line"><span class="cl">* rsi    | in 64-bit mode the first 6 parameters are placed in
+</span></span><span class="line"><span class="cl">* rdx    | these registers from rdi to r9 when calling a function,
+</span></span><span class="line"><span class="cl">* rcx    | any extra params are passed through the stack like in
+</span></span><span class="line"><span class="cl">* r8     | 32-bit mode
+</span></span><span class="line"><span class="cl">* r9  &lt;--+
+</span></span><span class="line"><span class="cl">        last
+</span></span><span class="line"><span class="cl">* r10-r15
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h2 id="simple-c-program-in-assembly">Simple C program in assembly</h2>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-c" data-lang="c"><span class="line"><span class="cl"><span class="cp">#include</span> <span class="cpf">&lt;stdio.h&gt;</span><span class="cp">
+</span></span></span><span class="line"><span class="cl"><span class="cp"></span><span class="k">extern</span> <span class="kt">int</span> <span class="nf">B</span><span class="p">();</span>
+</span></span><span class="line"><span class="cl"><span class="kt">int</span> <span class="nf">A</span><span class="p">(</span><span class="kt">int</span> <span class="n">x</span><span class="p">,</span> <span class="kt">int</span> <span class="n">y</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="kt">int</span> <span class="n">d</span><span class="p">,</span> <span class="n">e</span><span class="p">,</span> <span class="n">f</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">    <span class="n">d</span> <span class="o">=</span> <span class="mi">4</span><span class="p">;</span> <span class="n">e</span> <span class="o">=</span> <span class="mi">5</span><span class="p">;</span> <span class="n">f</span> <span class="o">=</span> <span class="mi">6</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">    <span class="n">f</span> <span class="o">=</span> <span class="n">B</span><span class="p">(</span><span class="n">d</span><span class="p">,</span><span class="n">e</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">cc -m32 -S &lt;cprog&gt;.c <span class="c1"># compile into 32-bit assembly code</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-asm" data-lang="asm"><span class="line"><span class="cl">    <span class="na">.text</span>
+</span></span><span class="line"><span class="cl">    <span class="na">.globl</span> <span class="no">A</span>
+</span></span><span class="line"><span class="cl"><span class="c">; ------------- Entry: -------------+
+</span></span></span><span class="line"><span class="cl"><span class="c"></span><span class="nl">A:</span>                          <span class="c"># A() start code location
+</span></span></span><span class="line"><span class="cl"><span class="c"></span>    <span class="nf">pushl</span>    <span class="nv">%ebp</span>
+</span></span><span class="line"><span class="cl">    <span class="nf">movl</span>     <span class="nv">%esp</span><span class="p">,</span> <span class="nv">%ebp</span>     <span class="c"># establishing the stack frame
+</span></span></span><span class="line"><span class="cl"><span class="c"></span>                                
+</span></span><span class="line"><span class="cl">    <span class="no">subl</span>     <span class="no">$24</span><span class="p">,</span> <span class="nv">%esp</span>      <span class="c"># allocate space for local vars etc
+</span></span></span><span class="line"><span class="cl"><span class="c">; ----------------------------------+
+</span></span></span><span class="line"><span class="cl"><span class="c"></span>
+</span></span><span class="line"><span class="cl"><span class="c">; ------- Function body code: ------+
+</span></span></span><span class="line"><span class="cl"><span class="c"></span>    <span class="nf">movl</span>     <span class="no">$4</span><span class="p">,</span> <span class="p">-</span><span class="mi">20</span><span class="p">(</span><span class="nv">%ebp</span><span class="p">)</span>   <span class="c"># d = 4
+</span></span></span><span class="line"><span class="cl"><span class="c"></span>    <span class="no">movl</span>     <span class="no">$5</span><span class="p">,</span> <span class="p">-</span><span class="mi">16</span><span class="p">(</span><span class="nv">%ebp</span><span class="p">)</span>   <span class="c"># e = 5
+</span></span></span><span class="line"><span class="cl"><span class="c"></span>    <span class="no">movl</span>     <span class="no">$6</span><span class="p">,</span> <span class="p">-</span><span class="mi">12</span><span class="p">(</span><span class="nv">%ebp</span><span class="p">)</span>   <span class="c"># f = 6
+</span></span></span><span class="line"><span class="cl"><span class="c"></span>
+</span></span><span class="line"><span class="cl">    <span class="nf">subl</span>     <span class="no">$8</span><span class="p">,</span> <span class="nv">%esp</span>        <span class="c"># create 8 byte slot for tmp
+</span></span></span><span class="line"><span class="cl"><span class="c"></span>    <span class="no">pushl</span>    <span class="p">-</span><span class="mi">16</span><span class="p">(</span><span class="nv">%ebp</span><span class="p">)</span>       <span class="c"># push e
+</span></span></span><span class="line"><span class="cl"><span class="c"></span>    <span class="no">pushl</span>    <span class="p">-</span><span class="mi">20</span><span class="p">(</span><span class="nv">%ebp</span><span class="p">)</span>       <span class="c"># push d
+</span></span></span><span class="line"><span class="cl"><span class="c"></span>    <span class="no">call</span>     <span class="no">B</span>
+</span></span><span class="line"><span class="cl">    
+</span></span><span class="line"><span class="cl">    <span class="nf">addl</span>     <span class="no">$16</span><span class="p">,</span> <span class="nv">%esp</span>       <span class="c"># clean stack
+</span></span></span><span class="line"><span class="cl"><span class="c"></span>    <span class="no">movl</span>     <span class="nv">%eax</span><span class="p">,</span> <span class="p">-</span><span class="mi">4</span><span class="p">(</span><span class="nv">%ebp</span><span class="p">)</span>  <span class="c"># f = return value in AX register
+</span></span></span><span class="line"><span class="cl"><span class="c">; ----------------------------------+
+</span></span></span><span class="line"><span class="cl"><span class="c"></span>    
+</span></span><span class="line"><span class="cl"><span class="c">; ----------- Exit code: -----------+
+</span></span></span><span class="line"><span class="cl"><span class="c"></span>    <span class="no">leave</span>
+</span></span><span class="line"><span class="cl">    <span class="nf">ret</span>
+</span></span><span class="line"><span class="cl"><span class="c">; ----------------------------------+
+</span></span></span></code></pre></td></tr></table>
+</div>
+</div><p>There are 3 parts to the assembly code:</p>
+<ol>
+<li><em>Entry</em>: the stack frame is established, local variables and working space are
+allocated on the stack.</li>
+</ol>
+<ul>
+<li>First FP is saved on the stack (%ebp)</li>
+<li>Second point SP (%esp) to that saved FP, the stack looks like:</li>
+</ul>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">--------------------- &gt; low address
+</span></span><span class="line"><span class="cl">XXXX | PC | FP |
+</span></span><span class="line"><span class="cl">               ^
+</span></span><span class="line"><span class="cl">           FP,SP
+</span></span><span class="line"><span class="cl">---------------------
+</span></span></code></pre></td></tr></table>
+</div>
+</div><ul>
+<li>Then allocate 24 bytes of space for the local variables and working area by
+shifting SP (%esp) downward</li>
+</ul>
+<ol start="2">
+<li><em>Function Body Code</em>: assign the values to the variables and extra for tmp space.</li>
+</ol>
+<ul>
+<li>FP is used to locate the local variables, as they are all ints (sizeof(int)
+== 4) just do -4(FP), &hellip; descending in multiples of 4. The stack looks like:</li>
+</ul>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">---------------- -4 -8  -12 -16 -20 -24 ----- 
+</span></span><span class="line"><span class="cl">XXXX | PC | FP | ? | ? | 6 | 5 | 4 | ? |
+</span></span><span class="line"><span class="cl">               ^         f   e   d     ^
+</span></span><span class="line"><span class="cl">              FP                      SP
+</span></span><span class="line"><span class="cl">---------------------------------------------
+</span></span></code></pre></td></tr></table>
+</div>
+</div><ul>
+<li>Then add the tmp space, using SP (%esp) as the guide before finally B is
+called, pushing the parameters onto the stack (in reverse order)</li>
+</ul>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">---------------- -4 -8  -12 -16 -20 -24 ------------------
+</span></span><span class="line"><span class="cl">XXXX | PC | FP | ? | ? | 6 | 5 | 4 | ? | ?? | ?? | e | d |
+</span></span><span class="line"><span class="cl">               ^         f   e   d      TMP SPACE        ^
+</span></span><span class="line"><span class="cl">              FP                                        SP
+</span></span><span class="line"><span class="cl">----------------------------------------------------------
+</span></span></code></pre></td></tr></table>
+</div>
+</div><ol start="3">
+<li><em>Exit Code</em>: returning the stack frame to the caller</li>
+</ol>
+<ul>
+<li>leave is the same as doing:</li>
+</ul>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-asm" data-lang="asm"><span class="line"><span class="cl"><span class="c">;leave
+</span></span></span><span class="line"><span class="cl"><span class="c"></span>    <span class="nf">movl</span>    <span class="nv">%ebp</span><span class="p">,</span> <span class="nv">%esp</span>
+</span></span><span class="line"><span class="cl">    <span class="nf">popl</span>    <span class="nv">%ebp</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h2 id="function-call-convention">Function call convention</h2>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-c" data-lang="c"><span class="line"><span class="cl"><span class="cm">/********* t.c file ********/</span>
+</span></span><span class="line"><span class="cl"><span class="cp">#include</span> <span class="cpf">&lt;stdio.h&gt;</span><span class="cp">
+</span></span></span><span class="line"><span class="cl"><span class="cp"></span><span class="kt">int</span> <span class="nf">sub</span><span class="p">(</span><span class="kt">int</span> <span class="n">a</span><span class="p">,</span> <span class="kt">int</span> <span class="n">b</span><span class="p">,</span> <span class="kt">int</span> <span class="n">c</span><span class="p">,</span> <span class="kt">int</span> <span class="n">d</span><span class="p">,</span> <span class="kt">int</span> <span class="n">e</span><span class="p">,</span> <span class="kt">int</span> <span class="n">f</span><span class="p">,</span> <span class="kt">int</span> <span class="n">g</span><span class="p">,</span> <span class="kt">int</span> <span class="n">h</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="kt">int</span> <span class="n">u</span><span class="p">,</span> <span class="n">v</span><span class="p">,</span> <span class="n">w</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">    <span class="n">u</span> <span class="o">=</span> <span class="mi">9</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">    <span class="n">v</span> <span class="o">=</span> <span class="mi">10</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">    <span class="n">w</span> <span class="o">=</span> <span class="mi">11</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">    <span class="k">return</span> <span class="n">a</span><span class="o">+</span><span class="n">g</span><span class="o">+</span><span class="n">u</span><span class="o">+</span><span class="n">v</span><span class="p">;</span> <span class="c1">// use first and extra parameter, locals
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="kt">int</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="kt">int</span> <span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">c</span><span class="p">,</span> <span class="n">d</span><span class="p">,</span> <span class="n">e</span><span class="p">,</span> <span class="n">f</span><span class="p">,</span> <span class="n">g</span><span class="p">,</span> <span class="n">h</span><span class="p">,</span> <span class="n">i</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">    <span class="n">a</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">    <span class="n">b</span> <span class="o">=</span> <span class="mi">2</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">    <span class="n">c</span> <span class="o">=</span> <span class="mi">3</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">    <span class="n">d</span> <span class="o">=</span> <span class="mi">4</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">    <span class="n">e</span> <span class="o">=</span> <span class="mi">5</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">    <span class="n">f</span> <span class="o">=</span> <span class="mi">6</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">    <span class="n">g</span> <span class="o">=</span> <span class="mi">7</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">    <span class="n">h</span> <span class="o">=</span> <span class="mi">8</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">    <span class="n">i</span> <span class="o">=</span> <span class="n">sub</span><span class="p">(</span><span class="n">a</span><span class="p">,</span><span class="n">b</span><span class="p">,</span><span class="n">c</span><span class="p">,</span><span class="n">d</span><span class="p">,</span><span class="n">e</span><span class="p">,</span><span class="n">f</span><span class="p">,</span><span class="n">g</span><span class="p">,</span><span class="n">h</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>First, to compile the c program and output the assembly code:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">gcc -S &lt;cprog&gt;.c <span class="c1"># it will output a &lt;cprog&gt;.s file</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span><span class="lnt">31
+</span><span class="lnt">32
+</span><span class="lnt">33
+</span><span class="lnt">34
+</span><span class="lnt">35
+</span><span class="lnt">36
+</span><span class="lnt">37
+</span><span class="lnt">38
+</span><span class="lnt">39
+</span><span class="lnt">40
+</span><span class="lnt">41
+</span><span class="lnt">42
+</span><span class="lnt">43
+</span><span class="lnt">44
+</span><span class="lnt">45
+</span><span class="lnt">46
+</span><span class="lnt">47
+</span><span class="lnt">48
+</span><span class="lnt">49
+</span><span class="lnt">50
+</span><span class="lnt">51
+</span><span class="lnt">52
+</span><span class="lnt">53
+</span><span class="lnt">54
+</span><span class="lnt">55
+</span><span class="lnt">56
+</span><span class="lnt">57
+</span><span class="lnt">58
+</span><span class="lnt">59
+</span><span class="lnt">60
+</span><span class="lnt">61
+</span><span class="lnt">62
+</span><span class="lnt">63
+</span><span class="lnt">64
+</span><span class="lnt">65
+</span><span class="lnt">66
+</span><span class="lnt">67
+</span><span class="lnt">68
+</span><span class="lnt">69
+</span><span class="lnt">70
+</span><span class="lnt">71
+</span><span class="lnt">72
+</span><span class="lnt">73
+</span><span class="lnt">74
+</span><span class="lnt">75
+</span><span class="lnt">76
+</span><span class="lnt">77
+</span><span class="lnt">78
+</span><span class="lnt">79
+</span><span class="lnt">80
+</span><span class="lnt">81
+</span><span class="lnt">82
+</span><span class="lnt">83
+</span><span class="lnt">84
+</span><span class="lnt">85
+</span><span class="lnt">86
+</span><span class="lnt">87
+</span><span class="lnt">88
+</span><span class="lnt">89
+</span><span class="lnt">90
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-asm" data-lang="asm"><span class="line"><span class="cl"><span class="c">#------------ t.s file generated by 64-bit GCC compiler ------------–
+</span></span></span><span class="line"><span class="cl"><span class="c"></span><span class="na">.globl</span> <span class="no">sub</span>
+</span></span><span class="line"><span class="cl"><span class="nl">sub:</span> <span class="c"># int sub(int a,b,c,d,e,f,g,h)
+</span></span></span><span class="line"><span class="cl"><span class="c"># first 6 parameters | a |,| b |,| c |,| d |,| e |,| f | 
+</span></span></span><span class="line"><span class="cl"><span class="c">#   in registers:    |rdi|,|rsi|,|rdx|,|rcx|,|r8d|,|r9d|
+</span></span></span><span class="line"><span class="cl"><span class="c"></span>
+</span></span><span class="line"><span class="cl"><span class="c"># 2 extra parameters g,h are on stack.
+</span></span></span><span class="line"><span class="cl"><span class="c"># Upon entry, stack top contains g, h
+</span></span></span><span class="line"><span class="cl"><span class="c">#    -------------------------------------
+</span></span></span><span class="line"><span class="cl"><span class="c">#    . . . ...| h | g | PC |     LOW address
+</span></span></span><span class="line"><span class="cl"><span class="c"></span>                           <span class="err">^</span>
+</span></span><span class="line"><span class="cl"><span class="c">#                        RSP
+</span></span></span><span class="line"><span class="cl"><span class="c">#    ------------------------------------
+</span></span></span><span class="line"><span class="cl"><span class="c"></span>
+</span></span><span class="line"><span class="cl"><span class="c"># establish stack frame
+</span></span></span><span class="line"><span class="cl"><span class="c"></span>    <span class="nf">pushq</span> <span class="nv">%rbp</span>
+</span></span><span class="line"><span class="cl">    <span class="nf">movq</span>  <span class="nv">%rsp</span><span class="p">,</span> <span class="nv">%rbp</span>
+</span></span><span class="line"><span class="cl"><span class="c"># no need to shift rsp down because each function has a 128 bytes
+</span></span></span><span class="line"><span class="cl"><span class="c"># reserved stack area.
+</span></span></span><span class="line"><span class="cl"><span class="c"># rsp will be shifted down if function define more locals
+</span></span></span><span class="line"><span class="cl"><span class="c"></span>
+</span></span><span class="line"><span class="cl"><span class="c"># save first 6 parameters in registers on stack
+</span></span></span><span class="line"><span class="cl"><span class="c"></span>    <span class="nf">movl</span> <span class="nv">%edi</span><span class="p">,</span> <span class="p">-</span><span class="mi">20</span><span class="p">(</span><span class="nv">%rbp</span><span class="p">)</span> <span class="c"># a
+</span></span></span><span class="line"><span class="cl"><span class="c"></span>    <span class="no">movl</span> <span class="nv">%esi</span><span class="p">,</span> <span class="p">-</span><span class="mi">24</span><span class="p">(</span><span class="nv">%rbp</span><span class="p">)</span> <span class="c"># b
+</span></span></span><span class="line"><span class="cl"><span class="c"></span>    <span class="no">movl</span> <span class="nv">%edx</span><span class="p">,</span> <span class="p">-</span><span class="mi">28</span><span class="p">(</span><span class="nv">%rbp</span><span class="p">)</span> <span class="c"># C
+</span></span></span><span class="line"><span class="cl"><span class="c"></span>    <span class="no">movl</span> <span class="nv">%ecx</span><span class="p">,</span> <span class="p">-</span><span class="mi">32</span><span class="p">(</span><span class="nv">%rbp</span><span class="p">)</span> <span class="c"># d
+</span></span></span><span class="line"><span class="cl"><span class="c"></span>    <span class="no">movl</span> <span class="nv">%r8d</span><span class="p">,</span> <span class="p">-</span><span class="mi">36</span><span class="p">(</span><span class="nv">%rbp</span><span class="p">)</span> <span class="c"># e
+</span></span></span><span class="line"><span class="cl"><span class="c"></span>    <span class="no">movl</span> <span class="nv">%r9d</span><span class="p">,</span> <span class="p">-</span><span class="mi">40</span><span class="p">(</span><span class="nv">%rbp</span><span class="p">)</span> <span class="c"># f
+</span></span></span><span class="line"><span class="cl"><span class="c"></span>
+</span></span><span class="line"><span class="cl"><span class="c"># access locals u, v, w at rbp -4 to -12
+</span></span></span><span class="line"><span class="cl"><span class="c"></span>    <span class="nf">movl</span> <span class="no">$9</span><span class="p">,</span>  <span class="p">-</span><span class="mi">4</span><span class="p">(</span><span class="nv">%rbp</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="nf">movl</span> <span class="no">$10</span><span class="p">,</span> <span class="p">-</span><span class="mi">8</span><span class="p">(</span><span class="nv">%rbp</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="nf">movl</span> <span class="no">$11</span><span class="p">,</span> <span class="p">-</span><span class="mi">12</span><span class="p">(</span><span class="nv">%rbp</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c"># compute x + g + u + v:
+</span></span></span><span class="line"><span class="cl"><span class="c"></span>    <span class="nf">movl</span> <span class="p">-</span><span class="mi">20</span><span class="p">(</span><span class="nv">%rbp</span><span class="p">),</span> <span class="nv">%edx</span> <span class="c"># saved a on stack
+</span></span></span><span class="line"><span class="cl"><span class="c"></span>    <span class="no">movl</span> <span class="mi">16</span><span class="p">(</span><span class="nv">%rbp</span><span class="p">),</span>  <span class="nv">%eax</span> <span class="c"># g at 16(rbp)
+</span></span></span><span class="line"><span class="cl"><span class="c"></span>    <span class="no">addl</span> <span class="nv">%eax</span><span class="p">,</span> <span class="nv">%edx</span>
+</span></span><span class="line"><span class="cl">    <span class="nf">movl</span> <span class="p">-</span><span class="mi">4</span><span class="p">(</span><span class="nv">%rbp</span><span class="p">),</span>  <span class="nv">%eax</span> <span class="c"># u at -4(rbp)
+</span></span></span><span class="line"><span class="cl"><span class="c"></span>    <span class="no">addl</span> <span class="nv">%eax</span><span class="p">,</span> <span class="nv">%edx</span>
+</span></span><span class="line"><span class="cl">    <span class="nf">movl</span> <span class="p">-</span><span class="mi">8</span><span class="p">(</span><span class="nv">%rbp</span><span class="p">),</span>  <span class="nv">%eax</span> <span class="c"># v at -8(rbp)
+</span></span></span><span class="line"><span class="cl"><span class="c"></span>    <span class="no">addl</span> <span class="nv">%edx</span><span class="p">,</span> <span class="nv">%eax</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c"># did not shift rsp down, so just popQ to restore rbp
+</span></span></span><span class="line"><span class="cl"><span class="c"></span>    <span class="nf">popq</span> <span class="nv">%rbp</span>
+</span></span><span class="line"><span class="cl">    <span class="nf">ret</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c"># ====== main function code in assembly ======
+</span></span></span><span class="line"><span class="cl"><span class="c"></span>    <span class="na">.globl</span>    <span class="no">main</span>
+</span></span><span class="line"><span class="cl"><span class="nl">main:</span>
+</span></span><span class="line"><span class="cl"><span class="c"># establish stack frame
+</span></span></span><span class="line"><span class="cl"><span class="c"></span>    <span class="nf">pushq</span> <span class="nv">%rbp</span>
+</span></span><span class="line"><span class="cl">    <span class="nf">movq</span> <span class="nv">%rsp</span><span class="p">,</span> <span class="nv">%rbp</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c"># shift rsp down 48 bytes for locals
+</span></span></span><span class="line"><span class="cl"><span class="c"></span>    <span class="nf">subq</span> <span class="no">$48</span><span class="p">,</span> <span class="nv">%rsp</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c"># locals are at rbp -4 to -32
+</span></span></span><span class="line"><span class="cl"><span class="c"></span>    <span class="nf">movl</span> <span class="no">$1</span><span class="p">,</span> <span class="p">-</span><span class="mi">4</span><span class="p">(</span><span class="nv">%rbp</span><span class="p">)</span>  <span class="c"># a=1
+</span></span></span><span class="line"><span class="cl"><span class="c"></span>    <span class="no">movl</span> <span class="no">$2</span><span class="p">,</span> <span class="p">-</span><span class="mi">8</span><span class="p">(</span><span class="nv">%rbp</span><span class="p">)</span>  <span class="c"># b=2
+</span></span></span><span class="line"><span class="cl"><span class="c"></span>    <span class="no">movl</span> <span class="no">$3</span><span class="p">,</span> <span class="p">-</span><span class="mi">12</span><span class="p">(</span><span class="nv">%rbp</span><span class="p">)</span> <span class="c"># c=3
+</span></span></span><span class="line"><span class="cl"><span class="c"></span>    <span class="no">movl</span> <span class="no">$4</span><span class="p">,</span> <span class="p">-</span><span class="mi">16</span><span class="p">(</span><span class="nv">%rbp</span><span class="p">)</span> <span class="c"># d=4
+</span></span></span><span class="line"><span class="cl"><span class="c"></span>    <span class="no">movl</span> <span class="no">$5</span><span class="p">,</span> <span class="p">-</span><span class="mi">20</span><span class="p">(</span><span class="nv">%rbp</span><span class="p">)</span> <span class="c"># e=5
+</span></span></span><span class="line"><span class="cl"><span class="c"></span>    <span class="no">movl</span> <span class="no">$6</span><span class="p">,</span> <span class="p">-</span><span class="mi">24</span><span class="p">(</span><span class="nv">%rbp</span><span class="p">)</span> <span class="c"># f=6
+</span></span></span><span class="line"><span class="cl"><span class="c"></span>    <span class="no">movl</span> <span class="no">$7</span><span class="p">,</span> <span class="p">-</span><span class="mi">28</span><span class="p">(</span><span class="nv">%rbp</span><span class="p">)</span> <span class="c"># g=7
+</span></span></span><span class="line"><span class="cl"><span class="c"></span>    <span class="no">movl</span> <span class="no">$8</span><span class="p">,</span> <span class="p">-</span><span class="mi">32</span><span class="p">(</span><span class="nv">%rbp</span><span class="p">)</span> <span class="c"># h=8
+</span></span></span><span class="line"><span class="cl"><span class="c"></span>
+</span></span><span class="line"><span class="cl"><span class="c"># call sub(a,b,c,d,e,f,g,h): first 6 parameters in registers
+</span></span></span><span class="line"><span class="cl"><span class="c"></span>    <span class="nf">movl</span> <span class="p">-</span><span class="mi">24</span><span class="p">(</span><span class="nv">%rbp</span><span class="p">),</span> <span class="nv">%r9d</span> <span class="c"># f in r9
+</span></span></span><span class="line"><span class="cl"><span class="c"></span>    <span class="no">movl</span> <span class="p">-</span><span class="mi">20</span><span class="p">(</span><span class="nv">%rbp</span><span class="p">),</span> <span class="nv">%r8d</span> <span class="c"># e in r8
+</span></span></span><span class="line"><span class="cl"><span class="c"></span>    <span class="no">movl</span> <span class="p">-</span><span class="mi">16</span><span class="p">(</span><span class="nv">%rbp</span><span class="p">),</span> <span class="nv">%ecx</span> <span class="c"># d in ecx
+</span></span></span><span class="line"><span class="cl"><span class="c"></span>    <span class="no">movl</span> <span class="p">-</span><span class="mi">12</span><span class="p">(</span><span class="nv">%rbp</span><span class="p">),</span> <span class="nv">%edx</span> <span class="c"># c in edx
+</span></span></span><span class="line"><span class="cl"><span class="c"></span>    <span class="no">movl</span> <span class="p">-</span><span class="mi">8</span><span class="p">(</span><span class="nv">%rbp</span><span class="p">),</span>  <span class="nv">%esi</span> <span class="c"># b in esi
+</span></span></span><span class="line"><span class="cl"><span class="c"></span>    <span class="no">movl</span> <span class="p">-</span><span class="mi">4</span><span class="p">(</span><span class="nv">%rbp</span><span class="p">),</span>  <span class="nv">%eax</span> <span class="c"># a in eax but will be in edi
+</span></span></span><span class="line"><span class="cl"><span class="c"></span>
+</span></span><span class="line"><span class="cl"><span class="c"># push 2 extra parameters h,g on stack
+</span></span></span><span class="line"><span class="cl"><span class="c"></span>    <span class="nf">movl</span> <span class="p">-</span><span class="mi">32</span><span class="p">(</span><span class="nv">%rbp</span><span class="p">),</span> <span class="nv">%edi</span> <span class="c"># int h in edi
+</span></span></span><span class="line"><span class="cl"><span class="c"></span>    <span class="no">pushq</span> <span class="nv">%rdi</span> <span class="c"># pushQ rdi ; only low 32-bits = h
+</span></span></span><span class="line"><span class="cl"><span class="c"></span>    <span class="no">movl</span> <span class="p">-</span><span class="mi">28</span><span class="p">(</span><span class="nv">%rbp</span><span class="p">),</span> <span class="nv">%edi</span> <span class="c"># int g in edi
+</span></span></span><span class="line"><span class="cl"><span class="c"></span>    <span class="no">pushq</span> <span class="nv">%rdi</span> <span class="c"># pushQ rdi ; low 32-bits = g
+</span></span></span><span class="line"><span class="cl"><span class="c"></span>
+</span></span><span class="line"><span class="cl">    <span class="nf">movl</span> <span class="nv">%eax</span><span class="p">,</span> <span class="nv">%edi</span> <span class="c"># parameter a in edi
+</span></span></span><span class="line"><span class="cl"><span class="c"></span>    <span class="no">call</span> <span class="no">sub</span> <span class="c"># call sub(a,b,c,d,e,f,g,h)
+</span></span></span><span class="line"><span class="cl"><span class="c"></span>
+</span></span><span class="line"><span class="cl">    <span class="nf">addq</span> <span class="no">$16</span><span class="p">,</span> <span class="nv">%rsp</span> <span class="c"># pop stack: h,g, 16 bytes
+</span></span></span><span class="line"><span class="cl"><span class="c"></span>    <span class="no">movl</span> <span class="nv">%eax</span><span class="p">,</span> <span class="p">-</span><span class="mi">36</span><span class="p">(</span><span class="nv">%rbp</span><span class="p">)</span> <span class="c"># i = sub return value in eax
+</span></span></span><span class="line"><span class="cl"><span class="c"></span>
+</span></span><span class="line"><span class="cl">    <span class="nf">movl</span> <span class="no">$0</span><span class="p">,</span> <span class="nv">%eax</span> <span class="c"># return 0 to crt0.o
+</span></span></span><span class="line"><span class="cl"><span class="c"></span>    <span class="no">leave</span>
+</span></span><span class="line"><span class="cl">    <span class="nf">ret</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div></div><div class="post-footer" id="post-footer">
+    <div class="post-info">
+        <div class="post-info-line">
+            <div class="post-info-mod">
+                <span>Updated on 0001-01-01</span>
+            </div></div>
+        <div class="post-info-line">
+            <div class="post-info-md"><span>
+                            <a class="link-to-markdown" href="/64-bit-gcc_runtime_stack_usage/index.md" target="_blank">Read Markdown</a>
+                        </span></div>
+            <div class="post-info-share">
+                <span><a href="javascript:void(0);" title="Share on Twitter" data-sharer="twitter" data-url="https://georgesims21.github.io/64-bit-gcc_runtime_stack_usage/" data-title="64-bit-GCC Runtime Stack Usage" data-via="xxxx" data-hashtags="C,Systems Programming,Assembly"><i class="fab fa-twitter fa-fw" aria-hidden="true"></i></a><a href="javascript:void(0);" title="Share on Facebook" data-sharer="facebook" data-url="https://georgesims21.github.io/64-bit-gcc_runtime_stack_usage/" data-hashtag="C"><i class="fab fa-facebook-square fa-fw" aria-hidden="true"></i></a><a href="javascript:void(0);" title="Share on Hacker News" data-sharer="hackernews" data-url="https://georgesims21.github.io/64-bit-gcc_runtime_stack_usage/" data-title="64-bit-GCC Runtime Stack Usage"><i class="fab fa-hacker-news fa-fw" aria-hidden="true"></i></a><a href="javascript:void(0);" title="Share on Line" data-sharer="line" data-url="https://georgesims21.github.io/64-bit-gcc_runtime_stack_usage/" data-title="64-bit-GCC Runtime Stack Usage"><i data-svg-src="/lib/simple-icons/icons/line.min.svg" aria-hidden="true"></i></a><a href="javascript:void(0);" title="Share on 微博" data-sharer="weibo" data-url="https://georgesims21.github.io/64-bit-gcc_runtime_stack_usage/" data-title="64-bit-GCC Runtime Stack Usage"><i class="fab fa-weibo fa-fw" aria-hidden="true"></i></a></span>
+            </div>
+        </div>
+    </div>
+
+    <div class="post-info-more">
+        <section class="post-tags"><i class="fas fa-tags fa-fw" aria-hidden="true"></i>&nbsp;<a href="/tags/c/">C</a>,&nbsp;<a href="/tags/systems-programming/">Systems Programming</a>,&nbsp;<a href="/tags/assembly/">Assembly</a></section>
+        <section>
+            <span><a href="javascript:void(0);" onclick="window.history.back();">Back</a></span>&nbsp;|&nbsp;<span><a href="/">Home</a></span>
+        </section>
+    </div>
+
+    <div class="post-nav"><a href="/c_function_calls/" class="prev" rel="prev" title="C function calls (32-bit)"><i class="fas fa-angle-left fa-fw" aria-hidden="true"></i>C function calls (32-bit)</a></div>
+</div>
+</article></div>
+            </main><footer class="footer">
+        <div class="footer-container"><div class="footer-line">Powered by <a href="https://gohugo.io/" target="_blank" rel="noopener noreffer" title="Hugo 0.101.0">Hugo</a> | Theme - <a href="https://github.com/dillonzq/LoveIt" target="_blank" rel="noopener noreffer" title="LoveIt 0.2.11"><i class="far fa-kiss-wink-heart fa-fw" aria-hidden="true"></i> LoveIt</a>
+                </div><div class="footer-line" itemscope itemtype="http://schema.org/CreativeWork"><i class="far fa-copyright fa-fw" aria-hidden="true"></i><span itemprop="copyrightYear">2019 - 2022</span><span class="author" itemprop="copyrightHolder">&nbsp;<a href="/" target="_blank">George Sims</a></span>&nbsp;|&nbsp;<span class="license"><a rel="license external nofollow noopener noreffer" href="https://creativecommons.org/licenses/by-nc/4.0/" target="_blank">CC BY-NC 4.0</a></span></div>
+        </div>
+    </footer></div>
+
+        <div id="fixed-buttons"><a href="#" id="back-to-top" class="fixed-button" title="Back to Top">
+                <i class="fas fa-arrow-up fa-fw" aria-hidden="true"></i>
+            </a><a href="#" id="view-comments" class="fixed-button" title="View Comments">
+                <i class="fas fa-comment fa-fw" aria-hidden="true"></i>
+            </a>
+        </div><link rel="stylesheet" href="/lib/katex/katex.min.css"><link rel="stylesheet" href="/lib/cookieconsent/cookieconsent.min.css"><script type="text/javascript" src="/lib/autocomplete/autocomplete.min.js"></script><script type="text/javascript" src="/lib/lunr/lunr.min.js"></script><script type="text/javascript" src="/lib/lazysizes/lazysizes.min.js"></script><script type="text/javascript" src="/lib/clipboard/clipboard.min.js"></script><script type="text/javascript" src="/lib/sharer/sharer.min.js"></script><script type="text/javascript" src="/lib/katex/katex.min.js"></script><script type="text/javascript" src="/lib/katex/contrib/auto-render.min.js"></script><script type="text/javascript" src="/lib/katex/contrib/copy-tex.min.js"></script><script type="text/javascript" src="/lib/katex/contrib/mhchem.min.js"></script><script type="text/javascript" src="/lib/cookieconsent/cookieconsent.min.js"></script><script type="text/javascript">window.config={"code":{"copyTitle":"Copy to clipboard","maxShownLines":50},"comment":{},"cookieconsent":{"content":{"dismiss":"Got it!","link":"Learn more","message":"This website uses Cookies to improve your experience."},"enable":true,"palette":{"button":{"background":"#f0f0f0"},"popup":{"background":"#1aa3ff"}},"theme":"edgeless"},"math":{"delimiters":[{"display":true,"left":"$$","right":"$$"},{"display":true,"left":"\\[","right":"\\]"},{"display":true,"left":"\\begin{equation}","right":"\\end{equation}"},{"display":true,"left":"\\begin{equation*}","right":"\\end{equation*}"},{"display":true,"left":"\\begin{align}","right":"\\end{align}"},{"display":true,"left":"\\begin{align*}","right":"\\end{align*}"},{"display":true,"left":"\\begin{alignat}","right":"\\end{alignat}"},{"display":true,"left":"\\begin{alignat*}","right":"\\end{alignat*}"},{"display":true,"left":"\\begin{gather}","right":"\\end{gather}"},{"display":true,"left":"\\begin{CD}","right":"\\end{CD}"},{"display":false,"left":"$","right":"$"},{"display":false,"left":"\\(","right":"\\)"}],"strict":false},"search":{"highlightTag":"em","lunrIndexURL":"/index.json","maxResultLength":10,"noResultsFound":"No results found","snippetLength":30,"type":"lunr"}};</script><script type="text/javascript" src="/js/theme.min.js"></script></body>
+</html>

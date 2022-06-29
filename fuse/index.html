@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="robots" content="noodp" />
+        <title>FUSE - George&#39;s Blog</title><meta name="Description" content="This is my cool site"><meta property="og:title" content="FUSE" />
+<meta property="og:description" content="FUSE (filesystem in user space) [1] What is FUSE, and why use it? FUSE is an open source framework which allows you to build filesystems in user space, compared to the conventional kernel space route. Building in user space is said by many to not be suitable for production, and also that the overhead is too substantial to be of use. But this allows the programmer to work in a &lsquo;friendlier&rsquo; environment, gives a much larger toolset to work with and probably most importantly, it doesn&rsquo;t crash the system on a bug like kernel programming does." />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://georgesims21.github.io/fuse/" /><meta property="og:image" content="https://georgesims21.github.io/logo.png"/><meta property="article:section" content="posts" />
+
+<meta property="og:site_name" content="My cool site" />
+
+<meta name="twitter:card" content="summary_large_image"/>
+<meta name="twitter:image" content="https://georgesims21.github.io/logo.png"/>
+
+<meta name="twitter:title" content="FUSE"/>
+<meta name="twitter:description" content="FUSE (filesystem in user space) [1] What is FUSE, and why use it? FUSE is an open source framework which allows you to build filesystems in user space, compared to the conventional kernel space route. Building in user space is said by many to not be suitable for production, and also that the overhead is too substantial to be of use. But this allows the programmer to work in a &lsquo;friendlier&rsquo; environment, gives a much larger toolset to work with and probably most importantly, it doesn&rsquo;t crash the system on a bug like kernel programming does."/>
+<meta name="application-name" content="My cool site">
+<meta name="apple-mobile-web-app-title" content="My cool site"><meta name="theme-color" content="#ffffff"><meta name="msapplication-TileColor" content="#da532c"><link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" />
+        <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+        <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png"><link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png"><link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5"><link rel="manifest" href="/site.webmanifest"><link rel="canonical" href="https://georgesims21.github.io/fuse/" /><link rel="prev" href="https://georgesims21.github.io/hugo-basics/" /><link rel="next" href="https://georgesims21.github.io/c_function_calls/" /><link rel="stylesheet" href="/css/style.min.css"><link rel="preload" href="/lib/fontawesome-free/all.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+        <noscript><link rel="stylesheet" href="/lib/fontawesome-free/all.min.css"></noscript><link rel="preload" href="/lib/animate/animate.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+        <noscript><link rel="stylesheet" href="/lib/animate/animate.min.css"></noscript><script type="application/ld+json">
+    {
+        "@context": "http://schema.org",
+        "@type": "BlogPosting",
+        "headline": "FUSE",
+        "inLanguage": "en",
+        "mainEntityOfPage": {
+            "@type": "WebPage",
+            "@id": "https:\/\/georgesims21.github.io\/fuse\/"
+        },"genre": "posts","keywords": "Systems Programming, FUSE, File Systems","wordcount":  1876 ,
+        "url": "https:\/\/georgesims21.github.io\/fuse\/","license": "©2019 Notepadium.","publisher": {
+            "@type": "Organization",
+            "name": ""},"author": {
+                "@type": "Person",
+                "name": "George Sims"
+            },"description": ""
+    }
+    </script></head>
+    <body data-header-desktop="fixed" data-header-mobile="auto"><script type="text/javascript">(window.localStorage && localStorage.getItem('theme') ? localStorage.getItem('theme') === 'dark' : ('auto' === 'auto' ? window.matchMedia('(prefers-color-scheme: dark)').matches : 'auto' === 'dark')) && document.body.setAttribute('theme', 'dark');</script>
+
+        <div id="mask"></div><div class="wrapper"><header class="desktop" id="header-desktop">
+    <div class="header-wrapper">
+        <div class="header-title">
+            <a href="/" title="George&#39;s Blog"></a>
+        </div>
+        <div class="menu">
+            <div class="menu-inner"><a class="menu-item" href="/posts/"> Posts </a><a class="menu-item" href="/tags/"> Tags </a><a class="menu-item" href="/categories/"> Categories </a><span class="menu-item delimiter"></span><span class="menu-item search" id="search-desktop">
+                        <input type="text" placeholder="Search titles or contents..." id="search-input-desktop">
+                        <a href="javascript:void(0);" class="search-button search-toggle" id="search-toggle-desktop" title="Search">
+                            <i class="fas fa-search fa-fw" aria-hidden="true"></i>
+                        </a>
+                        <a href="javascript:void(0);" class="search-button search-clear" id="search-clear-desktop" title="Clear">
+                            <i class="fas fa-times-circle fa-fw" aria-hidden="true"></i>
+                        </a>
+                        <span class="search-button search-loading" id="search-loading-desktop">
+                            <i class="fas fa-spinner fa-fw fa-spin" aria-hidden="true"></i>
+                        </span>
+                    </span><a href="javascript:void(0);" class="menu-item theme-switch" title="Switch Theme">
+                    <i class="fas fa-adjust fa-fw" aria-hidden="true"></i>
+                </a>
+            </div>
+        </div>
+    </div>
+</header><header class="mobile" id="header-mobile">
+    <div class="header-container">
+        <div class="header-wrapper">
+            <div class="header-title">
+                <a href="/" title="George&#39;s Blog"></a>
+            </div>
+            <div class="menu-toggle" id="menu-toggle-mobile">
+                <span></span><span></span><span></span>
+            </div>
+        </div>
+        <div class="menu" id="menu-mobile"><div class="search-wrapper">
+                    <div class="search mobile" id="search-mobile">
+                        <input type="text" placeholder="Search titles or contents..." id="search-input-mobile">
+                        <a href="javascript:void(0);" class="search-button search-toggle" id="search-toggle-mobile" title="Search">
+                            <i class="fas fa-search fa-fw" aria-hidden="true"></i>
+                        </a>
+                        <a href="javascript:void(0);" class="search-button search-clear" id="search-clear-mobile" title="Clear">
+                            <i class="fas fa-times-circle fa-fw" aria-hidden="true"></i>
+                        </a>
+                        <span class="search-button search-loading" id="search-loading-mobile">
+                            <i class="fas fa-spinner fa-fw fa-spin" aria-hidden="true"></i>
+                        </span>
+                    </div>
+                    <a href="javascript:void(0);" class="search-cancel" id="search-cancel-mobile">
+                        Cancel
+                    </a>
+                </div><a class="menu-item" href="/posts/" title="">Posts</a><a class="menu-item" href="/tags/" title="">Tags</a><a class="menu-item" href="/categories/" title="">Categories</a><a href="javascript:void(0);" class="menu-item theme-switch" title="Switch Theme">
+                <i class="fas fa-adjust fa-fw" aria-hidden="true"></i>
+            </a></div>
+    </div>
+</header><div class="search-dropdown desktop">
+        <div id="search-dropdown-desktop"></div>
+    </div>
+    <div class="search-dropdown mobile">
+        <div id="search-dropdown-mobile"></div>
+    </div><main class="main">
+                <div class="container"><div class="toc" id="toc-auto">
+            <h2 class="toc-title">Contents</h2>
+            <div class="toc-content" id="toc-content-auto"></div>
+        </div><article class="page single"><h1 class="single-title animate__animated animate__flipInX">FUSE</h1><div class="post-meta">
+            <div class="post-meta-line"><span class="post-author"><a href="/" title="Author" rel="author" class="author"><i class="fas fa-user-circle fa-fw" aria-hidden="true"></i>George Sims</a></span>&nbsp;<span class="post-category">included in <a href="/categories/theory/"><i class="far fa-folder fa-fw" aria-hidden="true"></i>Theory</a></span></div>
+            <div class="post-meta-line"><i class="far fa-calendar-alt fa-fw" aria-hidden="true"></i>&nbsp;<time datetime="0001-01-01">0001-01-01</time>&nbsp;<i class="fas fa-pencil-alt fa-fw" aria-hidden="true"></i>&nbsp;1876 words&nbsp;
+                <i class="far fa-clock fa-fw" aria-hidden="true"></i>&nbsp;9 minutes&nbsp;</div>
+        </div><div class="details toc" id="toc-static"  data-kept="true">
+                <div class="details-summary toc-title">
+                    <span>Contents</span>
+                    <span><i class="details-icon fas fa-angle-right" aria-hidden="true"></i></span>
+                </div>
+                <div class="details-content toc-content" id="toc-content-static"><nav id="TableOfContents">
+  <ul>
+    <li><a href="#what-is-fuse-and-why-use-it">What is FUSE, and why use it?</a></li>
+    <li><a href="#fuse-architecture-how-does-it-work">FUSE architecture: how does it work?</a>
+      <ul>
+        <li>
+          <ul>
+            <li><a href="#side-note-vfs-2">Side note: VFS [2]</a></li>
+          </ul>
+        </li>
+      </ul>
+    </li>
+    <li><a href="#apis-low-level-vs-high-level">APIs: Low-level vs High-level</a>
+      <ul>
+        <li>
+          <ul>
+            <li><a href="#side-note-inodes-3">Side note: inodes [3]</a></li>
+          </ul>
+        </li>
+      </ul>
+    </li>
+    <li><a href="#per-connection-session-information">Per connection session information</a></li>
+    <li><a href="#queues">Queues</a></li>
+    <li><a href="#splicing-and-fuse-buffers">Splicing and FUSE buffers</a></li>
+    <li><a href="#references">References</a></li>
+  </ul>
+</nav></div>
+            </div><div class="content" id="content"><h1 id="fuse-filesystem-in-user-space-1">FUSE (filesystem in user space) [1]</h1>
+<h2 id="what-is-fuse-and-why-use-it">What is FUSE, and why use it?</h2>
+<p>FUSE is an open source framework which allows you to build filesystems in user space, compared to the conventional kernel space route. Building in user space is said by many to not be suitable for production, and also that the overhead is too substantial to be of use. But this allows the programmer to work in a &lsquo;friendlier&rsquo; environment, gives a much larger toolset to work with and probably most importantly, it doesn&rsquo;t crash the system on a bug like kernel programming does. It is important to note that if Unix FS were created in user space then they would be readily accessed under Windows.</p>
+<h2 id="fuse-architecture-how-does-it-work">FUSE architecture: how does it work?</h2>
+<p>FUSE has a kernel part and a userland part. The kernel module (fuse.ko) and a fuse daemon, they communicate via a character device /dev/fuse. Upon initiation the fuse kernel module registers 3 filesystem types within the VFS: <em>fuse</em>, <em>fuseblk</em> and <em>fusectl</em>. The <em>fuse</em> type is for stackable (i.e on top of an already existing, kernel FS)/in-memory/network filesystems. <em>fuseblk</em> is for block devices containing user space file systems. <em>fuse</em> and <em>fuseblk</em> will be what is referred in this post as FUSE. Finally <em>fusectl</em> allows users to control and monitor FUSE FS behaviour.<br>
+Due to the FUSE filetype being able to represent many different FSs, unlike kernel-level FSs (e.g Ext4), they have a name attached to them when listed by Linux.</p>
+<hr>
+<h4 id="side-note-vfs-2">Side note: VFS [2]</h4>
+<p>The VFS (virtual file system) in Linux is used to give a level of abstraction to user-space applications about all the mounted filesystems, which allows for a unified look and feel. It does this by abstracting out the common filesystem code from each mounted filesystem to make a seperate layer, which in turn calls the underlying filesystem to manage its own data.<br>
+All POSTIX system calls (related to files/directories) must go through VFS first before reaching any underlying filesystem, this is the &ldquo;high-level interface&rdquo;. The &ldquo;low-level interface&rdquo; is the communication between the VFS and file system itself, called the VFS interface. Filesystem developers must supply the VFS with all the required VFS interface methods for that filesystem (read/write/readdir/etc). It is because of this interface that allows for all different filesystem types to coexist due to the VFS not needing to know where the file is located, only where to find the filesystem operations to work on the file.</p>
+<p>When a filesystem registers with the VFS, it is simply providing that list of addresses containing the methods required. For example, a filesystem has just been mounted at /mnt and the user is requesting a read operation on one file (read(&quot;/mnt/foo/file.txt&quot;)):</p>
+<ol>
+<li>The VFS first searches for the FS (filesystem) requested in the /mnt directory</li>
+<li>It then finds that FS&rsquo; superblock and its root directory (/mnt/) from within the superblock</li>
+<li>The VFS can then find the foo/file.txt file path</li>
+<li>It then creates a v-node and makes a call to the containing FS to collect the information from file.txt&rsquo;s inode</li>
+<li>This is then copied to the v-node (in RAM) along with other info which includes the pointer to the table of function calls to be used on v-nodes from the underlying FS</li>
+<li>Once the v-node is created the VFS adds an entry into the file descriptor table for the calling process and sets it to point to the new v-node, which is returned to the calling process, allowing it to now make read/write/close calls on the file</li>
+<li>Later when the caller makes a read call on the file using the fd, the VFS locates the corresponding v-node from the processes file descriptor table, follows the pointer to the table containing all of the methods of the underlying FS containing that file (which themselves are addresses located in the FS itself)</li>
+</ol>
+<hr>
+<p><img
+        class="lazyload"
+        src="/svg/loading.min.svg"
+        data-src="/FUSE/FUSE-architecture-highlevel.jpg"
+        data-srcset="/FUSE/FUSE-architecture-highlevel.jpg, /FUSE/FUSE-architecture-highlevel.jpg 1.5x, /FUSE/FUSE-architecture-highlevel.jpg 2x"
+        data-sizes="auto"
+        alt="/FUSE/FUSE-architecture-highlevel.jpg"
+        title="FUSE high level architecture" /></p>
+<p>The image above shows a high level overview of the basic communication between FUSE and the VFS. In more detail, if a user-level application accesses the FUSE FS:</p>
+<p><img
+        class="lazyload"
+        src="/svg/loading.min.svg"
+        data-src="/FUSE/FUSE-architecture-flowchart.jpg"
+        data-srcset="/FUSE/FUSE-architecture-flowchart.jpg, /FUSE/FUSE-architecture-flowchart.jpg 1.5x, /FUSE/FUSE-architecture-flowchart.jpg 2x"
+        data-sizes="auto"
+        alt="/FUSE/FUSE-architecture-flowchart.jpg"
+        title="FUSE architecture flow chart" /></p>
+<h2 id="apis-low-level-vs-high-level">APIs: Low-level vs High-level</h2>
+<p>FUSE offers developers two different API levels to choose from: a high-level and a low-level. A high-level filesystem implementation would see a simpler codebase but generally worse performance compared to its counterpart. The low-level API is the only one of the two which communicates directly with the kernel, meaning it has 4 key differences:</p>
+<ul>
+<li>It receives and parses kernel requests</li>
+<li>It sends properly formatted replies to the kernel</li>
+<li>It facilitates filsystem config and mounting</li>
+<li>Finally it hides version differences between the user and kernel spaces</li>
+</ul>
+<p>This means that the high-level API builds on top of the low-level, and all requests/replies must be passed through it if the high-level wishes to communicate with the kernel. One reason the complexity is reduced in the high-level is the fact that developers are not forced to do path-to-inode mapping, rather they are given the pathname directly. This is shown here:</p>
+<p><img
+        class="lazyload"
+        src="/svg/loading.min.svg"
+        data-src="/FUSE/FUSE-lib-interaction-flowchart.jpg"
+        data-srcset="/FUSE/FUSE-lib-interaction-flowchart.jpg, /FUSE/FUSE-lib-interaction-flowchart.jpg 1.5x, /FUSE/FUSE-lib-interaction-flowchart.jpg 2x"
+        data-sizes="auto"
+        alt="/FUSE/FUSE-lib-interaction-flowchart.jpg"
+        title="API interaction levels" /></p>
+<hr>
+<h4 id="side-note-inodes-3">Side note: inodes [3]</h4>
+<p>In modern Linux systems, every file has an associated inode. This datastructure contains the following information:</p>
+<ul>
+<li>The file&rsquo;s metadata</li>
+<li>12 Indirect pointers, where each pointer &lsquo;points to&rsquo; a data block of the file, in order</li>
+<li>1 Indirect pointer, which points to the head of another list of 12 indirect pointers, should the first 12 not be enough to cover the size of the file</li>
+<li>2 Indirect pointers, the same logic as above, but containing 2</li>
+<li>3 Indirect pointers, again but containing 3</li>
+</ul>
+<p>Below is an example using file.txt&rsquo;s inode:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">inode structure
+</span></span><span class="line"><span class="cl">---------------
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    inode                     file.txt
+</span></span><span class="line"><span class="cl">|  metadata  |
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">|   12 ind.  | ptr(0)  --&gt;  | datablock |
+</span></span><span class="line"><span class="cl">|            |   ...
+</span></span><span class="line"><span class="cl">|    ptrs    | ptr(11) --&gt;  | datablock |
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">|  ind. ptr  |      --&gt;     |   12 ind.  | ptr(0)  --&gt;  | datablock |
+</span></span><span class="line"><span class="cl">                            |            |   ...
+</span></span><span class="line"><span class="cl">                            |    ptrs    | ptr(11) --&gt;  | datablock |
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">|  2 x ind.  | --&gt; |  ind. ptr  |      --&gt;     |   12 ind.  | ptr(0)  --&gt;  | datablock |
+</span></span><span class="line"><span class="cl">                                               |            |   ...
+</span></span><span class="line"><span class="cl">                                               |    ptrs    | ptr(11) --&gt;  | datablock |
+</span></span><span class="line"><span class="cl">|    ptrs    | --&gt; |  ind. ptr  |      --&gt;     |   12 ind.  | ptr(0)  --&gt;  | datablock |
+</span></span><span class="line"><span class="cl">                                               |            |   ...
+</span></span><span class="line"><span class="cl">                                               |    ptrs    | ptr(11) --&gt;  | datablock |
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">|3 x ind. ptr| ...
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>Following the Unix philosophy that &rsquo;everything is a file&rsquo;, directories also have inodes, but instead of mapping the first ind. ptr to a file&rsquo;s datablock, they map a filename to its inode:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">inode structure
+</span></span><span class="line"><span class="cl">---------------
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">directory inode                     
+</span></span><span class="line"><span class="cl">|  metadata  |
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">|   12 ind.  | ptr(0)  --&gt;  | file1.txt&#39;s inode  |
+</span></span><span class="line"><span class="cl">|            |   ...
+</span></span><span class="line"><span class="cl">|    ptrs    | ptr(11) --&gt;  | file12.txt&#39;s inode |
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">|  ind. ptr  |      --&gt;     |   12 ind.  | ptr(0)  --&gt;  | file13.txt&#39;s inode |
+</span></span><span class="line"><span class="cl">                            |            |   ...
+</span></span><span class="line"><span class="cl">                            |    ptrs    | ptr(11) --&gt;  | file24.txt&#39;s inode |
+</span></span><span class="line"><span class="cl">|  2 x ind.  | ...
+</span></span><span class="line"><span class="cl">|    ptrs    | ...
+</span></span><span class="line"><span class="cl">|3 x ind. ptr| ...
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>So to get the data of a file &lsquo;/foo/file.txt&rsquo; from &lsquo;/&rsquo;:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">     &#34;/&#34;                &#34;/foo&#34;             &#34;/foo/file.txt&#34;
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">| &#34;/&#34;s inode |
+</span></span><span class="line"><span class="cl">     ...
+</span></span><span class="line"><span class="cl">|  ind. ptr  | --&gt; | &#34;foo&#34;s inode |
+</span></span><span class="line"><span class="cl">     ...                 ...
+</span></span><span class="line"><span class="cl">                   |   ind. ptr   | --&gt; | &#34;file.txt&#34;s inode |
+</span></span><span class="line"><span class="cl">                         ...                    ...
+</span></span><span class="line"><span class="cl">                                        |     ind. ptr      | --&gt; | data block |
+</span></span><span class="line"><span class="cl">                                                ...
+</span></span></code></pre></td></tr></table>
+</div>
+</div><hr>
+<p>The main differences then, between low and high-level:</p>
+<ul>
+<li>Low-level methods all take a fuse request as an argument, high-level methods do not</li>
+<li>Lookup and forget methods are used by the high-level when the kernel removes an inode from either the inode or dentry cache. Due to the high-level not using inodes, the low-level handles this instead</li>
+</ul>
+<p>When a request comes in from the kernel, the low-level lib takes it and either searches in the low_level_ops struct or the high_level_ops struct depending on which api the developer used and runs the code found inside. The high-level will pass the response down to the low-level which will handle it there before passing the response to the kernel, hence one of the main reasons of the performance difference of the two apis.</p>
+<h2 id="per-connection-session-information">Per connection session information</h2>
+<p>The user-kernel protocol (mentioned previously) offers a mechanism to store opened file&rsquo;s/dir&rsquo;s information. In the low-level lib, each method gets a fuse_file_info struct which is used to hold such information. It contains a filehandle which can point to the file/dir. Taking advantage of this capability allows the protocol to be stateful. Developers are also allowed to leave it stateless (by not using the struct), but this leads to the daemon constantly needing to open/close the files and directories manually upon each operation, leading to potential performance degredation.</p>
+<h2 id="queues">Queues</h2>
+<p>The fuse kernel holds 5 different queues, with each queue providing a specific purpose:</p>
+<ul>
+<li>Interrupts (highest priority) - For all interrupt requests</li>
+<li>Forgets                       - For all forget requests</li>
+<li>Pending                       - Latency sensitive requests (related to metadata)</li>
+<li>Background                    - All other requests (read/write etc)</li>
+<li>Processing                    - The requests that are currently being processed by the daemon</li>
+</ul>
+<p><img
+        class="lazyload"
+        src="/svg/loading.min.svg"
+        data-src="/FUSE/FUSE-queue-structure.jpg"
+        data-srcset="/FUSE/FUSE-queue-structure.jpg, /FUSE/FUSE-queue-structure.jpg 1.5x, /FUSE/FUSE-queue-structure.jpg 2x"
+        data-sizes="auto"
+        alt="/FUSE/FUSE-queue-structure.jpg"
+        title="FUSE queue structure" /></p>
+<p>It is important to note that one request can only belong to one queue at a time.
+For performance reasons forget requests must be throttled as many can come at once and take over the queue, hence why there is a seperate forget queue. For every 8 non-forget request there are 16 forgets. The oldest requests in the pending queue are &rsquo;taken&rsquo; by the user space daemon, and when this happens the kernel updates the queues to match, by removing the request from the pending queue into the processing queue. When the user-space daemon replies to the kernel that a process is finished (via the /dev/fuse character device), the kernel removes this request from the processing queue. This queue doesn&rsquo;t have a tail due to the daemon replying with confirmation of arbitrary requests, thus there is no order there. Another important note is that interupt and forget requests do not get a reply, thus those requests are removed completely when taken.</p>
+<h2 id="splicing-and-fuse-buffers">Splicing and FUSE buffers</h2>
+<p>Every read/write call to /dev/fuse requires a memory copy of the data between the kernel and user-space. Write requests and read replies can be the most harmful due to the potential size of the data that needs to be processed. FUSE uses splicing (offered by the linux kernel) which allows the user-space to transfer data between 2 in-kernel memory buffers without the need to copy the data to user space.</p>
+<p>In the low-level api, the write_buf method can be used to splice data from /dev/fuse into a linux pipe. It then passes the data as a buffer containing the pipes fd. For this to happen there must be more than a single page of data. It is important to note that for reads in the low-level api, developers must differentiate between splice and non-splice flows inside the read method itself.</p>
+<h2 id="references">References</h2>
+<ul>
+<li>[1] : Vangoor, Bharath Kumar Reddy, Vasily Tarasov, and Erez Zadok. &ldquo;To {FUSE} or Not to {FUSE}: Performance of User-Space File Systems.&rdquo; In 15th {USENIX} Conference on File and Storage Technologies ({FAST} 17), pp. 59-72. 2017.</li>
+<li>[2] : Tanenbaum, A. S., and H. Bos. &ldquo;Modern Operation Systems 4th Edition.&rdquo; (2014).</li>
+<li>[3] : Inode structure, Udacity, 2015, <a href="https://www.youtube.com/watch?v=tMVj22EWg6A" target="_blank" rel="noopener noreffer ">https://www.youtube.com/watch?v=tMVj22EWg6A</a></li>
+</ul>
+</div><div class="post-footer" id="post-footer">
+    <div class="post-info">
+        <div class="post-info-line">
+            <div class="post-info-mod">
+                <span>Updated on 0001-01-01</span>
+            </div></div>
+        <div class="post-info-line">
+            <div class="post-info-md"><span>
+                            <a class="link-to-markdown" href="/fuse/index.md" target="_blank">Read Markdown</a>
+                        </span></div>
+            <div class="post-info-share">
+                <span><a href="javascript:void(0);" title="Share on Twitter" data-sharer="twitter" data-url="https://georgesims21.github.io/fuse/" data-title="FUSE" data-via="xxxx" data-hashtags="Systems Programming,FUSE,File Systems"><i class="fab fa-twitter fa-fw" aria-hidden="true"></i></a><a href="javascript:void(0);" title="Share on Facebook" data-sharer="facebook" data-url="https://georgesims21.github.io/fuse/" data-hashtag="Systems Programming"><i class="fab fa-facebook-square fa-fw" aria-hidden="true"></i></a><a href="javascript:void(0);" title="Share on Hacker News" data-sharer="hackernews" data-url="https://georgesims21.github.io/fuse/" data-title="FUSE"><i class="fab fa-hacker-news fa-fw" aria-hidden="true"></i></a><a href="javascript:void(0);" title="Share on Line" data-sharer="line" data-url="https://georgesims21.github.io/fuse/" data-title="FUSE"><i data-svg-src="/lib/simple-icons/icons/line.min.svg" aria-hidden="true"></i></a><a href="javascript:void(0);" title="Share on 微博" data-sharer="weibo" data-url="https://georgesims21.github.io/fuse/" data-title="FUSE"><i class="fab fa-weibo fa-fw" aria-hidden="true"></i></a></span>
+            </div>
+        </div>
+    </div>
+
+    <div class="post-info-more">
+        <section class="post-tags"><i class="fas fa-tags fa-fw" aria-hidden="true"></i>&nbsp;<a href="/tags/systems-programming/">Systems Programming</a>,&nbsp;<a href="/tags/fuse/">FUSE</a>,&nbsp;<a href="/tags/file-systems/">File Systems</a></section>
+        <section>
+            <span><a href="javascript:void(0);" onclick="window.history.back();">Back</a></span>&nbsp;|&nbsp;<span><a href="/">Home</a></span>
+        </section>
+    </div>
+
+    <div class="post-nav"><a href="/hugo-basics/" class="prev" rel="prev" title="Hugo basics"><i class="fas fa-angle-left fa-fw" aria-hidden="true"></i>Hugo basics</a>
+            <a href="/c_function_calls/" class="next" rel="next" title="C function calls (32-bit)">C function calls (32-bit)<i class="fas fa-angle-right fa-fw" aria-hidden="true"></i></a></div>
+</div>
+</article></div>
+            </main><footer class="footer">
+        <div class="footer-container"><div class="footer-line">Powered by <a href="https://gohugo.io/" target="_blank" rel="noopener noreffer" title="Hugo 0.101.0">Hugo</a> | Theme - <a href="https://github.com/dillonzq/LoveIt" target="_blank" rel="noopener noreffer" title="LoveIt 0.2.11"><i class="far fa-kiss-wink-heart fa-fw" aria-hidden="true"></i> LoveIt</a>
+                </div><div class="footer-line" itemscope itemtype="http://schema.org/CreativeWork"><i class="far fa-copyright fa-fw" aria-hidden="true"></i><span itemprop="copyrightYear">2019 - 2022</span><span class="author" itemprop="copyrightHolder">&nbsp;<a href="/" target="_blank">George Sims</a></span>&nbsp;|&nbsp;<span class="license"><a rel="license external nofollow noopener noreffer" href="https://creativecommons.org/licenses/by-nc/4.0/" target="_blank">CC BY-NC 4.0</a></span></div>
+        </div>
+    </footer></div>
+
+        <div id="fixed-buttons"><a href="#" id="back-to-top" class="fixed-button" title="Back to Top">
+                <i class="fas fa-arrow-up fa-fw" aria-hidden="true"></i>
+            </a><a href="#" id="view-comments" class="fixed-button" title="View Comments">
+                <i class="fas fa-comment fa-fw" aria-hidden="true"></i>
+            </a>
+        </div><link rel="stylesheet" href="/lib/katex/katex.min.css"><link rel="stylesheet" href="/lib/cookieconsent/cookieconsent.min.css"><script type="text/javascript" src="/lib/autocomplete/autocomplete.min.js"></script><script type="text/javascript" src="/lib/lunr/lunr.min.js"></script><script type="text/javascript" src="/lib/lazysizes/lazysizes.min.js"></script><script type="text/javascript" src="/lib/clipboard/clipboard.min.js"></script><script type="text/javascript" src="/lib/sharer/sharer.min.js"></script><script type="text/javascript" src="/lib/katex/katex.min.js"></script><script type="text/javascript" src="/lib/katex/contrib/auto-render.min.js"></script><script type="text/javascript" src="/lib/katex/contrib/copy-tex.min.js"></script><script type="text/javascript" src="/lib/katex/contrib/mhchem.min.js"></script><script type="text/javascript" src="/lib/cookieconsent/cookieconsent.min.js"></script><script type="text/javascript">window.config={"code":{"copyTitle":"Copy to clipboard","maxShownLines":50},"comment":{},"cookieconsent":{"content":{"dismiss":"Got it!","link":"Learn more","message":"This website uses Cookies to improve your experience."},"enable":true,"palette":{"button":{"background":"#f0f0f0"},"popup":{"background":"#1aa3ff"}},"theme":"edgeless"},"math":{"delimiters":[{"display":true,"left":"$$","right":"$$"},{"display":true,"left":"\\[","right":"\\]"},{"display":true,"left":"\\begin{equation}","right":"\\end{equation}"},{"display":true,"left":"\\begin{equation*}","right":"\\end{equation*}"},{"display":true,"left":"\\begin{align}","right":"\\end{align}"},{"display":true,"left":"\\begin{align*}","right":"\\end{align*}"},{"display":true,"left":"\\begin{alignat}","right":"\\end{alignat}"},{"display":true,"left":"\\begin{alignat*}","right":"\\end{alignat*}"},{"display":true,"left":"\\begin{gather}","right":"\\end{gather}"},{"display":true,"left":"\\begin{CD}","right":"\\end{CD}"},{"display":false,"left":"$","right":"$"},{"display":false,"left":"\\(","right":"\\)"}],"strict":false},"search":{"highlightTag":"em","lunrIndexURL":"/index.json","maxResultLength":10,"noResultsFound":"No results found","snippetLength":30,"type":"lunr"}};</script><script type="text/javascript" src="/js/theme.min.js"></script></body>
+</html>

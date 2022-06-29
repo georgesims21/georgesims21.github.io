@@ -1,0 +1,653 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="robots" content="noodp" />
+        <title>pthreads in C - George&#39;s Blog</title><meta name="Description" content="This is my cool site"><meta property="og:title" content="pthreads in C" />
+<meta property="og:description" content="This tutorial assumes you know the basic concepts of multithreading. It is based on this short video series by Dr. Brian Fraser
+Creating single threads The pthread library (POSTIX thread) allows C programmers to use multithreading capabilities. First you must define the &lt;pthread.h&gt; header, and link -pthread when compiling the program. The function to create a thread is the pthread_create():
+1 2 &lt;pthread.h&gt; int pthread_create(pthread_t *thread, const pthread_attr_t *attr, void *(*start_routine) (void *), void *arg); This takes 4 different parameters:" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://georgesims21.github.io/pthreads/" /><meta property="og:image" content="https://georgesims21.github.io/logo.png"/><meta property="article:section" content="posts" />
+
+<meta property="og:site_name" content="My cool site" />
+
+<meta name="twitter:card" content="summary_large_image"/>
+<meta name="twitter:image" content="https://georgesims21.github.io/logo.png"/>
+
+<meta name="twitter:title" content="pthreads in C"/>
+<meta name="twitter:description" content="This tutorial assumes you know the basic concepts of multithreading. It is based on this short video series by Dr. Brian Fraser
+Creating single threads The pthread library (POSTIX thread) allows C programmers to use multithreading capabilities. First you must define the &lt;pthread.h&gt; header, and link -pthread when compiling the program. The function to create a thread is the pthread_create():
+1 2 &lt;pthread.h&gt; int pthread_create(pthread_t *thread, const pthread_attr_t *attr, void *(*start_routine) (void *), void *arg); This takes 4 different parameters:"/>
+<meta name="application-name" content="My cool site">
+<meta name="apple-mobile-web-app-title" content="My cool site"><meta name="theme-color" content="#ffffff"><meta name="msapplication-TileColor" content="#da532c"><link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" />
+        <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+        <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png"><link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png"><link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5"><link rel="manifest" href="/site.webmanifest"><link rel="canonical" href="https://georgesims21.github.io/pthreads/" /><link rel="prev" href="https://georgesims21.github.io/socket_programming/" /><link rel="next" href="https://georgesims21.github.io/procfs/" /><link rel="stylesheet" href="/css/style.min.css"><link rel="preload" href="/lib/fontawesome-free/all.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+        <noscript><link rel="stylesheet" href="/lib/fontawesome-free/all.min.css"></noscript><link rel="preload" href="/lib/animate/animate.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+        <noscript><link rel="stylesheet" href="/lib/animate/animate.min.css"></noscript><script type="application/ld+json">
+    {
+        "@context": "http://schema.org",
+        "@type": "BlogPosting",
+        "headline": "pthreads in C",
+        "inLanguage": "en",
+        "mainEntityOfPage": {
+            "@type": "WebPage",
+            "@id": "https:\/\/georgesims21.github.io\/pthreads\/"
+        },"genre": "posts","keywords": "C, Multithreading","wordcount":  1579 ,
+        "url": "https:\/\/georgesims21.github.io\/pthreads\/","license": "©2019 Notepadium.","publisher": {
+            "@type": "Organization",
+            "name": ""},"author": {
+                "@type": "Person",
+                "name": "George Sims"
+            },"description": ""
+    }
+    </script></head>
+    <body data-header-desktop="fixed" data-header-mobile="auto"><script type="text/javascript">(window.localStorage && localStorage.getItem('theme') ? localStorage.getItem('theme') === 'dark' : ('auto' === 'auto' ? window.matchMedia('(prefers-color-scheme: dark)').matches : 'auto' === 'dark')) && document.body.setAttribute('theme', 'dark');</script>
+
+        <div id="mask"></div><div class="wrapper"><header class="desktop" id="header-desktop">
+    <div class="header-wrapper">
+        <div class="header-title">
+            <a href="/" title="George&#39;s Blog"></a>
+        </div>
+        <div class="menu">
+            <div class="menu-inner"><a class="menu-item" href="/posts/"> Posts </a><a class="menu-item" href="/tags/"> Tags </a><a class="menu-item" href="/categories/"> Categories </a><span class="menu-item delimiter"></span><span class="menu-item search" id="search-desktop">
+                        <input type="text" placeholder="Search titles or contents..." id="search-input-desktop">
+                        <a href="javascript:void(0);" class="search-button search-toggle" id="search-toggle-desktop" title="Search">
+                            <i class="fas fa-search fa-fw" aria-hidden="true"></i>
+                        </a>
+                        <a href="javascript:void(0);" class="search-button search-clear" id="search-clear-desktop" title="Clear">
+                            <i class="fas fa-times-circle fa-fw" aria-hidden="true"></i>
+                        </a>
+                        <span class="search-button search-loading" id="search-loading-desktop">
+                            <i class="fas fa-spinner fa-fw fa-spin" aria-hidden="true"></i>
+                        </span>
+                    </span><a href="javascript:void(0);" class="menu-item theme-switch" title="Switch Theme">
+                    <i class="fas fa-adjust fa-fw" aria-hidden="true"></i>
+                </a>
+            </div>
+        </div>
+    </div>
+</header><header class="mobile" id="header-mobile">
+    <div class="header-container">
+        <div class="header-wrapper">
+            <div class="header-title">
+                <a href="/" title="George&#39;s Blog"></a>
+            </div>
+            <div class="menu-toggle" id="menu-toggle-mobile">
+                <span></span><span></span><span></span>
+            </div>
+        </div>
+        <div class="menu" id="menu-mobile"><div class="search-wrapper">
+                    <div class="search mobile" id="search-mobile">
+                        <input type="text" placeholder="Search titles or contents..." id="search-input-mobile">
+                        <a href="javascript:void(0);" class="search-button search-toggle" id="search-toggle-mobile" title="Search">
+                            <i class="fas fa-search fa-fw" aria-hidden="true"></i>
+                        </a>
+                        <a href="javascript:void(0);" class="search-button search-clear" id="search-clear-mobile" title="Clear">
+                            <i class="fas fa-times-circle fa-fw" aria-hidden="true"></i>
+                        </a>
+                        <span class="search-button search-loading" id="search-loading-mobile">
+                            <i class="fas fa-spinner fa-fw fa-spin" aria-hidden="true"></i>
+                        </span>
+                    </div>
+                    <a href="javascript:void(0);" class="search-cancel" id="search-cancel-mobile">
+                        Cancel
+                    </a>
+                </div><a class="menu-item" href="/posts/" title="">Posts</a><a class="menu-item" href="/tags/" title="">Tags</a><a class="menu-item" href="/categories/" title="">Categories</a><a href="javascript:void(0);" class="menu-item theme-switch" title="Switch Theme">
+                <i class="fas fa-adjust fa-fw" aria-hidden="true"></i>
+            </a></div>
+    </div>
+</header><div class="search-dropdown desktop">
+        <div id="search-dropdown-desktop"></div>
+    </div>
+    <div class="search-dropdown mobile">
+        <div id="search-dropdown-mobile"></div>
+    </div><main class="main">
+                <div class="container"><div class="toc" id="toc-auto">
+            <h2 class="toc-title">Contents</h2>
+            <div class="toc-content" id="toc-content-auto"></div>
+        </div><article class="page single"><h1 class="single-title animate__animated animate__flipInX">pthreads in C</h1><div class="post-meta">
+            <div class="post-meta-line"><span class="post-author"><a href="/" title="Author" rel="author" class="author"><i class="fas fa-user-circle fa-fw" aria-hidden="true"></i>George Sims</a></span>&nbsp;<span class="post-category">included in <a href="/categories/tutorial/"><i class="far fa-folder fa-fw" aria-hidden="true"></i>Tutorial</a></span></div>
+            <div class="post-meta-line"><i class="far fa-calendar-alt fa-fw" aria-hidden="true"></i>&nbsp;<time datetime="0001-01-01">0001-01-01</time>&nbsp;<i class="fas fa-pencil-alt fa-fw" aria-hidden="true"></i>&nbsp;1579 words&nbsp;
+                <i class="far fa-clock fa-fw" aria-hidden="true"></i>&nbsp;8 minutes&nbsp;</div>
+        </div><div class="details toc" id="toc-static"  data-kept="true">
+                <div class="details-summary toc-title">
+                    <span>Contents</span>
+                    <span><i class="details-icon fas fa-angle-right" aria-hidden="true"></i></span>
+                </div>
+                <div class="details-content toc-content" id="toc-content-static"><nav id="TableOfContents">
+  <ul>
+    <li><a href="#creating-single-threads">Creating single threads</a></li>
+    <li><a href="#returning-a-value-from-the-run-function">Returning a value from the run function</a></li>
+    <li><a href="#giving-multiple-parameters-to-the-run-function">Giving multiple parameters to the run function</a></li>
+    <li><a href="#creating-multiple-threads">Creating multiple threads</a></li>
+    <li><a href="#multiple-threads-having-own-param-variables">Multiple threads having own param variables</a></li>
+    <li><a href="#thread-syncronization">Thread syncronization</a>
+      <ul>
+        <li><a href="#mutexes">Mutexes</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav></div>
+            </div><div class="content" id="content"><p>This tutorial assumes you know the basic concepts of multithreading. It is based on <a href="https://www.youtube.com/watch?v=ynCc-v0K-do&amp;t=5s" target="_blank" rel="noopener noreffer ">this short video series by Dr. Brian Fraser</a></p>
+<h2 id="creating-single-threads">Creating single threads</h2>
+<p>The pthread library (POSTIX thread) allows C programmers to use multithreading capabilities. First you must define the &lt;pthread.h&gt; header, and link -pthread when compiling the program.
+The function to create a thread is the pthread_create():</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-C" data-lang="C"><span class="line"><span class="cl"><span class="o">&lt;</span><span class="n">pthread</span><span class="p">.</span><span class="n">h</span><span class="o">&gt;</span>
+</span></span><span class="line"><span class="cl"><span class="kt">int</span> <span class="n">pthread_create</span><span class="p">(</span><span class="n">pthread_t</span> <span class="o">*</span><span class="kr">thread</span><span class="p">,</span> <span class="k">const</span> <span class="n">pthread_attr_t</span> <span class="o">*</span><span class="n">attr</span><span class="p">,</span> <span class="kt">void</span> <span class="o">*</span><span class="p">(</span><span class="o">*</span><span class="n">start_routine</span><span class="p">)</span> <span class="p">(</span><span class="kt">void</span> <span class="o">*</span><span class="p">),</span> <span class="kt">void</span> <span class="o">*</span><span class="n">arg</span><span class="p">);</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>This takes 4 different parameters:</p>
+<ul>
+<li>The pthread_t thread variable you wish to use</li>
+<li>Any special attributes you wish this thread to have contained in the pthread_attr_t struct</li>
+<li>The routine you want this thread to do. This will be a function pointer, and this pointer should return a void* as well as accepting void* as params.</li>
+<li>Finally any arguments you wish to pass to this routine</li>
+</ul>
+<p>From this it is important to point out that threads can only run routines which return and take void pointer types. This means casting must be done within the routine if you wish to use particular variables.</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span><span class="lnt">31
+</span><span class="lnt">32
+</span><span class="lnt">33
+</span><span class="lnt">34
+</span><span class="lnt">35
+</span><span class="lnt">36
+</span><span class="lnt">37
+</span><span class="lnt">38
+</span><span class="lnt">39
+</span><span class="lnt">40
+</span><span class="lnt">41
+</span><span class="lnt">42
+</span><span class="lnt">43
+</span><span class="lnt">44
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-C" data-lang="C"><span class="line"><span class="cl"><span class="cp">#include</span> <span class="cpf">&lt;stdio.h&gt;</span><span class="cp">
+</span></span></span><span class="line"><span class="cl"><span class="cp">#include</span> <span class="cpf">&lt;pthread.h&gt;</span><span class="cp">
+</span></span></span><span class="line"><span class="cl"><span class="cp"></span><span class="cm">/*
+</span></span></span><span class="line"><span class="cl"><span class="cm">* Simply allow a thread to increment a global variable
+</span></span></span><span class="line"><span class="cl"><span class="cm">*/</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="kt">int</span> <span class="n">limit</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="c1">// global as threads share address space
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>
+</span></span><span class="line"><span class="cl"><span class="kt">void</span><span class="o">*</span> <span class="nf">run</span><span class="p">(</span><span class="kt">void</span><span class="o">*</span> <span class="n">arg</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="kt">int</span> <span class="o">*</span><span class="n">lim</span> <span class="o">=</span> <span class="p">(</span><span class="kt">int</span> <span class="o">*</span><span class="p">)</span><span class="n">arg</span><span class="p">;</span> <span class="c1">// must cast the void pointer
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="c1">// int lim = *(int *)arg; would dereference and place value in lim instead
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="n">printf</span><span class="p">(</span><span class="s">&#34;Thread running, before incrementing limit is: %d</span><span class="se">\n</span><span class="s">&#34;</span><span class="p">,</span> <span class="n">limit</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="o">*</span><span class="n">lim</span> <span class="o">=</span> <span class="o">*</span><span class="n">lim</span> <span class="o">+</span> <span class="mi">1</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">    <span class="n">printf</span><span class="p">(</span><span class="s">&#34;Thread running, after incrementing limit is: %d</span><span class="se">\n</span><span class="s">&#34;</span><span class="p">,</span> <span class="n">limit</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="n">pthread_exit</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span> 
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="kt">int</span> <span class="nf">main</span><span class="p">(</span><span class="kt">void</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="n">printf</span><span class="p">(</span><span class="s">&#34;In main before thread, limit is: %d</span><span class="se">\n</span><span class="s">&#34;</span><span class="p">,</span> <span class="n">limit</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="c1">// create thread
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="n">pthread_t</span> <span class="n">tid</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="c1">// create attributes - can also pass NULL if not needed
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="n">pthread_attr_t</span> <span class="n">attr</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">    <span class="c1">// init attributes
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="n">pthread_attr_init</span><span class="p">(</span><span class="o">&amp;</span><span class="n">attr</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="c1">// create and run thread
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="n">pthread_create</span><span class="p">(</span><span class="o">&amp;</span><span class="n">tid</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">attr</span><span class="p">,</span> <span class="n">run</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">limit</span><span class="p">);</span> <span class="c1">// run is function pointer as without
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>                                              <span class="c1">// paranthesis it points to starting 
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>                                              <span class="c1">// address of function
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>
+</span></span><span class="line"><span class="cl">    <span class="c1">// wait for thread to finish
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="n">pthread_join</span><span class="p">(</span><span class="n">tid</span><span class="p">,</span> <span class="nb">NULL</span><span class="p">);</span> <span class="c1">// if param 2 is NULL, main ignores any return value
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>
+</span></span><span class="line"><span class="cl">    <span class="n">printf</span><span class="p">(</span><span class="s">&#34;In main after thread, limit is: %d</span><span class="se">\n</span><span class="s">&#34;</span><span class="p">,</span> <span class="n">limit</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>      
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>The output of such program should look like this:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">➜  ~ gcc -Wall threads.c -lpthread -o threads
+</span></span><span class="line"><span class="cl">➜  ~ ./threads  
+</span></span><span class="line"><span class="cl">In main before thread, limit is: <span class="m">0</span>
+</span></span><span class="line"><span class="cl">Thread running, before incrementing limit is: <span class="m">0</span> <span class="c1"># Thread is running </span>
+</span></span><span class="line"><span class="cl">Thread running, after incrementing limit is: <span class="m">1</span>  <span class="c1"># while main waits</span>
+</span></span><span class="line"><span class="cl">In main after thread, limit is: <span class="m">1</span>   
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>It is important to note that without the pthread_join function in this program, the main thread would simply print the statement and return without giving the thread a chance.</p>
+<h2 id="returning-a-value-from-the-run-function">Returning a value from the run function</h2>
+<p>In the previous example a global variable was used. If you want to return a variable from the function you must use pthread_exit(<return value>) and catch it when using pthread_join like so:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-C" data-lang="C"><span class="line"><span class="cl"><span class="kt">void</span><span class="o">*</span> <span class="nf">run</span><span class="p">(</span><span class="kt">void</span><span class="o">*</span> <span class="n">arg</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="kt">int</span> <span class="n">value</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">    <span class="p">...</span>
+</span></span><span class="line"><span class="cl">    <span class="n">pthread_exit</span><span class="p">(</span><span class="o">&amp;</span><span class="n">value</span><span class="p">);</span> <span class="c1">// auto-converted to void* by method
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="kt">int</span> <span class="nf">main</span><span class="p">(</span><span class="kt">void</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="p">...</span>
+</span></span><span class="line"><span class="cl">    <span class="kt">int</span> <span class="o">*</span><span class="n">retval</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">    <span class="n">pthread_join</span><span class="p">(</span><span class="n">tid</span><span class="p">,</span> <span class="p">(</span><span class="kt">void</span> <span class="o">**</span><span class="p">)</span><span class="o">&amp;</span><span class="n">retval</span><span class="p">);</span> <span class="c1">// join returns ptr to ptr of type void
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="p">...</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>      
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h2 id="giving-multiple-parameters-to-the-run-function">Giving multiple parameters to the run function</h2>
+<p>The problem with having the void* as a parameter for the run function is giving more than one argument. The only way to pass more than one would be to create a struct containing all of the variables that you wish to pass to the function. It is good practice to name this similar to the function itself:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-C" data-lang="C"><span class="line"><span class="cl"><span class="p">...</span>
+</span></span><span class="line"><span class="cl"><span class="k">struct</span> <span class="n">run_struct</span> <span class="p">{</span> <span class="c1">// name matching function
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="kt">int</span> <span class="n">limit</span><span class="p">;</span> 
+</span></span><span class="line"><span class="cl">    <span class="kt">int</span> <span class="n">answer</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="p">};</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="kt">void</span><span class="o">*</span> <span class="nf">run</span><span class="p">(</span><span class="kt">void</span><span class="o">*</span> <span class="n">arg</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="k">struct</span> <span class="n">run_struct</span> <span class="o">*</span><span class="n">args</span> <span class="o">=</span> <span class="p">(</span><span class="k">struct</span> <span class="n">run_struct</span> <span class="o">*</span><span class="p">)</span> <span class="n">arg</span><span class="p">;</span> <span class="c1">// typecast to use vars
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>
+</span></span><span class="line"><span class="cl">    <span class="n">args</span><span class="o">-&gt;</span><span class="n">answer</span> <span class="o">=</span> <span class="n">args</span><span class="o">-&gt;</span><span class="n">limit</span><span class="o">++</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">    <span class="p">...</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="kt">int</span> <span class="nf">main</span><span class="p">(</span><span class="kt">void</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="p">...</span>
+</span></span><span class="line"><span class="cl">    <span class="k">struct</span> <span class="n">run_struct</span> <span class="n">rs</span> <span class="o">=</span> <span class="p">{</span><span class="mi">5</span><span class="p">,</span> <span class="mi">0</span><span class="p">};</span>
+</span></span><span class="line"><span class="cl">    <span class="p">...</span>
+</span></span><span class="line"><span class="cl">    <span class="n">pthread_create</span><span class="p">(</span><span class="o">&amp;</span><span class="n">tid</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">attr</span><span class="p">,</span> <span class="n">run</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">rs</span><span class="p">);</span> <span class="c1">// here the struct is given as param
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="p">...</span>
+</span></span><span class="line"><span class="cl">    <span class="n">printf</span><span class="p">(</span><span class="s">&#34;In main after thread, answer is: %d</span><span class="se">\n</span><span class="s">&#34;</span><span class="p">,</span> <span class="n">rs</span><span class="p">.</span><span class="n">answer</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl"> <span class="p">}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h2 id="creating-multiple-threads">Creating multiple threads</h2>
+<p>Multiple threads can be created using a for loop:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-C" data-lang="C"><span class="line"><span class="cl"><span class="p">...</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="n">pthread_t</span> <span class="n">tids</span><span class="p">[</span><span class="mi">10</span><span class="p">];</span> <span class="c1">// create array of threads size 10
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>
+</span></span><span class="line"><span class="cl"><span class="k">for</span><span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;=</span> <span class="mi">10</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="c1">// this can be done here for each or you can use one pthread_attr_t for
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="c1">// all threads, if you wish them to have the same attributes
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="n">pthread_attr_t</span> <span class="n">attr</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">    <span class="n">pthread_attr_init</span><span class="p">(</span><span class="o">&amp;</span><span class="n">attr</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="n">pthread_create</span><span class="p">(</span><span class="o">&amp;</span><span class="n">tids</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="o">&amp;</span><span class="n">attr</span><span class="p">,</span> <span class="n">run</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">limit</span><span class="p">);</span> <span class="c1">// create 10 threads
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="k">for</span><span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;=</span> <span class="mi">10</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="n">pthread_join</span><span class="p">(</span><span class="n">tids</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="nb">NULL</span><span class="p">);</span> <span class="c1">// make main wait for all of them
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="p">...</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h2 id="multiple-threads-having-own-param-variables">Multiple threads having own param variables</h2>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span><span class="lnt">31
+</span><span class="lnt">32
+</span><span class="lnt">33
+</span><span class="lnt">34
+</span><span class="lnt">35
+</span><span class="lnt">36
+</span><span class="lnt">37
+</span><span class="lnt">38
+</span><span class="lnt">39
+</span><span class="lnt">40
+</span><span class="lnt">41
+</span><span class="lnt">42
+</span><span class="lnt">43
+</span><span class="lnt">44
+</span><span class="lnt">45
+</span><span class="lnt">46
+</span><span class="lnt">47
+</span><span class="lnt">48
+</span><span class="lnt">49
+</span><span class="lnt">50
+</span><span class="lnt">51
+</span><span class="lnt">52
+</span><span class="lnt">53
+</span><span class="lnt">54
+</span><span class="lnt">55
+</span><span class="lnt">56
+</span><span class="lnt">57
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-C" data-lang="C"><span class="line"><span class="cl"><span class="cp">#include</span> <span class="cpf">&lt;stdio.h&gt;</span><span class="cp">
+</span></span></span><span class="line"><span class="cl"><span class="cp">#include</span> <span class="cpf">&lt;pthread.h&gt;</span><span class="cp">
+</span></span></span><span class="line"><span class="cl"><span class="cp"></span><span class="cm">/*
+</span></span></span><span class="line"><span class="cl"><span class="cm">* Allow multiple threads to increment their own struct variable and save into the other
+</span></span></span><span class="line"><span class="cl"><span class="cm">* then main waits and prints. - Doesn&#39;t increment but too lazy to change
+</span></span></span><span class="line"><span class="cl"><span class="cm">*/</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="k">struct</span> <span class="n">run_struct</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="kt">int</span> <span class="n">limit</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">    <span class="kt">int</span> <span class="n">answer</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">    <span class="kt">int</span> <span class="n">tn</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="p">};</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="kt">void</span><span class="o">*</span> <span class="nf">run</span><span class="p">(</span><span class="kt">void</span><span class="o">*</span> <span class="n">arg</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="k">struct</span> <span class="n">run_struct</span> <span class="o">*</span><span class="n">args</span> <span class="o">=</span> <span class="p">(</span><span class="k">struct</span> <span class="n">run_struct</span> <span class="o">*</span><span class="p">)</span> <span class="n">arg</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">    <span class="n">printf</span><span class="p">(</span><span class="s">&#34;Thread[%d] running, before incrementing answer is: %d</span><span class="se">\n</span><span class="s">&#34;</span><span class="p">,</span> <span class="n">args</span><span class="o">-&gt;</span><span class="n">tn</span><span class="p">,</span> 
+</span></span><span class="line"><span class="cl">                                                                      <span class="n">args</span><span class="o">-&gt;</span><span class="n">answer</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="n">args</span><span class="o">-&gt;</span><span class="n">answer</span> <span class="o">=</span> <span class="n">args</span><span class="o">-&gt;</span><span class="n">limit</span><span class="o">++</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">    <span class="n">printf</span><span class="p">(</span><span class="s">&#34;Thread[%d] running, after incrementing answer is: %d</span><span class="se">\n</span><span class="s">&#34;</span><span class="p">,</span> <span class="n">args</span><span class="o">-&gt;</span><span class="n">tn</span><span class="p">,</span> 
+</span></span><span class="line"><span class="cl">                                                                     <span class="n">args</span><span class="o">-&gt;</span><span class="n">answer</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="n">pthread_exit</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span> 
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="kt">int</span> <span class="nf">main</span><span class="p">(</span><span class="kt">void</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="k">struct</span> <span class="n">run_struct</span> <span class="n">rs</span><span class="p">[</span><span class="mi">10</span><span class="p">];</span> <span class="c1">// to give all threads own variables for function
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="k">for</span><span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="mi">10</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="n">rs</span><span class="p">[</span><span class="n">i</span><span class="p">].</span><span class="n">limit</span> <span class="o">=</span> <span class="mi">5</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">        <span class="n">rs</span><span class="p">[</span><span class="n">i</span><span class="p">].</span><span class="n">answer</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">        <span class="n">rs</span><span class="p">[</span><span class="n">i</span><span class="p">].</span><span class="n">tn</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="c1">// create threads
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="n">pthread_t</span> <span class="n">tids</span><span class="p">[</span><span class="mi">10</span><span class="p">];</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="n">pthread_attr_t</span> <span class="n">attr</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">    <span class="n">pthread_attr_init</span><span class="p">(</span><span class="o">&amp;</span><span class="n">attr</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="c1">// create and run threads with threads own param struct
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="k">for</span><span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="mi">10</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="n">rs</span><span class="p">[</span><span class="n">i</span><span class="p">].</span><span class="n">tn</span> <span class="o">=</span> <span class="n">i</span><span class="p">;</span> <span class="c1">// give thread it&#39;s own tid
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>        <span class="n">pthread_create</span><span class="p">(</span><span class="o">&amp;</span><span class="n">tids</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="o">&amp;</span><span class="n">attr</span><span class="p">,</span> <span class="n">run</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">rs</span><span class="p">[</span><span class="n">i</span><span class="p">]);</span> <span class="c1">// each thread gives own 
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>                                                      <span class="c1">// struct as param pointer
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="c1">// wait for thread to finish
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="k">for</span><span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="mi">10</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="n">pthread_join</span><span class="p">(</span><span class="n">tids</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="nb">NULL</span><span class="p">);</span> <span class="c1">// if param 2 is NULL, main ignores any return value
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>        <span class="n">printf</span><span class="p">(</span><span class="s">&#34;In main after thread[%d], limit is: %d</span><span class="se">\n</span><span class="s">&#34;</span><span class="p">,</span> <span class="n">i</span><span class="p">,</span> <span class="n">rs</span><span class="p">[</span><span class="n">i</span><span class="p">].</span><span class="n">answer</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>       
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>If you compile and run the above program, you will see that the order of execution is only kept when main is printing the variables due to the wait function, but the threads themselves can finish before the others without order.. but main won&rsquo;t print information for a thread if the one before hasn&rsquo;t finished. Example output:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span><span class="lnt">31
+</span><span class="lnt">32
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">➜  ~ gcc -Wall threads.c -lpthread -o threads
+</span></span><span class="line"><span class="cl">➜  ~ ./threads
+</span></span><span class="line"><span class="cl">Thread<span class="o">[</span>0<span class="o">]</span> running, before incrementing answer is: <span class="m">0</span>
+</span></span><span class="line"><span class="cl">Thread<span class="o">[</span>0<span class="o">]</span> running, after incrementing answer is: <span class="m">5</span>
+</span></span><span class="line"><span class="cl">Thread<span class="o">[</span>1<span class="o">]</span> running, before incrementing answer is: <span class="m">0</span>
+</span></span><span class="line"><span class="cl">Thread<span class="o">[</span>4<span class="o">]</span> running, before incrementing answer is: <span class="m">0</span> <span class="c1"># not in order </span>
+</span></span><span class="line"><span class="cl">Thread<span class="o">[</span>6<span class="o">]</span> running, before incrementing answer is: <span class="m">0</span>
+</span></span><span class="line"><span class="cl">Thread<span class="o">[</span>6<span class="o">]</span> running, after incrementing answer is: <span class="m">5</span>
+</span></span><span class="line"><span class="cl">Thread<span class="o">[</span>2<span class="o">]</span> running, before incrementing answer is: <span class="m">0</span>
+</span></span><span class="line"><span class="cl">Thread<span class="o">[</span>5<span class="o">]</span> running, before incrementing answer is: <span class="m">0</span>
+</span></span><span class="line"><span class="cl">Thread<span class="o">[</span>5<span class="o">]</span> running, after incrementing answer is: <span class="m">5</span>
+</span></span><span class="line"><span class="cl">In main after thread<span class="o">[</span>0<span class="o">]</span>, limit is: <span class="m">5</span> <span class="c1"># Thread[0] has finished so main can print it</span>
+</span></span><span class="line"><span class="cl">Thread<span class="o">[</span>4<span class="o">]</span> running, after incrementing answer is: <span class="m">5</span>
+</span></span><span class="line"><span class="cl">Thread<span class="o">[</span>8<span class="o">]</span> running, before incrementing answer is: <span class="m">0</span>
+</span></span><span class="line"><span class="cl">Thread<span class="o">[</span>8<span class="o">]</span> running, after incrementing answer is: <span class="m">5</span>
+</span></span><span class="line"><span class="cl">Thread<span class="o">[</span>2<span class="o">]</span> running, after incrementing answer is: <span class="m">5</span>
+</span></span><span class="line"><span class="cl">Thread<span class="o">[</span>3<span class="o">]</span> running, before incrementing answer is: <span class="m">0</span>
+</span></span><span class="line"><span class="cl">Thread<span class="o">[</span>3<span class="o">]</span> running, after incrementing answer is: <span class="m">5</span>
+</span></span><span class="line"><span class="cl">Thread<span class="o">[</span>1<span class="o">]</span> running, after incrementing answer is: <span class="m">5</span>
+</span></span><span class="line"><span class="cl">Thread<span class="o">[</span>9<span class="o">]</span> running, before incrementing answer is: <span class="m">0</span>
+</span></span><span class="line"><span class="cl">Thread<span class="o">[</span>9<span class="o">]</span> running, after incrementing answer is: <span class="m">5</span>
+</span></span><span class="line"><span class="cl">In main after thread<span class="o">[</span>1<span class="o">]</span>, limit is: <span class="m">5</span>
+</span></span><span class="line"><span class="cl">In main after thread<span class="o">[</span>2<span class="o">]</span>, limit is: <span class="m">5</span>
+</span></span><span class="line"><span class="cl">In main after thread<span class="o">[</span>3<span class="o">]</span>, limit is: <span class="m">5</span>
+</span></span><span class="line"><span class="cl">In main after thread<span class="o">[</span>4<span class="o">]</span>, limit is: <span class="m">5</span>
+</span></span><span class="line"><span class="cl">In main after thread<span class="o">[</span>5<span class="o">]</span>, limit is: <span class="m">5</span>
+</span></span><span class="line"><span class="cl">In main after thread<span class="o">[</span>6<span class="o">]</span>, limit is: <span class="m">5</span> <span class="c1"># 8 will not be printed until 7 is finished</span>
+</span></span><span class="line"><span class="cl">Thread<span class="o">[</span>7<span class="o">]</span> running, before incrementing answer is: <span class="m">0</span>
+</span></span><span class="line"><span class="cl">Thread<span class="o">[</span>7<span class="o">]</span> running, after incrementing answer is: <span class="m">5</span>
+</span></span><span class="line"><span class="cl">In main after thread<span class="o">[</span>7<span class="o">]</span>, limit is: <span class="m">5</span> <span class="c1"># now 7 is done 8 can proceed</span>
+</span></span><span class="line"><span class="cl">In main after thread<span class="o">[</span>8<span class="o">]</span>, limit is: <span class="m">5</span>
+</span></span><span class="line"><span class="cl">In main after thread<span class="o">[</span>9<span class="o">]</span>, limit is: <span class="m">5</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h2 id="thread-syncronization">Thread syncronization</h2>
+<h3 id="mutexes">Mutexes</h3>
+<p>When threads modify the same address or variable, there is no telling which will go first and most likely without any form of syncronisation you will get race conditions.It is important to correctly identify the critical section(s) within the code and add some form of syncronisation to that area, so only one thread at a time can access this area. A mutex (or mutual exclusion) allows for such a scenario.</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span><span class="lnt">8
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-C" data-lang="C"><span class="line"><span class="cl"><span class="n">pthread_mutex_t</span> <span class="n">mutex</span> <span class="o">=</span> <span class="n">PTHREAD_MUTEX_INITIALIZER</span><span class="p">;</span> <span class="c1">// macro used for init of mutex
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>
+</span></span><span class="line"><span class="cl"><span class="p">...</span>
+</span></span><span class="line"><span class="cl"><span class="c1">// critical section start
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="n">pthread_mutex_lock</span><span class="p">(</span><span class="o">&amp;</span><span class="n">mutex</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl"><span class="p">...</span> <span class="c1">// only 1 thread can acess this area of code
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="n">pthread_mutex_unlock</span><span class="p">(</span><span class="o">&amp;</span><span class="n">mutex</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl"><span class="c1">// critical section end
+</span></span></span></code></pre></td></tr></table>
+</div>
+</div><p>Keep in mind however that mutexes should only be used when needed as they make expensive calls to the kernel.
+Further reading: <a href="https://nachtimwald.com/2019/04/12/thread-pool-in-c/" target="_blank" rel="noopener noreffer ">Implementing thread pools in C</a></p>
+</div><div class="post-footer" id="post-footer">
+    <div class="post-info">
+        <div class="post-info-line">
+            <div class="post-info-mod">
+                <span>Updated on 0001-01-01</span>
+            </div></div>
+        <div class="post-info-line">
+            <div class="post-info-md"><span>
+                            <a class="link-to-markdown" href="/pthreads/index.md" target="_blank">Read Markdown</a>
+                        </span></div>
+            <div class="post-info-share">
+                <span><a href="javascript:void(0);" title="Share on Twitter" data-sharer="twitter" data-url="https://georgesims21.github.io/pthreads/" data-title="pthreads in C" data-via="xxxx" data-hashtags="C,Multithreading"><i class="fab fa-twitter fa-fw" aria-hidden="true"></i></a><a href="javascript:void(0);" title="Share on Facebook" data-sharer="facebook" data-url="https://georgesims21.github.io/pthreads/" data-hashtag="C"><i class="fab fa-facebook-square fa-fw" aria-hidden="true"></i></a><a href="javascript:void(0);" title="Share on Hacker News" data-sharer="hackernews" data-url="https://georgesims21.github.io/pthreads/" data-title="pthreads in C"><i class="fab fa-hacker-news fa-fw" aria-hidden="true"></i></a><a href="javascript:void(0);" title="Share on Line" data-sharer="line" data-url="https://georgesims21.github.io/pthreads/" data-title="pthreads in C"><i data-svg-src="/lib/simple-icons/icons/line.min.svg" aria-hidden="true"></i></a><a href="javascript:void(0);" title="Share on 微博" data-sharer="weibo" data-url="https://georgesims21.github.io/pthreads/" data-title="pthreads in C"><i class="fab fa-weibo fa-fw" aria-hidden="true"></i></a></span>
+            </div>
+        </div>
+    </div>
+
+    <div class="post-info-more">
+        <section class="post-tags"><i class="fas fa-tags fa-fw" aria-hidden="true"></i>&nbsp;<a href="/tags/c/">C</a>,&nbsp;<a href="/tags/multithreading/">Multithreading</a></section>
+        <section>
+            <span><a href="javascript:void(0);" onclick="window.history.back();">Back</a></span>&nbsp;|&nbsp;<span><a href="/">Home</a></span>
+        </section>
+    </div>
+
+    <div class="post-nav"><a href="/socket_programming/" class="prev" rel="prev" title="Socket Programming (TCP)"><i class="fas fa-angle-left fa-fw" aria-hidden="true"></i>Socket Programming (TCP)</a>
+            <a href="/procfs/" class="next" rel="next" title="procfs/sysfs">procfs/sysfs<i class="fas fa-angle-right fa-fw" aria-hidden="true"></i></a></div>
+</div>
+</article></div>
+            </main><footer class="footer">
+        <div class="footer-container"><div class="footer-line">Powered by <a href="https://gohugo.io/" target="_blank" rel="noopener noreffer" title="Hugo 0.101.0">Hugo</a> | Theme - <a href="https://github.com/dillonzq/LoveIt" target="_blank" rel="noopener noreffer" title="LoveIt 0.2.11"><i class="far fa-kiss-wink-heart fa-fw" aria-hidden="true"></i> LoveIt</a>
+                </div><div class="footer-line" itemscope itemtype="http://schema.org/CreativeWork"><i class="far fa-copyright fa-fw" aria-hidden="true"></i><span itemprop="copyrightYear">2019 - 2022</span><span class="author" itemprop="copyrightHolder">&nbsp;<a href="/" target="_blank">George Sims</a></span>&nbsp;|&nbsp;<span class="license"><a rel="license external nofollow noopener noreffer" href="https://creativecommons.org/licenses/by-nc/4.0/" target="_blank">CC BY-NC 4.0</a></span></div>
+        </div>
+    </footer></div>
+
+        <div id="fixed-buttons"><a href="#" id="back-to-top" class="fixed-button" title="Back to Top">
+                <i class="fas fa-arrow-up fa-fw" aria-hidden="true"></i>
+            </a><a href="#" id="view-comments" class="fixed-button" title="View Comments">
+                <i class="fas fa-comment fa-fw" aria-hidden="true"></i>
+            </a>
+        </div><link rel="stylesheet" href="/lib/katex/katex.min.css"><link rel="stylesheet" href="/lib/cookieconsent/cookieconsent.min.css"><script type="text/javascript" src="/lib/autocomplete/autocomplete.min.js"></script><script type="text/javascript" src="/lib/lunr/lunr.min.js"></script><script type="text/javascript" src="/lib/lazysizes/lazysizes.min.js"></script><script type="text/javascript" src="/lib/clipboard/clipboard.min.js"></script><script type="text/javascript" src="/lib/sharer/sharer.min.js"></script><script type="text/javascript" src="/lib/katex/katex.min.js"></script><script type="text/javascript" src="/lib/katex/contrib/auto-render.min.js"></script><script type="text/javascript" src="/lib/katex/contrib/copy-tex.min.js"></script><script type="text/javascript" src="/lib/katex/contrib/mhchem.min.js"></script><script type="text/javascript" src="/lib/cookieconsent/cookieconsent.min.js"></script><script type="text/javascript">window.config={"code":{"copyTitle":"Copy to clipboard","maxShownLines":50},"comment":{},"cookieconsent":{"content":{"dismiss":"Got it!","link":"Learn more","message":"This website uses Cookies to improve your experience."},"enable":true,"palette":{"button":{"background":"#f0f0f0"},"popup":{"background":"#1aa3ff"}},"theme":"edgeless"},"math":{"delimiters":[{"display":true,"left":"$$","right":"$$"},{"display":true,"left":"\\[","right":"\\]"},{"display":true,"left":"\\begin{equation}","right":"\\end{equation}"},{"display":true,"left":"\\begin{equation*}","right":"\\end{equation*}"},{"display":true,"left":"\\begin{align}","right":"\\end{align}"},{"display":true,"left":"\\begin{align*}","right":"\\end{align*}"},{"display":true,"left":"\\begin{alignat}","right":"\\end{alignat}"},{"display":true,"left":"\\begin{alignat*}","right":"\\end{alignat*}"},{"display":true,"left":"\\begin{gather}","right":"\\end{gather}"},{"display":true,"left":"\\begin{CD}","right":"\\end{CD}"},{"display":false,"left":"$","right":"$"},{"display":false,"left":"\\(","right":"\\)"}],"strict":false},"search":{"highlightTag":"em","lunrIndexURL":"/index.json","maxResultLength":10,"noResultsFound":"No results found","snippetLength":30,"type":"lunr"}};</script><script type="text/javascript" src="/js/theme.min.js"></script></body>
+</html>

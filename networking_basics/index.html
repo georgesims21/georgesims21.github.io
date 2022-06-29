@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="robots" content="noodp" />
+        <title>Networking basics - George&#39;s Blog</title><meta name="Description" content="This is my cool site"><meta property="og:title" content="Networking basics" />
+<meta property="og:description" content="TCP (Transmission Control Protocol)/IP (Internet Protocol) is the backbone of the internet. There are 2 versions: IPv4 (32-bit addresses) and IPv6 (64-bit). The figure below shows the TCP/IP layers:
+The top layer shows applications which use networking to transfer/collect data. They either use TCP or UDP (mentioned later). Data transfer at this level is only logical, the real transferring takes place at the bottom two layers (Internet and Link layers). This is where the data packets are divided into data frames for transmission over physical networks." />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://georgesims21.github.io/networking_basics/" /><meta property="og:image" content="https://georgesims21.github.io/logo.png"/><meta property="article:section" content="posts" />
+
+<meta property="og:site_name" content="My cool site" />
+
+<meta name="twitter:card" content="summary_large_image"/>
+<meta name="twitter:image" content="https://georgesims21.github.io/logo.png"/>
+
+<meta name="twitter:title" content="Networking basics"/>
+<meta name="twitter:description" content="TCP (Transmission Control Protocol)/IP (Internet Protocol) is the backbone of the internet. There are 2 versions: IPv4 (32-bit addresses) and IPv6 (64-bit). The figure below shows the TCP/IP layers:
+The top layer shows applications which use networking to transfer/collect data. They either use TCP or UDP (mentioned later). Data transfer at this level is only logical, the real transferring takes place at the bottom two layers (Internet and Link layers). This is where the data packets are divided into data frames for transmission over physical networks."/>
+<meta name="application-name" content="My cool site">
+<meta name="apple-mobile-web-app-title" content="My cool site"><meta name="theme-color" content="#ffffff"><meta name="msapplication-TileColor" content="#da532c"><link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" />
+        <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+        <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png"><link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png"><link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5"><link rel="manifest" href="/site.webmanifest"><link rel="canonical" href="https://georgesims21.github.io/networking_basics/" /><link rel="prev" href="https://georgesims21.github.io/procfs/" /><link rel="next" href="https://georgesims21.github.io/hugo-basics/" /><link rel="stylesheet" href="/css/style.min.css"><link rel="preload" href="/lib/fontawesome-free/all.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+        <noscript><link rel="stylesheet" href="/lib/fontawesome-free/all.min.css"></noscript><link rel="preload" href="/lib/animate/animate.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+        <noscript><link rel="stylesheet" href="/lib/animate/animate.min.css"></noscript><script type="application/ld+json">
+    {
+        "@context": "http://schema.org",
+        "@type": "BlogPosting",
+        "headline": "Networking basics",
+        "inLanguage": "en",
+        "mainEntityOfPage": {
+            "@type": "WebPage",
+            "@id": "https:\/\/georgesims21.github.io\/networking_basics\/"
+        },"genre": "posts","keywords": "C, Systems Programming, Networking","wordcount":  529 ,
+        "url": "https:\/\/georgesims21.github.io\/networking_basics\/","license": "©2019 Notepadium.","publisher": {
+            "@type": "Organization",
+            "name": ""},"author": {
+                "@type": "Person",
+                "name": "George Sims"
+            },"description": ""
+    }
+    </script></head>
+    <body data-header-desktop="fixed" data-header-mobile="auto"><script type="text/javascript">(window.localStorage && localStorage.getItem('theme') ? localStorage.getItem('theme') === 'dark' : ('auto' === 'auto' ? window.matchMedia('(prefers-color-scheme: dark)').matches : 'auto' === 'dark')) && document.body.setAttribute('theme', 'dark');</script>
+
+        <div id="mask"></div><div class="wrapper"><header class="desktop" id="header-desktop">
+    <div class="header-wrapper">
+        <div class="header-title">
+            <a href="/" title="George&#39;s Blog"></a>
+        </div>
+        <div class="menu">
+            <div class="menu-inner"><a class="menu-item" href="/posts/"> Posts </a><a class="menu-item" href="/tags/"> Tags </a><a class="menu-item" href="/categories/"> Categories </a><span class="menu-item delimiter"></span><span class="menu-item search" id="search-desktop">
+                        <input type="text" placeholder="Search titles or contents..." id="search-input-desktop">
+                        <a href="javascript:void(0);" class="search-button search-toggle" id="search-toggle-desktop" title="Search">
+                            <i class="fas fa-search fa-fw" aria-hidden="true"></i>
+                        </a>
+                        <a href="javascript:void(0);" class="search-button search-clear" id="search-clear-desktop" title="Clear">
+                            <i class="fas fa-times-circle fa-fw" aria-hidden="true"></i>
+                        </a>
+                        <span class="search-button search-loading" id="search-loading-desktop">
+                            <i class="fas fa-spinner fa-fw fa-spin" aria-hidden="true"></i>
+                        </span>
+                    </span><a href="javascript:void(0);" class="menu-item theme-switch" title="Switch Theme">
+                    <i class="fas fa-adjust fa-fw" aria-hidden="true"></i>
+                </a>
+            </div>
+        </div>
+    </div>
+</header><header class="mobile" id="header-mobile">
+    <div class="header-container">
+        <div class="header-wrapper">
+            <div class="header-title">
+                <a href="/" title="George&#39;s Blog"></a>
+            </div>
+            <div class="menu-toggle" id="menu-toggle-mobile">
+                <span></span><span></span><span></span>
+            </div>
+        </div>
+        <div class="menu" id="menu-mobile"><div class="search-wrapper">
+                    <div class="search mobile" id="search-mobile">
+                        <input type="text" placeholder="Search titles or contents..." id="search-input-mobile">
+                        <a href="javascript:void(0);" class="search-button search-toggle" id="search-toggle-mobile" title="Search">
+                            <i class="fas fa-search fa-fw" aria-hidden="true"></i>
+                        </a>
+                        <a href="javascript:void(0);" class="search-button search-clear" id="search-clear-mobile" title="Clear">
+                            <i class="fas fa-times-circle fa-fw" aria-hidden="true"></i>
+                        </a>
+                        <span class="search-button search-loading" id="search-loading-mobile">
+                            <i class="fas fa-spinner fa-fw fa-spin" aria-hidden="true"></i>
+                        </span>
+                    </div>
+                    <a href="javascript:void(0);" class="search-cancel" id="search-cancel-mobile">
+                        Cancel
+                    </a>
+                </div><a class="menu-item" href="/posts/" title="">Posts</a><a class="menu-item" href="/tags/" title="">Tags</a><a class="menu-item" href="/categories/" title="">Categories</a><a href="javascript:void(0);" class="menu-item theme-switch" title="Switch Theme">
+                <i class="fas fa-adjust fa-fw" aria-hidden="true"></i>
+            </a></div>
+    </div>
+</header><div class="search-dropdown desktop">
+        <div id="search-dropdown-desktop"></div>
+    </div>
+    <div class="search-dropdown mobile">
+        <div id="search-dropdown-mobile"></div>
+    </div><main class="main">
+                <div class="container"><div class="toc" id="toc-auto">
+            <h2 class="toc-title">Contents</h2>
+            <div class="toc-content" id="toc-content-auto"></div>
+        </div><article class="page single"><h1 class="single-title animate__animated animate__flipInX">Networking basics</h1><div class="post-meta">
+            <div class="post-meta-line"><span class="post-author"><a href="/" title="Author" rel="author" class="author"><i class="fas fa-user-circle fa-fw" aria-hidden="true"></i>George Sims</a></span>&nbsp;<span class="post-category">included in <a href="/categories/theory/"><i class="far fa-folder fa-fw" aria-hidden="true"></i>Theory</a></span></div>
+            <div class="post-meta-line"><i class="far fa-calendar-alt fa-fw" aria-hidden="true"></i>&nbsp;<time datetime="0001-01-01">0001-01-01</time>&nbsp;<i class="fas fa-pencil-alt fa-fw" aria-hidden="true"></i>&nbsp;529 words&nbsp;
+                <i class="far fa-clock fa-fw" aria-hidden="true"></i>&nbsp;3 minutes&nbsp;</div>
+        </div><div class="details toc" id="toc-static"  data-kept="true">
+                <div class="details-summary toc-title">
+                    <span>Contents</span>
+                    <span><i class="details-icon fas fa-angle-right" aria-hidden="true"></i></span>
+                </div>
+                <div class="details-content toc-content" id="toc-content-static"><nav id="TableOfContents"></nav></div>
+            </div><div class="content" id="content"><p>TCP (Transmission Control Protocol)/IP (Internet Protocol) is the backbone of the internet. There are 2 versions: IPv4 (32-bit addresses) and IPv6 (64-bit). The figure below shows the TCP/IP layers:</p>
+<p><img
+        class="lazyload"
+        src="/svg/loading.min.svg"
+        data-src="/networking-basics/networking-layers.jpg"
+        data-srcset="/networking-basics/networking-layers.jpg, /networking-basics/networking-layers.jpg 1.5x, /networking-basics/networking-layers.jpg 2x"
+        data-sizes="auto"
+        alt="/networking-basics/networking-layers.jpg"
+        title="TCP/IP layers" /></p>
+<p>The top layer shows applications which use networking to transfer/collect data. They either use TCP or UDP (mentioned later). Data transfer at this level is only logical, the real transferring takes place at the bottom two layers (Internet and Link layers). This is where the data packets are divided into data frames for transmission over physical networks. This is represented in the data flow diagram below:</p>
+<p><img
+        class="lazyload"
+        src="/svg/loading.min.svg"
+        data-src="/networking-basics/networking-flow-path.jpg"
+        data-srcset="/networking-basics/networking-flow-path.jpg, /networking-basics/networking-flow-path.jpg 1.5x, /networking-basics/networking-flow-path.jpg 2x"
+        data-sizes="auto"
+        alt="/networking-basics/networking-flow-path.jpg"
+        title="Dataflow paths in TCP/IP network" /></p>
+<p>Every host (device supporting the TCP/IP protocol) is identified by a 32-bit address called an IP address. These are represented in a dot notation where the individual bytes are separated by dots. A hostname (i.e www.) and IP are the same, only the DNS (Domain Name System) translate between the two for simplicity. There are two parts to an IP address: NetworkID field and HostID field, where the leading two bits are the NetworkID and the rest the HostID. Data intended for an IP address are sent to a router with the same NetworkID, this router will then forward the packets to a specific host on the network with the same HostID. Every host has a <em>localhost</em> name (default IP: 127.0.0.1). IP protocol is used for sending/receiving data packets between IP hosts, operating in a best effort manner. This means there is no guarantee that packets will arrive at their destinations or arrive in order, thus IP is not a reliable protocol. Reliability, if needed, must then be implemented above the IP layer.</p>
+<p>An IP packet consists of an IP header, sender and receiver IP addreses, an IP header looks like this:</p>
+<p><img
+        class="lazyload"
+        src="/svg/loading.min.svg"
+        data-src="/networking-basics/networking-IP-header.jpg"
+        data-srcset="/networking-basics/networking-IP-header.jpg, /networking-basics/networking-IP-header.jpg 1.5x, /networking-basics/networking-IP-header.jpg 2x"
+        data-sizes="auto"
+        alt="/networking-basics/networking-IP-header.jpg"
+        title="IP header format" /></p>
+<p>It is usually not possible to send data packets directly from one host to another due to the distance between them. Routers are special IP hosts which receive and forward these packets, so if one receives a packet not meant for them, it will pass it on to the next router, which is called a hop. If however the packet does not arrive at its intended destination it doesn&rsquo;t simply stay hopping around on the network. All packets have a Time-To-Live (TTL) count in the header, its job it to reduce by one upon each hop, and when it hits 0 that router will drop the packet. This number can be max 255 (8-bit).</p>
+<p>The UDP (User Datgram Protocol) like IP, doesn&rsquo;t guarantee reliability, but is fast and efficient. This protocol is used by applications where reliability isn&rsquo;t essential (e.g ping). The TCP (Transmission Control Protocol) <strong>does</strong> guarantee reliable data transfers, but is much less efficient.</p>
+<p>Each host may have multiple TCP/UDP connections happening at once, thus they all must be uniquely identified by a triple:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-C" data-lang="C"><span class="line"><span class="cl"><span class="n">Application</span> <span class="o">=</span> <span class="p">(</span><span class="n">HostIP</span><span class="p">,</span> <span class="n">Protocol</span><span class="p">,</span> <span class="n">PortNumber</span><span class="p">)</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>Where PortNumber is a unique unsigned short integer. In TCP applications the first 1024 ports are reserved:</p>
+<p><img
+        class="lazyload"
+        src="/svg/loading.min.svg"
+        data-src="/networking-basics/reserved-port-numbers-TCP.jpg"
+        data-srcset="/networking-basics/reserved-port-numbers-TCP.jpg, /networking-basics/reserved-port-numbers-TCP.jpg 1.5x, /networking-basics/reserved-port-numbers-TCP.jpg 2x"
+        data-sizes="auto"
+        alt="/networking-basics/reserved-port-numbers-TCP.jpg"
+        title="Reserved port numbers on TCP" /></p>
+<p>The dataflow in TCP/IP networks looks like this:</p>
+<p><img
+        class="lazyload"
+        src="/svg/loading.min.svg"
+        data-src="/networking-basics/data-format-tcpip.jpg"
+        data-srcset="/networking-basics/data-format-tcpip.jpg, /networking-basics/data-format-tcpip.jpg 1.5x, /networking-basics/data-format-tcpip.jpg 2x"
+        data-sizes="auto"
+        alt="/networking-basics/data-format-tcpip.jpg"
+        title="Data flow in TCP/IP networks" /></p>
+<p>Where each layer adds some form of data as a header, and shows the direction these packets go through each one. The receiving host translates the data going in the opposite direction to this chart.</p>
+</div><div class="post-footer" id="post-footer">
+    <div class="post-info">
+        <div class="post-info-line">
+            <div class="post-info-mod">
+                <span>Updated on 0001-01-01</span>
+            </div></div>
+        <div class="post-info-line">
+            <div class="post-info-md"><span>
+                            <a class="link-to-markdown" href="/networking_basics/index.md" target="_blank">Read Markdown</a>
+                        </span></div>
+            <div class="post-info-share">
+                <span><a href="javascript:void(0);" title="Share on Twitter" data-sharer="twitter" data-url="https://georgesims21.github.io/networking_basics/" data-title="Networking basics" data-via="xxxx" data-hashtags="C,Systems Programming,Networking"><i class="fab fa-twitter fa-fw" aria-hidden="true"></i></a><a href="javascript:void(0);" title="Share on Facebook" data-sharer="facebook" data-url="https://georgesims21.github.io/networking_basics/" data-hashtag="C"><i class="fab fa-facebook-square fa-fw" aria-hidden="true"></i></a><a href="javascript:void(0);" title="Share on Hacker News" data-sharer="hackernews" data-url="https://georgesims21.github.io/networking_basics/" data-title="Networking basics"><i class="fab fa-hacker-news fa-fw" aria-hidden="true"></i></a><a href="javascript:void(0);" title="Share on Line" data-sharer="line" data-url="https://georgesims21.github.io/networking_basics/" data-title="Networking basics"><i data-svg-src="/lib/simple-icons/icons/line.min.svg" aria-hidden="true"></i></a><a href="javascript:void(0);" title="Share on 微博" data-sharer="weibo" data-url="https://georgesims21.github.io/networking_basics/" data-title="Networking basics"><i class="fab fa-weibo fa-fw" aria-hidden="true"></i></a></span>
+            </div>
+        </div>
+    </div>
+
+    <div class="post-info-more">
+        <section class="post-tags"><i class="fas fa-tags fa-fw" aria-hidden="true"></i>&nbsp;<a href="/tags/c/">C</a>,&nbsp;<a href="/tags/systems-programming/">Systems Programming</a>,&nbsp;<a href="/tags/networking/">Networking</a></section>
+        <section>
+            <span><a href="javascript:void(0);" onclick="window.history.back();">Back</a></span>&nbsp;|&nbsp;<span><a href="/">Home</a></span>
+        </section>
+    </div>
+
+    <div class="post-nav"><a href="/procfs/" class="prev" rel="prev" title="procfs/sysfs"><i class="fas fa-angle-left fa-fw" aria-hidden="true"></i>procfs/sysfs</a>
+            <a href="/hugo-basics/" class="next" rel="next" title="Hugo basics">Hugo basics<i class="fas fa-angle-right fa-fw" aria-hidden="true"></i></a></div>
+</div>
+</article></div>
+            </main><footer class="footer">
+        <div class="footer-container"><div class="footer-line">Powered by <a href="https://gohugo.io/" target="_blank" rel="noopener noreffer" title="Hugo 0.101.0">Hugo</a> | Theme - <a href="https://github.com/dillonzq/LoveIt" target="_blank" rel="noopener noreffer" title="LoveIt 0.2.11"><i class="far fa-kiss-wink-heart fa-fw" aria-hidden="true"></i> LoveIt</a>
+                </div><div class="footer-line" itemscope itemtype="http://schema.org/CreativeWork"><i class="far fa-copyright fa-fw" aria-hidden="true"></i><span itemprop="copyrightYear">2019 - 2022</span><span class="author" itemprop="copyrightHolder">&nbsp;<a href="/" target="_blank">George Sims</a></span>&nbsp;|&nbsp;<span class="license"><a rel="license external nofollow noopener noreffer" href="https://creativecommons.org/licenses/by-nc/4.0/" target="_blank">CC BY-NC 4.0</a></span></div>
+        </div>
+    </footer></div>
+
+        <div id="fixed-buttons"><a href="#" id="back-to-top" class="fixed-button" title="Back to Top">
+                <i class="fas fa-arrow-up fa-fw" aria-hidden="true"></i>
+            </a><a href="#" id="view-comments" class="fixed-button" title="View Comments">
+                <i class="fas fa-comment fa-fw" aria-hidden="true"></i>
+            </a>
+        </div><link rel="stylesheet" href="/lib/katex/katex.min.css"><link rel="stylesheet" href="/lib/cookieconsent/cookieconsent.min.css"><script type="text/javascript" src="/lib/autocomplete/autocomplete.min.js"></script><script type="text/javascript" src="/lib/lunr/lunr.min.js"></script><script type="text/javascript" src="/lib/lazysizes/lazysizes.min.js"></script><script type="text/javascript" src="/lib/clipboard/clipboard.min.js"></script><script type="text/javascript" src="/lib/sharer/sharer.min.js"></script><script type="text/javascript" src="/lib/katex/katex.min.js"></script><script type="text/javascript" src="/lib/katex/contrib/auto-render.min.js"></script><script type="text/javascript" src="/lib/katex/contrib/copy-tex.min.js"></script><script type="text/javascript" src="/lib/katex/contrib/mhchem.min.js"></script><script type="text/javascript" src="/lib/cookieconsent/cookieconsent.min.js"></script><script type="text/javascript">window.config={"code":{"copyTitle":"Copy to clipboard","maxShownLines":50},"comment":{},"cookieconsent":{"content":{"dismiss":"Got it!","link":"Learn more","message":"This website uses Cookies to improve your experience."},"enable":true,"palette":{"button":{"background":"#f0f0f0"},"popup":{"background":"#1aa3ff"}},"theme":"edgeless"},"math":{"delimiters":[{"display":true,"left":"$$","right":"$$"},{"display":true,"left":"\\[","right":"\\]"},{"display":true,"left":"\\begin{equation}","right":"\\end{equation}"},{"display":true,"left":"\\begin{equation*}","right":"\\end{equation*}"},{"display":true,"left":"\\begin{align}","right":"\\end{align}"},{"display":true,"left":"\\begin{align*}","right":"\\end{align*}"},{"display":true,"left":"\\begin{alignat}","right":"\\end{alignat}"},{"display":true,"left":"\\begin{alignat*}","right":"\\end{alignat*}"},{"display":true,"left":"\\begin{gather}","right":"\\end{gather}"},{"display":true,"left":"\\begin{CD}","right":"\\end{CD}"},{"display":false,"left":"$","right":"$"},{"display":false,"left":"\\(","right":"\\)"}],"strict":false},"search":{"highlightTag":"em","lunrIndexURL":"/index.json","maxResultLength":10,"noResultsFound":"No results found","snippetLength":30,"type":"lunr"}};</script><script type="text/javascript" src="/js/theme.min.js"></script></body>
+</html>
