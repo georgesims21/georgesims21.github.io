@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Multithreading on George&#39;s Blog</title>
@@ -1044,3 +1045,22 @@ Further reading: &lt;a href=&#34;https://nachtimwald.com/2019/04/12/thread-pool-
     
   </channel>
 </rss>
+=======
+<rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0">
+    <channel>
+        <title>Multithreading - Tag - My New Hugo Site</title>
+        <link>http://example.org/tags/multithreading/</link>
+        <description>Multithreading - Tag - My New Hugo Site</description>
+        <generator>Hugo -- gohugo.io</generator><language>en</language><atom:link href="http://example.org/tags/multithreading/" rel="self" type="application/rss+xml" /><item>
+    <title>pthreads in C</title>
+    <link>http://example.org/posts/pthreads/</link>
+    <pubDate>Mon, 01 Jan 0001 00:00:00 &#43;0000</pubDate>
+    <author>xxxx</author>
+    <guid>http://example.org/posts/pthreads/</guid>
+    <description><![CDATA[This tutorial assumes you know the basic concepts of multithreading. It is based on this short video series by Dr. Brian Fraser
+Creating single threads The pthread library (POSTIX thread) allows C programmers to use multithreading capabilities. First you must define the &lt;pthread.h&gt; header, and link -pthread when compiling the program. The function to create a thread is the pthread_create():
+&lt;pthread.h&gt; int pthread_create(pthread_t *thread, const pthread_attr_t *attr, void *(*start_routine) (void *), void *arg); This takes 4 different parameters:]]></description>
+</item>
+</channel>
+</rss>
+>>>>>>> 9fe4d0e (rebuilding site Wed Jun 29 08:25:17 AM CEST 2022)
