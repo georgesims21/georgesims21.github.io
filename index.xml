@@ -1,86 +1,86 @@
 <rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0">
     <channel>
         <title>My New Hugo Site</title>
-        <link>georgesims21.github.io/</link>
+        <link>https://georgesims21.github.io/</link>
         <description>This is my cool site</description>
         <generator>Hugo -- gohugo.io</generator><language>en</language>
-            <atom:link href="georgesims21.github.io/index.xml" rel="self" type="application/rss+xml" />
+            <atom:link href="https://georgesims21.github.io/index.xml" rel="self" type="application/rss+xml" />
         <item>
     <title>64-bit-GCC Runtime Stack Usage</title>
-    <link>georgesims21.github.io/posts/64-bit-gcc_runtime_stack_usage/</link>
+    <link>https://georgesims21.github.io/posts/64-bit-gcc_runtime_stack_usage/</link>
     <pubDate>Mon, 01 Jan 0001 00:00:00 &#43;0000</pubDate>
     <author>xxxx</author>
-    <guid>georgesims21.github.io/posts/64-bit-gcc_runtime_stack_usage/</guid>
+    <guid>https://georgesims21.github.io/posts/64-bit-gcc_runtime_stack_usage/</guid>
     <description><![CDATA[CPU registers in 64-bit mode * rax * rbx * rbp * rsp first * rdi &lt;--+ * rsi | in 64-bit mode the first 6 parameters are placed in * rdx | these registers from rdi to r9 when calling a function, * rcx | any extra params are passed through the stack like in * r8 | 32-bit mode * r9 &lt;--+ last * r10-r15 Simple C program in assembly #include &lt;stdio.]]></description>
 </item>
 <item>
     <title>C function calls (32-bit)</title>
-    <link>georgesims21.github.io/posts/c_function_calls/</link>
+    <link>https://georgesims21.github.io/posts/c_function_calls/</link>
     <pubDate>Mon, 01 Jan 0001 00:00:00 &#43;0000</pubDate>
     <author>xxxx</author>
-    <guid>georgesims21.github.io/posts/c_function_calls/</guid>
+    <guid>https://georgesims21.github.io/posts/c_function_calls/</guid>
     <description><![CDATA[Each CPU has the following registers (64-bit in parantheses):
 PC (IP): Instruction pointer - Points to next instruction for the CPU to execute SP (SP): Stack pointer - Points to the top of the stack FP (BP): Base pointer - Points to the stack frame of the current active function RVR (AX): Return value - Points to the function return value main() | int sub(int x, int y) { | { int a, b, c; | int u, v; a = 1; b = 2; c = 3; | u = 4; v = 5; c = sub(a, b); | return x+y+u+v; printf(&#34;c=%d\n&#34;, c); | } } | When a C program is envoked, the return address (current PC) is pushed onto the stack and then the value stored in the PC register is replaced with the function we wish the CPU to execute.]]></description>
 </item>
 <item>
     <title>FUSE</title>
-    <link>georgesims21.github.io/posts/fuse/</link>
+    <link>https://georgesims21.github.io/posts/fuse/</link>
     <pubDate>Mon, 01 Jan 0001 00:00:00 &#43;0000</pubDate>
     <author>xxxx</author>
-    <guid>georgesims21.github.io/posts/fuse/</guid>
+    <guid>https://georgesims21.github.io/posts/fuse/</guid>
     <description><![CDATA[FUSE (filesystem in user space) [1] What is FUSE, and why use it? FUSE is an open source framework which allows you to build filesystems in user space, compared to the conventional kernel space route. Building in user space is said by many to not be suitable for production, and also that the overhead is too substantial to be of use. But this allows the programmer to work in a &lsquo;friendlier&rsquo; environment, gives a much larger toolset to work with and probably most importantly, it doesn&rsquo;t crash the system on a bug like kernel programming does.]]></description>
 </item>
 <item>
     <title>Hugo basics</title>
-    <link>georgesims21.github.io/posts/hugo-basics/</link>
+    <link>https://georgesims21.github.io/posts/hugo-basics/</link>
     <pubDate>Mon, 01 Jan 0001 00:00:00 &#43;0000</pubDate>
     <author>xxxx</author>
-    <guid>georgesims21.github.io/posts/hugo-basics/</guid>
+    <guid>https://georgesims21.github.io/posts/hugo-basics/</guid>
     <description><![CDATA[Create a new site in a directory &lt;site_name&gt; hugo new site &lt;site_name&gt; Running the server locally (-D flag is to render pages marked as drafts) hugo server -D Github This repo has the alternate stream set to &lsquo;development&rsquo;. So pushing master to here will not effect the site itself.
 Deploying ./deploy.sh This script deploys the website to the repo georgesims21.github.io as a proper site. It will not render files marked as drafts, so it should look exactly the same as locally if you run:]]></description>
 </item>
 <item>
     <title>Networking basics</title>
-    <link>georgesims21.github.io/posts/networking_basics/</link>
+    <link>https://georgesims21.github.io/posts/networking_basics/</link>
     <pubDate>Mon, 01 Jan 0001 00:00:00 &#43;0000</pubDate>
     <author>xxxx</author>
-    <guid>georgesims21.github.io/posts/networking_basics/</guid>
+    <guid>https://georgesims21.github.io/posts/networking_basics/</guid>
     <description><![CDATA[TCP (Transmission Control Protocol)/IP (Internet Protocol) is the backbone of the internet. There are 2 versions: IPv4 (32-bit addresses) and IPv6 (64-bit). The figure below shows the TCP/IP layers:
 The top layer shows applications which use networking to transfer/collect data. They either use TCP or UDP (mentioned later). Data transfer at this level is only logical, the real transferring takes place at the bottom two layers (Internet and Link layers). This is where the data packets are divided into data frames for transmission over physical networks.]]></description>
 </item>
 <item>
     <title>procfs/sysfs</title>
-    <link>georgesims21.github.io/posts/procfs/</link>
+    <link>https://georgesims21.github.io/posts/procfs/</link>
     <pubDate>Mon, 01 Jan 0001 00:00:00 &#43;0000</pubDate>
     <author>xxxx</author>
-    <guid>georgesims21.github.io/posts/procfs/</guid>
+    <guid>https://georgesims21.github.io/posts/procfs/</guid>
     <description><![CDATA[procfs and sysfs are both pseudo filesystems located in the root directory of the Unix FS heirarchy. They contain files which act as a window to the kernel and allows user-land processes to see and change important system information. Upon inspection (if you wrote the command $ ls -al /proc on a Unix system) you would notice that all files are 0 in size. This is due to the window aspect, one a user-land process reads/opens one of these files, it is at that moment the kernel writes that information to the file, hence the analogy.]]></description>
 </item>
 <item>
     <title>pthreads in C</title>
-    <link>georgesims21.github.io/posts/pthreads/</link>
+    <link>https://georgesims21.github.io/posts/pthreads/</link>
     <pubDate>Mon, 01 Jan 0001 00:00:00 &#43;0000</pubDate>
     <author>xxxx</author>
-    <guid>georgesims21.github.io/posts/pthreads/</guid>
+    <guid>https://georgesims21.github.io/posts/pthreads/</guid>
     <description><![CDATA[This tutorial assumes you know the basic concepts of multithreading. It is based on this short video series by Dr. Brian Fraser
 Creating single threads The pthread library (POSTIX thread) allows C programmers to use multithreading capabilities. First you must define the &lt;pthread.h&gt; header, and link -pthread when compiling the program. The function to create a thread is the pthread_create():
 &lt;pthread.h&gt; int pthread_create(pthread_t *thread, const pthread_attr_t *attr, void *(*start_routine) (void *), void *arg); This takes 4 different parameters:]]></description>
 </item>
 <item>
     <title>Socket Programming (TCP)</title>
-    <link>georgesims21.github.io/posts/socket_programming/</link>
+    <link>https://georgesims21.github.io/posts/socket_programming/</link>
     <pubDate>Mon, 01 Jan 0001 00:00:00 &#43;0000</pubDate>
     <author>xxxx</author>
-    <guid>georgesims21.github.io/posts/socket_programming/</guid>
+    <guid>https://georgesims21.github.io/posts/socket_programming/</guid>
     <description><![CDATA[The C socket API allows a developer to design and build a TCP/IP client/server program. To begin with a socket address structure is needed (&lt;sys/socket.h&gt;):
 struct sockaddr_in { sa_family_t sin_family; // AF_INET for TCP/IP in_port_t sin_port; // port number struct in_addr sin_addr; // IP address }; struct in_addr { // internet address (in_addr) uint32_t s_addr; // IP address in network byte order }; for TCP/IP connections sin_family is always set to AF_INET, sin_port contains the port number (in network byte order) and finally sin_addr is the host IP address, also in network byte order.]]></description>
 </item>
 <item>
     <title>strace</title>
-    <link>georgesims21.github.io/posts/strace/</link>
+    <link>https://georgesims21.github.io/posts/strace/</link>
     <pubDate>Mon, 01 Jan 0001 00:00:00 &#43;0000</pubDate>
     <author>xxxx</author>
-    <guid>georgesims21.github.io/posts/strace/</guid>
+    <guid>https://georgesims21.github.io/posts/strace/</guid>
     <description><![CDATA[Strace is a command used to view the system calls made by an executable program during runtime, it is especially helpful when trying to debug a systems program.
 Basic strace commands:
 strace &lt;program executable&gt; # output to stdout the full output strace -o &lt;file.out&gt; &lt;progex&gt; # output to &lt;file.out&gt; instead of stdout strace -e &lt;command&gt; &lt;progex&gt; # only output specific &lt;command&gt; (i.e openat/read etc) strace -e trace=&lt;command1, command2, ...&gt; &lt;progex&gt; sudo strace -p &lt;pid&gt; -o &lt;file.]]></description>

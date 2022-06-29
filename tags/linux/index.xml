@@ -1,14 +1,14 @@
 <rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0">
     <channel>
         <title>Linux - Tag - My New Hugo Site</title>
-        <link>georgesims21.github.io/tags/linux/</link>
+        <link>https://georgesims21.github.io/tags/linux/</link>
         <description>Linux - Tag - My New Hugo Site</description>
-        <generator>Hugo -- gohugo.io</generator><language>en</language><atom:link href="georgesims21.github.io/tags/linux/" rel="self" type="application/rss+xml" /><item>
+        <generator>Hugo -- gohugo.io</generator><language>en</language><atom:link href="https://georgesims21.github.io/tags/linux/" rel="self" type="application/rss+xml" /><item>
     <title>strace</title>
-    <link>georgesims21.github.io/posts/strace/</link>
+    <link>https://georgesims21.github.io/posts/strace/</link>
     <pubDate>Mon, 01 Jan 0001 00:00:00 &#43;0000</pubDate>
     <author>xxxx</author>
-    <guid>georgesims21.github.io/posts/strace/</guid>
+    <guid>https://georgesims21.github.io/posts/strace/</guid>
     <description><![CDATA[Strace is a command used to view the system calls made by an executable program during runtime, it is especially helpful when trying to debug a systems program.
 Basic strace commands:
 strace &lt;program executable&gt; # output to stdout the full output strace -o &lt;file.out&gt; &lt;progex&gt; # output to &lt;file.out&gt; instead of stdout strace -e &lt;command&gt; &lt;progex&gt; # only output specific &lt;command&gt; (i.e openat/read etc) strace -e trace=&lt;command1, command2, ...&gt; &lt;progex&gt; sudo strace -p &lt;pid&gt; -o &lt;file.]]></description>
