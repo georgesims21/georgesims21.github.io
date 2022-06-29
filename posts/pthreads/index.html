@@ -1,10 +1,10 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh-cn">
     <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta name="robots" content="noodp" />
-        <title>pthreads in C - My New Hugo Site</title><meta name="Description" content="This is my cool site"><meta property="og:title" content="pthreads in C" />
+        <title>pthreads in C - George&#39;s Blog</title><meta name="Description" content="This is my cool site"><meta property="og:title" content="pthreads in C" />
 <meta property="og:description" content="This tutorial assumes you know the basic concepts of multithreading. It is based on this short video series by Dr. Brian Fraser
 Creating single threads The pthread library (POSTIX thread) allows C programmers to use multithreading capabilities. First you must define the &lt;pthread.h&gt; header, and link -pthread when compiling the program. The function to create a thread is the pthread_create():
 &lt;pthread.h&gt; int pthread_create(pthread_t *thread, const pthread_attr_t *attr, void *(*start_routine) (void *), void *arg); This takes 4 different parameters:" />
@@ -28,16 +28,16 @@ Creating single threads The pthread library (POSTIX thread) allows C programmers
         "@context": "http://schema.org",
         "@type": "BlogPosting",
         "headline": "pthreads in C",
-        "inLanguage": "en",
+        "inLanguage": "zh-cn",
         "mainEntityOfPage": {
             "@type": "WebPage",
             "@id": "https:\/\/georgesims21.github.io\/posts\/pthreads\/"
         },"genre": "posts","keywords": "C, Multithreading","wordcount":  1379 ,
-        "url": "https:\/\/georgesims21.github.io\/posts\/pthreads\/","publisher": {
+        "url": "https:\/\/georgesims21.github.io\/posts\/pthreads\/","license": "©2019 Notepadium.","publisher": {
             "@type": "Organization",
             "name": ""},"author": {
                 "@type": "Person",
-                "name": "xxxx"
+                "name": "Author"
             },"description": ""
     }
     </script></head>
@@ -46,10 +46,10 @@ Creating single threads The pthread library (POSTIX thread) allows C programmers
         <div id="mask"></div><div class="wrapper"><header class="desktop" id="header-desktop">
     <div class="header-wrapper">
         <div class="header-title">
-            <a href="/" title="My New Hugo Site">My cool site</a>
+            <a href="/" title="George&#39;s Blog">My cool site</a>
         </div>
         <div class="menu">
-            <div class="menu-inner"><a class="menu-item" href="/posts/"> Posts </a><a class="menu-item" href="/tags/"> Tags </a><a class="menu-item" href="/categories/"> Categories </a><span class="menu-item delimiter"></span><a href="javascript:void(0);" class="menu-item theme-switch" title="Switch Theme">
+            <div class="menu-inner"><a href="javascript:void(0);" class="menu-item theme-switch" title="Switch Theme">
                     <i class="fas fa-adjust fa-fw" aria-hidden="true"></i>
                 </a>
             </div>
@@ -59,13 +59,13 @@ Creating single threads The pthread library (POSTIX thread) allows C programmers
     <div class="header-container">
         <div class="header-wrapper">
             <div class="header-title">
-                <a href="/" title="My New Hugo Site">My cool site</a>
+                <a href="/" title="George&#39;s Blog">My cool site</a>
             </div>
             <div class="menu-toggle" id="menu-toggle-mobile">
                 <span></span><span></span><span></span>
             </div>
         </div>
-        <div class="menu" id="menu-mobile"><a class="menu-item" href="/posts/" title="">Posts</a><a class="menu-item" href="/tags/" title="">Tags</a><a class="menu-item" href="/categories/" title="">Categories</a><a href="javascript:void(0);" class="menu-item theme-switch" title="Switch Theme">
+        <div class="menu" id="menu-mobile"><a href="javascript:void(0);" class="menu-item theme-switch" title="Switch Theme">
                 <i class="fas fa-adjust fa-fw" aria-hidden="true"></i>
             </a></div>
     </div>
@@ -74,8 +74,8 @@ Creating single threads The pthread library (POSTIX thread) allows C programmers
             <h2 class="toc-title">Contents</h2>
             <div class="toc-content" id="toc-content-auto"></div>
         </div><article class="page single"><h1 class="single-title animate__animated animate__flipInX">pthreads in C</h1><div class="post-meta">
-            <div class="post-meta-line"><span class="post-author"><a href="/" title="Author" rel="author" class="author"><i class="fas fa-user-circle fa-fw" aria-hidden="true"></i>xxxx</a></span>&nbsp;<span class="post-category">included in <a href="/categories/tutorial/"><i class="far fa-folder fa-fw" aria-hidden="true"></i>Tutorial</a></span></div>
-            <div class="post-meta-line"><i class="far fa-calendar-alt fa-fw" aria-hidden="true"></i>&nbsp;<time datetime="0001-01-01">0001-01-01</time>&nbsp;<i class="fas fa-pencil-alt fa-fw" aria-hidden="true"></i>&nbsp;1379 words&nbsp;
+            <div class="post-meta-line"><span class="post-author"><a href="/" title="Author" rel="author" class="author"><i class="fas fa-user-circle fa-fw" aria-hidden="true"></i>Author</a></span>&nbsp;<span class="post-category">included in <a href="/categories/tutorial/"><i class="far fa-folder fa-fw" aria-hidden="true"></i>Tutorial</a></span></div>
+            <div class="post-meta-line"><i class="far fa-calendar-alt fa-fw" aria-hidden="true"></i>&nbsp;<time datetime="Monday, January 1, 0001">Monday, January 1, 0001</time>&nbsp;<i class="fas fa-pencil-alt fa-fw" aria-hidden="true"></i>&nbsp;1379 words&nbsp;
                 <i class="far fa-clock fa-fw" aria-hidden="true"></i>&nbsp;7 minutes&nbsp;</div>
         </div><div class="details toc" id="toc-static"  data-kept="">
                 <div class="details-summary toc-title">
@@ -163,7 +163,7 @@ The function to create a thread is the pthread_create():</p>
 </span></span><span class="line"><span class="cl">In main after thread, limit is: <span class="m">1</span>   
 </span></span></code></pre></div><p>It is important to note that without the pthread_join function in this program, the main thread would simply print the statement and return without giving the thread a chance.</p>
 <h2 id="returning-a-value-from-the-run-function">Returning a value from the run function</h2>
-<p>In the previous example a global variable was used. If you want to return a variable from the function you must use pthread_exit(<!-- raw HTML omitted -->) and catch it when using pthread_join like so:</p>
+<p>In the previous example a global variable was used. If you want to return a variable from the function you must use pthread_exit(<return value>) and catch it when using pthread_join like so:</p>
 <div class="highlight"><pre tabindex="0" class="chroma"><code class="language-C" data-lang="C"><span class="line"><span class="cl"><span class="kt">void</span><span class="o">*</span> <span class="nf">run</span><span class="p">(</span><span class="kt">void</span><span class="o">*</span> <span class="n">arg</span><span class="p">)</span> <span class="p">{</span>
 </span></span><span class="line"><span class="cl">    <span class="kt">int</span> <span class="n">value</span><span class="p">;</span>
 </span></span><span class="line"><span class="cl">    <span class="p">...</span>
@@ -327,7 +327,7 @@ Further reading: <a href="https://nachtimwald.com/2019/04/12/thread-pool-in-c/" 
     <div class="post-info">
         <div class="post-info-line">
             <div class="post-info-mod">
-                <span>Updated on 0001-01-01</span>
+                <span>Updated on Monday, January 1, 0001</span>
             </div></div>
         <div class="post-info-line">
             <div class="post-info-md"></div>
@@ -350,7 +350,7 @@ Further reading: <a href="https://nachtimwald.com/2019/04/12/thread-pool-in-c/" 
 </article></div>
             </main><footer class="footer">
         <div class="footer-container"><div class="footer-line">Powered by <a href="https://gohugo.io/" target="_blank" rel="noopener noreffer" title="Hugo 0.101.0">Hugo</a> | Theme - <a href="https://github.com/dillonzq/LoveIt" target="_blank" rel="noopener noreffer" title="LoveIt 0.2.11"><i class="far fa-kiss-wink-heart fa-fw" aria-hidden="true"></i> LoveIt</a>
-                </div><div class="footer-line" itemscope itemtype="http://schema.org/CreativeWork"><i class="far fa-copyright fa-fw" aria-hidden="true"></i><span itemprop="copyrightYear">2022</span><span class="author" itemprop="copyrightHolder">&nbsp;<a href="/" target="_blank">xxxx</a></span></div>
+                </div><div class="footer-line" itemscope itemtype="http://schema.org/CreativeWork"><i class="far fa-copyright fa-fw" aria-hidden="true"></i><span itemprop="copyrightYear">2022</span><span class="author" itemprop="copyrightHolder">&nbsp;<a href="/" target="_blank"></a></span></div>
         </div>
     </footer></div>
 
