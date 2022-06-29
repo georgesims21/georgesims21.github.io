@@ -1,22 +1,22 @@
 <rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0">
     <channel>
         <title>Categories - Category - My New Hugo Site</title>
-        <link>http://example.org/categories/</link>
+        <link>georgesims21.github.io/categories/</link>
         <description>Categories - Category - My New Hugo Site</description>
-        <generator>Hugo -- gohugo.io</generator><language>en</language><atom:link href="http://example.org/categories/" rel="self" type="application/rss+xml" /><item>
+        <generator>Hugo -- gohugo.io</generator><language>en</language><atom:link href="georgesims21.github.io/categories/" rel="self" type="application/rss+xml" /><item>
     <title>Theory</title>
-    <link>http://example.org/categories/theory/</link>
+    <link>georgesims21.github.io/categories/theory/</link>
     <pubDate>Mon, 01 Jan 0001 00:00:00 &#43;0000</pubDate>
     <author>xxxx</author>
-    <guid>http://example.org/categories/theory/</guid>
+    <guid>georgesims21.github.io/categories/theory/</guid>
     <description><![CDATA[]]></description>
 </item>
 <item>
     <title>Tutorial</title>
-    <link>http://example.org/categories/tutorial/</link>
+    <link>georgesims21.github.io/categories/tutorial/</link>
     <pubDate>Mon, 01 Jan 0001 00:00:00 &#43;0000</pubDate>
     <author>xxxx</author>
-    <guid>http://example.org/categories/tutorial/</guid>
+    <guid>georgesims21.github.io/categories/tutorial/</guid>
     <description><![CDATA[]]></description>
 </item>
 </channel>

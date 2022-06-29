@@ -1,23 +1,23 @@
 <rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0">
     <channel>
         <title>Networking - Tag - My New Hugo Site</title>
-        <link>http://example.org/tags/networking/</link>
+        <link>georgesims21.github.io/tags/networking/</link>
         <description>Networking - Tag - My New Hugo Site</description>
-        <generator>Hugo -- gohugo.io</generator><language>en</language><atom:link href="http://example.org/tags/networking/" rel="self" type="application/rss+xml" /><item>
+        <generator>Hugo -- gohugo.io</generator><language>en</language><atom:link href="georgesims21.github.io/tags/networking/" rel="self" type="application/rss+xml" /><item>
     <title>Networking basics</title>
-    <link>http://example.org/posts/networking_basics/</link>
+    <link>georgesims21.github.io/posts/networking_basics/</link>
     <pubDate>Mon, 01 Jan 0001 00:00:00 &#43;0000</pubDate>
     <author>xxxx</author>
-    <guid>http://example.org/posts/networking_basics/</guid>
+    <guid>georgesims21.github.io/posts/networking_basics/</guid>
     <description><![CDATA[TCP (Transmission Control Protocol)/IP (Internet Protocol) is the backbone of the internet. There are 2 versions: IPv4 (32-bit addresses) and IPv6 (64-bit). The figure below shows the TCP/IP layers:
 The top layer shows applications which use networking to transfer/collect data. They either use TCP or UDP (mentioned later). Data transfer at this level is only logical, the real transferring takes place at the bottom two layers (Internet and Link layers). This is where the data packets are divided into data frames for transmission over physical networks.]]></description>
 </item>
 <item>
     <title>Socket Programming (TCP)</title>
-    <link>http://example.org/posts/socket_programming/</link>
+    <link>georgesims21.github.io/posts/socket_programming/</link>
     <pubDate>Mon, 01 Jan 0001 00:00:00 &#43;0000</pubDate>
     <author>xxxx</author>
-    <guid>http://example.org/posts/socket_programming/</guid>
+    <guid>georgesims21.github.io/posts/socket_programming/</guid>
     <description><![CDATA[The C socket API allows a developer to design and build a TCP/IP client/server program. To begin with a socket address structure is needed (&lt;sys/socket.h&gt;):
 struct sockaddr_in { sa_family_t sin_family; // AF_INET for TCP/IP in_port_t sin_port; // port number struct in_addr sin_addr; // IP address }; struct in_addr { // internet address (in_addr) uint32_t s_addr; // IP address in network byte order }; for TCP/IP connections sin_family is always set to AF_INET, sin_port contains the port number (in network byte order) and finally sin_addr is the host IP address, also in network byte order.]]></description>
 </item>

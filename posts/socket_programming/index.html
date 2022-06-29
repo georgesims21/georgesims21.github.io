@@ -8,7 +8,7 @@
 <meta property="og:description" content="The C socket API allows a developer to design and build a TCP/IP client/server program. To begin with a socket address structure is needed (&lt;sys/socket.h&gt;):
 struct sockaddr_in { sa_family_t sin_family; // AF_INET for TCP/IP in_port_t sin_port; // port number struct in_addr sin_addr; // IP address }; struct in_addr { // internet address (in_addr) uint32_t s_addr; // IP address in network byte order }; for TCP/IP connections sin_family is always set to AF_INET, sin_port contains the port number (in network byte order) and finally sin_addr is the host IP address, also in network byte order." />
 <meta property="og:type" content="article" />
-<meta property="og:url" content="http://example.org/posts/socket_programming/" /><meta property="article:section" content="posts" />
+<meta property="og:url" content="georgesims21.github.io/posts/socket_programming/" /><meta property="article:section" content="posts" />
 
 <meta property="og:site_name" content="My cool site" />
 
@@ -19,7 +19,7 @@ struct sockaddr_in { sa_family_t sin_family; // AF_INET for TCP/IP in_port_t sin
 <meta name="application-name" content="My cool site">
 <meta name="apple-mobile-web-app-title" content="My cool site"><meta name="theme-color" content="#ffffff"><meta name="msapplication-TileColor" content="#da532c"><link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" />
         <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
-        <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png"><link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png"><link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5"><link rel="manifest" href="/site.webmanifest"><link rel="canonical" href="http://example.org/posts/socket_programming/" /><link rel="prev" href="http://example.org/posts/strace/" /><link rel="next" href="http://example.org/posts/pthreads/" /><link rel="stylesheet" href="/css/style.min.css"><link rel="preload" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.1.1/css/all.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+        <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png"><link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png"><link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5"><link rel="manifest" href="/site.webmanifest"><link rel="canonical" href="georgesims21.github.io/posts/socket_programming/" /><link rel="prev" href="georgesims21.github.io/posts/strace/" /><link rel="next" href="georgesims21.github.io/posts/pthreads/" /><link rel="stylesheet" href="/georgesims21.github.io/css/style.min.css"><link rel="preload" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.1.1/css/all.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
         <noscript><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.1.1/css/all.min.css"></noscript><link rel="preload" href="https://cdn.jsdelivr.net/npm/animate.css@4.1.1/animate.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
         <noscript><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/animate.css@4.1.1/animate.min.css"></noscript><script type="application/ld+json">
     {
@@ -29,9 +29,9 @@ struct sockaddr_in { sa_family_t sin_family; // AF_INET for TCP/IP in_port_t sin
         "inLanguage": "en",
         "mainEntityOfPage": {
             "@type": "WebPage",
-            "@id": "http:\/\/example.org\/posts\/socket_programming\/"
+            "@id": "georgesims21.github.io\/posts\/socket_programming\/"
         },"genre": "posts","keywords": "C, Systems Programming, Networking, Sockets","wordcount":  418 ,
-        "url": "http:\/\/example.org\/posts\/socket_programming\/","publisher": {
+        "url": "georgesims21.github.io\/posts\/socket_programming\/","publisher": {
             "@type": "Organization",
             "name": ""},"author": {
                 "@type": "Person",
@@ -44,10 +44,10 @@ struct sockaddr_in { sa_family_t sin_family; // AF_INET for TCP/IP in_port_t sin
         <div id="mask"></div><div class="wrapper"><header class="desktop" id="header-desktop">
     <div class="header-wrapper">
         <div class="header-title">
-            <a href="/" title="My New Hugo Site">My cool site</a>
+            <a href="georgesims21.github.io/" title="My New Hugo Site">My cool site</a>
         </div>
         <div class="menu">
-            <div class="menu-inner"><a class="menu-item" href="/posts/"> Posts </a><a class="menu-item" href="/tags/"> Tags </a><a class="menu-item" href="/categories/"> Categories </a><span class="menu-item delimiter"></span><a href="javascript:void(0);" class="menu-item theme-switch" title="Switch Theme">
+            <div class="menu-inner"><a class="menu-item" href="/georgesims21.github.io/posts/"> Posts </a><a class="menu-item" href="/georgesims21.github.io/tags/"> Tags </a><a class="menu-item" href="/georgesims21.github.io/categories/"> Categories </a><span class="menu-item delimiter"></span><a href="javascript:void(0);" class="menu-item theme-switch" title="Switch Theme">
                     <i class="fas fa-adjust fa-fw" aria-hidden="true"></i>
                 </a>
             </div>
@@ -57,13 +57,13 @@ struct sockaddr_in { sa_family_t sin_family; // AF_INET for TCP/IP in_port_t sin
     <div class="header-container">
         <div class="header-wrapper">
             <div class="header-title">
-                <a href="/" title="My New Hugo Site">My cool site</a>
+                <a href="georgesims21.github.io/" title="My New Hugo Site">My cool site</a>
             </div>
             <div class="menu-toggle" id="menu-toggle-mobile">
                 <span></span><span></span><span></span>
             </div>
         </div>
-        <div class="menu" id="menu-mobile"><a class="menu-item" href="/posts/" title="">Posts</a><a class="menu-item" href="/tags/" title="">Tags</a><a class="menu-item" href="/categories/" title="">Categories</a><a href="javascript:void(0);" class="menu-item theme-switch" title="Switch Theme">
+        <div class="menu" id="menu-mobile"><a class="menu-item" href="/georgesims21.github.io/posts/" title="">Posts</a><a class="menu-item" href="/georgesims21.github.io/tags/" title="">Tags</a><a class="menu-item" href="/georgesims21.github.io/categories/" title="">Categories</a><a href="javascript:void(0);" class="menu-item theme-switch" title="Switch Theme">
                 <i class="fas fa-adjust fa-fw" aria-hidden="true"></i>
             </a></div>
     </div>
@@ -72,7 +72,7 @@ struct sockaddr_in { sa_family_t sin_family; // AF_INET for TCP/IP in_port_t sin
             <h2 class="toc-title">Contents</h2>
             <div class="toc-content" id="toc-content-auto"></div>
         </div><article class="page single"><h1 class="single-title animate__animated animate__flipInX">Socket Programming (TCP)</h1><div class="post-meta">
-            <div class="post-meta-line"><span class="post-author"><a href="/" title="Author" rel="author" class="author"><i class="fas fa-user-circle fa-fw" aria-hidden="true"></i>xxxx</a></span>&nbsp;<span class="post-category">included in <a href="/categories/theory/"><i class="far fa-folder fa-fw" aria-hidden="true"></i>Theory</a></span></div>
+            <div class="post-meta-line"><span class="post-author"><a href="georgesims21.github.io/" title="Author" rel="author" class="author"><i class="fas fa-user-circle fa-fw" aria-hidden="true"></i>xxxx</a></span>&nbsp;<span class="post-category">included in <a href="georgesims21.github.io/categories/theory/"><i class="far fa-folder fa-fw" aria-hidden="true"></i>Theory</a></span></div>
             <div class="post-meta-line"><i class="far fa-calendar-alt fa-fw" aria-hidden="true"></i>&nbsp;<time datetime="0001-01-01">0001-01-01</time>&nbsp;<i class="fas fa-pencil-alt fa-fw" aria-hidden="true"></i>&nbsp;418 words&nbsp;
                 <i class="far fa-clock fa-fw" aria-hidden="true"></i>&nbsp;2 minutes&nbsp;</div>
         </div><div class="details toc" id="toc-static"  data-kept="">
@@ -118,25 +118,25 @@ struct sockaddr_in { sa_family_t sin_family; // AF_INET for TCP/IP in_port_t sin
         <div class="post-info-line">
             <div class="post-info-md"></div>
             <div class="post-info-share">
-                <span><a href="javascript:void(0);" title="Share on Twitter" data-sharer="twitter" data-url="http://example.org/posts/socket_programming/" data-title="Socket Programming (TCP)" data-hashtags="C,Systems Programming,Networking,Sockets"><i class="fab fa-twitter fa-fw" aria-hidden="true"></i></a><a href="javascript:void(0);" title="Share on Facebook" data-sharer="facebook" data-url="http://example.org/posts/socket_programming/" data-hashtag="C"><i class="fab fa-facebook-square fa-fw" aria-hidden="true"></i></a><a href="javascript:void(0);" title="Share on Hacker News" data-sharer="hackernews" data-url="http://example.org/posts/socket_programming/" data-title="Socket Programming (TCP)"><i class="fab fa-hacker-news fa-fw" aria-hidden="true"></i></a><a href="javascript:void(0);" title="Share on Line" data-sharer="line" data-url="http://example.org/posts/socket_programming/" data-title="Socket Programming (TCP)"><i data-svg-src="https://cdn.jsdelivr.net/npm/simple-icons@7.0.0/icons/line.svg" aria-hidden="true"></i></a><a href="javascript:void(0);" title="Share on 微博" data-sharer="weibo" data-url="http://example.org/posts/socket_programming/" data-title="Socket Programming (TCP)"><i class="fab fa-weibo fa-fw" aria-hidden="true"></i></a></span>
+                <span><a href="javascript:void(0);" title="Share on Twitter" data-sharer="twitter" data-url="georgesims21.github.io/posts/socket_programming/" data-title="Socket Programming (TCP)" data-hashtags="C,Systems Programming,Networking,Sockets"><i class="fab fa-twitter fa-fw" aria-hidden="true"></i></a><a href="javascript:void(0);" title="Share on Facebook" data-sharer="facebook" data-url="georgesims21.github.io/posts/socket_programming/" data-hashtag="C"><i class="fab fa-facebook-square fa-fw" aria-hidden="true"></i></a><a href="javascript:void(0);" title="Share on Hacker News" data-sharer="hackernews" data-url="georgesims21.github.io/posts/socket_programming/" data-title="Socket Programming (TCP)"><i class="fab fa-hacker-news fa-fw" aria-hidden="true"></i></a><a href="javascript:void(0);" title="Share on Line" data-sharer="line" data-url="georgesims21.github.io/posts/socket_programming/" data-title="Socket Programming (TCP)"><i data-svg-src="https://cdn.jsdelivr.net/npm/simple-icons@7.0.0/icons/line.svg" aria-hidden="true"></i></a><a href="javascript:void(0);" title="Share on 微博" data-sharer="weibo" data-url="georgesims21.github.io/posts/socket_programming/" data-title="Socket Programming (TCP)"><i class="fab fa-weibo fa-fw" aria-hidden="true"></i></a></span>
             </div>
         </div>
     </div>
 
     <div class="post-info-more">
-        <section class="post-tags"><i class="fas fa-tags fa-fw" aria-hidden="true"></i>&nbsp;<a href="/tags/c/">C</a>,&nbsp;<a href="/tags/systems-programming/">Systems Programming</a>,&nbsp;<a href="/tags/networking/">Networking</a>,&nbsp;<a href="/tags/sockets/">Sockets</a></section>
+        <section class="post-tags"><i class="fas fa-tags fa-fw" aria-hidden="true"></i>&nbsp;<a href="georgesims21.github.io/tags/c/">C</a>,&nbsp;<a href="georgesims21.github.io/tags/systems-programming/">Systems Programming</a>,&nbsp;<a href="georgesims21.github.io/tags/networking/">Networking</a>,&nbsp;<a href="georgesims21.github.io/tags/sockets/">Sockets</a></section>
         <section>
-            <span><a href="javascript:void(0);" onclick="window.history.back();">Back</a></span>&nbsp;|&nbsp;<span><a href="/">Home</a></span>
+            <span><a href="javascript:void(0);" onclick="window.history.back();">Back</a></span>&nbsp;|&nbsp;<span><a href="georgesims21.github.io/">Home</a></span>
         </section>
     </div>
 
-    <div class="post-nav"><a href="/posts/strace/" class="prev" rel="prev" title="strace"><i class="fas fa-angle-left fa-fw" aria-hidden="true"></i>strace</a>
-            <a href="/posts/pthreads/" class="next" rel="next" title="pthreads in C">pthreads in C<i class="fas fa-angle-right fa-fw" aria-hidden="true"></i></a></div>
+    <div class="post-nav"><a href="georgesims21.github.io/posts/strace/" class="prev" rel="prev" title="strace"><i class="fas fa-angle-left fa-fw" aria-hidden="true"></i>strace</a>
+            <a href="georgesims21.github.io/posts/pthreads/" class="next" rel="next" title="pthreads in C">pthreads in C<i class="fas fa-angle-right fa-fw" aria-hidden="true"></i></a></div>
 </div>
 </article></div>
             </main><footer class="footer">
         <div class="footer-container"><div class="footer-line">Powered by <a href="https://gohugo.io/" target="_blank" rel="noopener noreffer" title="Hugo 0.101.0">Hugo</a> | Theme - <a href="https://github.com/dillonzq/LoveIt" target="_blank" rel="noopener noreffer" title="LoveIt 0.2.11"><i class="far fa-kiss-wink-heart fa-fw" aria-hidden="true"></i> LoveIt</a>
-                </div><div class="footer-line" itemscope itemtype="http://schema.org/CreativeWork"><i class="far fa-copyright fa-fw" aria-hidden="true"></i><span itemprop="copyrightYear">2022</span><span class="author" itemprop="copyrightHolder">&nbsp;<a href="/" target="_blank">xxxx</a></span></div>
+                </div><div class="footer-line" itemscope itemtype="http://schema.org/CreativeWork"><i class="far fa-copyright fa-fw" aria-hidden="true"></i><span itemprop="copyrightYear">2022</span><span class="author" itemprop="copyrightHolder">&nbsp;<a href="georgesims21.github.io/" target="_blank">xxxx</a></span></div>
         </div>
     </footer></div>
 
@@ -145,5 +145,5 @@ struct sockaddr_in { sa_family_t sin_family; // AF_INET for TCP/IP in_port_t sin
             </a><a href="#" id="view-comments" class="fixed-button" title="View Comments">
                 <i class="fas fa-comment fa-fw" aria-hidden="true"></i>
             </a>
-        </div><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/lazysizes@5.3.2/lazysizes.min.js"></script><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/clipboard@2.0.11/dist/clipboard.min.js"></script><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/sharer.js@0.5.1/sharer.min.js"></script><script type="text/javascript">window.config={"code":{"copyTitle":"Copy to clipboard","maxShownLines":50},"comment":{}};</script><script type="text/javascript" src="/js/theme.min.js"></script></body>
+        </div><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/lazysizes@5.3.2/lazysizes.min.js"></script><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/clipboard@2.0.11/dist/clipboard.min.js"></script><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/sharer.js@0.5.1/sharer.min.js"></script><script type="text/javascript">window.config={"code":{"copyTitle":"Copy to clipboard","maxShownLines":50},"comment":{}};</script><script type="text/javascript" src="/georgesims21.github.io/js/theme.min.js"></script></body>
 </html>
