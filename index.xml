@@ -2,7 +2,7 @@
     <channel>
         <title>George&#39;s Blog</title>
         <link>https://georgesims21.github.io/</link>
-        <description>This is my cool site</description>
+        <description>A healthy portion of DevOps with a side of Linux. Site currently under construction..</description>
         <generator>Hugo -- gohugo.io</generator><language>en</language><managingEditor>george.sims.nl@gmail.com (George Sims)</managingEditor>
             <webMaster>george.sims.nl@gmail.com (George Sims)</webMaster><copyright>©2019 Notepadium.</copyright>
             <atom:link href="https://georgesims21.github.io/index.xml" rel="self" type="application/rss+xml" />
