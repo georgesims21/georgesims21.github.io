@@ -1,86 +1,86 @@
 <rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0">
     <channel>
-        <title>Tags - Tag - My New Hugo Site</title>
-        <link>http://example.org/tags/</link>
-        <description>Tags - Tag - My New Hugo Site</description>
-        <generator>Hugo -- gohugo.io</generator><language>en</language><atom:link href="http://example.org/tags/" rel="self" type="application/rss+xml" /><item>
+        <title>Tags - Tag - George&#39;s Blog</title>
+        <link>georgesims21.github.io/tags/</link>
+        <description>Tags - Tag - George&#39;s Blog</description>
+        <generator>Hugo -- gohugo.io</generator><language>zh-cn</language><copyright>©2019 Notepadium.</copyright><atom:link href="georgesims21.github.io/tags/" rel="self" type="application/rss+xml" /><item>
     <title>Assembly</title>
-    <link>http://example.org/tags/assembly/</link>
+    <link>georgesims21.github.io/tags/assembly/</link>
     <pubDate>Mon, 01 Jan 0001 00:00:00 &#43;0000</pubDate>
-    <author>xxxx</author>
-    <guid>http://example.org/tags/assembly/</guid>
+    <author>Author</author>
+    <guid>georgesims21.github.io/tags/assembly/</guid>
     <description><![CDATA[]]></description>
 </item>
 <item>
     <title>Basics</title>
-    <link>http://example.org/tags/basics/</link>
+    <link>georgesims21.github.io/tags/basics/</link>
     <pubDate>Mon, 01 Jan 0001 00:00:00 &#43;0000</pubDate>
-    <author>xxxx</author>
-    <guid>http://example.org/tags/basics/</guid>
+    <author>Author</author>
+    <guid>georgesims21.github.io/tags/basics/</guid>
     <description><![CDATA[]]></description>
 </item>
 <item>
     <title>C</title>
-    <link>http://example.org/tags/c/</link>
+    <link>georgesims21.github.io/tags/c/</link>
     <pubDate>Mon, 01 Jan 0001 00:00:00 &#43;0000</pubDate>
-    <author>xxxx</author>
-    <guid>http://example.org/tags/c/</guid>
+    <author>Author</author>
+    <guid>georgesims21.github.io/tags/c/</guid>
     <description><![CDATA[]]></description>
 </item>
 <item>
     <title>Command Line Tools</title>
-    <link>http://example.org/tags/command-line-tools/</link>
+    <link>georgesims21.github.io/tags/command-line-tools/</link>
     <pubDate>Mon, 01 Jan 0001 00:00:00 &#43;0000</pubDate>
-    <author>xxxx</author>
-    <guid>http://example.org/tags/command-line-tools/</guid>
+    <author>Author</author>
+    <guid>georgesims21.github.io/tags/command-line-tools/</guid>
     <description><![CDATA[]]></description>
 </item>
 <item>
     <title>File Systems</title>
-    <link>http://example.org/tags/file-systems/</link>
+    <link>georgesims21.github.io/tags/file-systems/</link>
     <pubDate>Mon, 01 Jan 0001 00:00:00 &#43;0000</pubDate>
-    <author>xxxx</author>
-    <guid>http://example.org/tags/file-systems/</guid>
+    <author>Author</author>
+    <guid>georgesims21.github.io/tags/file-systems/</guid>
     <description><![CDATA[]]></description>
 </item>
 <item>
     <title>FUSE</title>
-    <link>http://example.org/tags/fuse/</link>
+    <link>georgesims21.github.io/tags/fuse/</link>
     <pubDate>Mon, 01 Jan 0001 00:00:00 &#43;0000</pubDate>
-    <author>xxxx</author>
-    <guid>http://example.org/tags/fuse/</guid>
+    <author>Author</author>
+    <guid>georgesims21.github.io/tags/fuse/</guid>
     <description><![CDATA[]]></description>
 </item>
 <item>
     <title>Hugo</title>
-    <link>http://example.org/tags/hugo/</link>
+    <link>georgesims21.github.io/tags/hugo/</link>
     <pubDate>Mon, 01 Jan 0001 00:00:00 &#43;0000</pubDate>
-    <author>xxxx</author>
-    <guid>http://example.org/tags/hugo/</guid>
+    <author>Author</author>
+    <guid>georgesims21.github.io/tags/hugo/</guid>
     <description><![CDATA[]]></description>
 </item>
 <item>
     <title>Linux</title>
-    <link>http://example.org/tags/linux/</link>
+    <link>georgesims21.github.io/tags/linux/</link>
     <pubDate>Mon, 01 Jan 0001 00:00:00 &#43;0000</pubDate>
-    <author>xxxx</author>
-    <guid>http://example.org/tags/linux/</guid>
+    <author>Author</author>
+    <guid>georgesims21.github.io/tags/linux/</guid>
     <description><![CDATA[]]></description>
 </item>
 <item>
     <title>Multithreading</title>
-    <link>http://example.org/tags/multithreading/</link>
+    <link>georgesims21.github.io/tags/multithreading/</link>
     <pubDate>Mon, 01 Jan 0001 00:00:00 &#43;0000</pubDate>
-    <author>xxxx</author>
-    <guid>http://example.org/tags/multithreading/</guid>
+    <author>Author</author>
+    <guid>georgesims21.github.io/tags/multithreading/</guid>
     <description><![CDATA[]]></description>
 </item>
 <item>
     <title>Networking</title>
-    <link>http://example.org/tags/networking/</link>
+    <link>georgesims21.github.io/tags/networking/</link>
     <pubDate>Mon, 01 Jan 0001 00:00:00 &#43;0000</pubDate>
-    <author>xxxx</author>
-    <guid>http://example.org/tags/networking/</guid>
+    <author>Author</author>
+    <guid>georgesims21.github.io/tags/networking/</guid>
     <description><![CDATA[]]></description>
 </item>
 </channel>

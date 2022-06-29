@@ -1,33 +1,33 @@
 <rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0">
     <channel>
-        <title>Tutorial - Category - My New Hugo Site</title>
-        <link>http://example.org/categories/tutorial/</link>
-        <description>Tutorial - Category - My New Hugo Site</description>
-        <generator>Hugo -- gohugo.io</generator><language>en</language><atom:link href="http://example.org/categories/tutorial/" rel="self" type="application/rss+xml" /><item>
+        <title>Tutorial - Category - George&#39;s Blog</title>
+        <link>georgesims21.github.io/categories/tutorial/</link>
+        <description>Tutorial - Category - George&#39;s Blog</description>
+        <generator>Hugo -- gohugo.io</generator><language>zh-cn</language><copyright>©2019 Notepadium.</copyright><atom:link href="georgesims21.github.io/categories/tutorial/" rel="self" type="application/rss+xml" /><item>
     <title>Hugo basics</title>
-    <link>http://example.org/posts/hugo-basics/</link>
+    <link>georgesims21.github.io/posts/hugo-basics/</link>
     <pubDate>Mon, 01 Jan 0001 00:00:00 &#43;0000</pubDate>
-    <author>xxxx</author>
-    <guid>http://example.org/posts/hugo-basics/</guid>
+    <author>Author</author>
+    <guid>georgesims21.github.io/posts/hugo-basics/</guid>
     <description><![CDATA[Create a new site in a directory &lt;site_name&gt; hugo new site &lt;site_name&gt; Running the server locally (-D flag is to render pages marked as drafts) hugo server -D Github This repo has the alternate stream set to &lsquo;development&rsquo;. So pushing master to here will not effect the site itself.
 Deploying ./deploy.sh This script deploys the website to the repo georgesims21.github.io as a proper site. It will not render files marked as drafts, so it should look exactly the same as locally if you run:]]></description>
 </item>
 <item>
     <title>pthreads in C</title>
-    <link>http://example.org/posts/pthreads/</link>
+    <link>georgesims21.github.io/posts/pthreads/</link>
     <pubDate>Mon, 01 Jan 0001 00:00:00 &#43;0000</pubDate>
-    <author>xxxx</author>
-    <guid>http://example.org/posts/pthreads/</guid>
+    <author>Author</author>
+    <guid>georgesims21.github.io/posts/pthreads/</guid>
     <description><![CDATA[This tutorial assumes you know the basic concepts of multithreading. It is based on this short video series by Dr. Brian Fraser
 Creating single threads The pthread library (POSTIX thread) allows C programmers to use multithreading capabilities. First you must define the &lt;pthread.h&gt; header, and link -pthread when compiling the program. The function to create a thread is the pthread_create():
 &lt;pthread.h&gt; int pthread_create(pthread_t *thread, const pthread_attr_t *attr, void *(*start_routine) (void *), void *arg); This takes 4 different parameters:]]></description>
 </item>
 <item>
     <title>strace</title>
-    <link>http://example.org/posts/strace/</link>
+    <link>georgesims21.github.io/posts/strace/</link>
     <pubDate>Mon, 01 Jan 0001 00:00:00 &#43;0000</pubDate>
-    <author>xxxx</author>
-    <guid>http://example.org/posts/strace/</guid>
+    <author>Author</author>
+    <guid>georgesims21.github.io/posts/strace/</guid>
     <description><![CDATA[Strace is a command used to view the system calls made by an executable program during runtime, it is especially helpful when trying to debug a systems program.
 Basic strace commands:
 strace &lt;program executable&gt; # output to stdout the full output strace -o &lt;file.out&gt; &lt;progex&gt; # output to &lt;file.out&gt; instead of stdout strace -e &lt;command&gt; &lt;progex&gt; # only output specific &lt;command&gt; (i.e openat/read etc) strace -e trace=&lt;command1, command2, ...&gt; &lt;progex&gt; sudo strace -p &lt;pid&gt; -o &lt;file.]]></description>

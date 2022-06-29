@@ -1,14 +1,14 @@
 <rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0">
     <channel>
-        <title>procfs - Tag - My New Hugo Site</title>
-        <link>http://example.org/tags/procfs/</link>
-        <description>procfs - Tag - My New Hugo Site</description>
-        <generator>Hugo -- gohugo.io</generator><language>en</language><atom:link href="http://example.org/tags/procfs/" rel="self" type="application/rss+xml" /><item>
+        <title>procfs - Tag - George&#39;s Blog</title>
+        <link>georgesims21.github.io/tags/procfs/</link>
+        <description>procfs - Tag - George&#39;s Blog</description>
+        <generator>Hugo -- gohugo.io</generator><language>zh-cn</language><copyright>©2019 Notepadium.</copyright><atom:link href="georgesims21.github.io/tags/procfs/" rel="self" type="application/rss+xml" /><item>
     <title>procfs/sysfs</title>
-    <link>http://example.org/posts/procfs/</link>
+    <link>georgesims21.github.io/posts/procfs/</link>
     <pubDate>Mon, 01 Jan 0001 00:00:00 &#43;0000</pubDate>
-    <author>xxxx</author>
-    <guid>http://example.org/posts/procfs/</guid>
+    <author>Author</author>
+    <guid>georgesims21.github.io/posts/procfs/</guid>
     <description><![CDATA[procfs and sysfs are both pseudo filesystems located in the root directory of the Unix FS heirarchy. They contain files which act as a window to the kernel and allows user-land processes to see and change important system information. Upon inspection (if you wrote the command $ ls -al /proc on a Unix system) you would notice that all files are 0 in size. This is due to the window aspect, one a user-land process reads/opens one of these files, it is at that moment the kernel writes that information to the file, hence the analogy.]]></description>
 </item>
 </channel>

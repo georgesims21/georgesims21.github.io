@@ -1,14 +1,14 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh-cn">
     <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta name="robots" content="noodp" />
-        <title>Networking basics - My New Hugo Site</title><meta name="Description" content="This is my cool site"><meta property="og:title" content="Networking basics" />
+        <title>Networking basics - George&#39;s Blog</title><meta name="Description" content="This is my cool site"><meta property="og:title" content="Networking basics" />
 <meta property="og:description" content="TCP (Transmission Control Protocol)/IP (Internet Protocol) is the backbone of the internet. There are 2 versions: IPv4 (32-bit addresses) and IPv6 (64-bit). The figure below shows the TCP/IP layers:
 The top layer shows applications which use networking to transfer/collect data. They either use TCP or UDP (mentioned later). Data transfer at this level is only logical, the real transferring takes place at the bottom two layers (Internet and Link layers). This is where the data packets are divided into data frames for transmission over physical networks." />
 <meta property="og:type" content="article" />
-<meta property="og:url" content="http://example.org/posts/networking_basics/" /><meta property="article:section" content="posts" />
+<meta property="og:url" content="georgesims21.github.io/posts/networking_basics/" /><meta property="article:section" content="posts" />
 
 <meta property="og:site_name" content="My cool site" />
 
@@ -19,23 +19,23 @@ The top layer shows applications which use networking to transfer/collect data. 
 <meta name="application-name" content="My cool site">
 <meta name="apple-mobile-web-app-title" content="My cool site"><meta name="theme-color" content="#ffffff"><meta name="msapplication-TileColor" content="#da532c"><link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" />
         <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
-        <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png"><link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png"><link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5"><link rel="manifest" href="/site.webmanifest"><link rel="canonical" href="http://example.org/posts/networking_basics/" /><link rel="prev" href="http://example.org/posts/procfs/" /><link rel="next" href="http://example.org/posts/hugo-basics/" /><link rel="stylesheet" href="/css/style.min.css"><link rel="preload" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.1.1/css/all.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+        <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png"><link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png"><link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5"><link rel="manifest" href="/site.webmanifest"><link rel="canonical" href="georgesims21.github.io/posts/networking_basics/" /><link rel="prev" href="georgesims21.github.io/posts/procfs/" /><link rel="next" href="georgesims21.github.io/posts/hugo-basics/" /><link rel="stylesheet" href="/georgesims21.github.io/css/style.min.css"><link rel="preload" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.1.1/css/all.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
         <noscript><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.1.1/css/all.min.css"></noscript><link rel="preload" href="https://cdn.jsdelivr.net/npm/animate.css@4.1.1/animate.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
         <noscript><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/animate.css@4.1.1/animate.min.css"></noscript><script type="application/ld+json">
     {
         "@context": "http://schema.org",
         "@type": "BlogPosting",
         "headline": "Networking basics",
-        "inLanguage": "en",
+        "inLanguage": "zh-cn",
         "mainEntityOfPage": {
             "@type": "WebPage",
-            "@id": "http:\/\/example.org\/posts\/networking_basics\/"
+            "@id": "georgesims21.github.io\/posts\/networking_basics\/"
         },"genre": "posts","keywords": "C, Systems Programming, Networking","wordcount":  528 ,
-        "url": "http:\/\/example.org\/posts\/networking_basics\/","publisher": {
+        "url": "georgesims21.github.io\/posts\/networking_basics\/","license": "©2019 Notepadium.","publisher": {
             "@type": "Organization",
             "name": ""},"author": {
                 "@type": "Person",
-                "name": "xxxx"
+                "name": "Author"
             },"description": ""
     }
     </script></head>
@@ -44,10 +44,10 @@ The top layer shows applications which use networking to transfer/collect data. 
         <div id="mask"></div><div class="wrapper"><header class="desktop" id="header-desktop">
     <div class="header-wrapper">
         <div class="header-title">
-            <a href="/" title="My New Hugo Site">My cool site</a>
+            <a href="georgesims21.github.io/" title="George&#39;s Blog">My cool site</a>
         </div>
         <div class="menu">
-            <div class="menu-inner"><a class="menu-item" href="/posts/"> Posts </a><a class="menu-item" href="/tags/"> Tags </a><a class="menu-item" href="/categories/"> Categories </a><span class="menu-item delimiter"></span><a href="javascript:void(0);" class="menu-item theme-switch" title="Switch Theme">
+            <div class="menu-inner"><a href="javascript:void(0);" class="menu-item theme-switch" title="Switch Theme">
                     <i class="fas fa-adjust fa-fw" aria-hidden="true"></i>
                 </a>
             </div>
@@ -57,13 +57,13 @@ The top layer shows applications which use networking to transfer/collect data. 
     <div class="header-container">
         <div class="header-wrapper">
             <div class="header-title">
-                <a href="/" title="My New Hugo Site">My cool site</a>
+                <a href="georgesims21.github.io/" title="George&#39;s Blog">My cool site</a>
             </div>
             <div class="menu-toggle" id="menu-toggle-mobile">
                 <span></span><span></span><span></span>
             </div>
         </div>
-        <div class="menu" id="menu-mobile"><a class="menu-item" href="/posts/" title="">Posts</a><a class="menu-item" href="/tags/" title="">Tags</a><a class="menu-item" href="/categories/" title="">Categories</a><a href="javascript:void(0);" class="menu-item theme-switch" title="Switch Theme">
+        <div class="menu" id="menu-mobile"><a href="javascript:void(0);" class="menu-item theme-switch" title="Switch Theme">
                 <i class="fas fa-adjust fa-fw" aria-hidden="true"></i>
             </a></div>
     </div>
@@ -72,8 +72,8 @@ The top layer shows applications which use networking to transfer/collect data. 
             <h2 class="toc-title">Contents</h2>
             <div class="toc-content" id="toc-content-auto"></div>
         </div><article class="page single"><h1 class="single-title animate__animated animate__flipInX">Networking basics</h1><div class="post-meta">
-            <div class="post-meta-line"><span class="post-author"><a href="/" title="Author" rel="author" class="author"><i class="fas fa-user-circle fa-fw" aria-hidden="true"></i>xxxx</a></span>&nbsp;<span class="post-category">included in <a href="/categories/theory/"><i class="far fa-folder fa-fw" aria-hidden="true"></i>Theory</a></span></div>
-            <div class="post-meta-line"><i class="far fa-calendar-alt fa-fw" aria-hidden="true"></i>&nbsp;<time datetime="0001-01-01">0001-01-01</time>&nbsp;<i class="fas fa-pencil-alt fa-fw" aria-hidden="true"></i>&nbsp;528 words&nbsp;
+            <div class="post-meta-line"><span class="post-author"><a href="georgesims21.github.io/" title="Author" rel="author" class="author"><i class="fas fa-user-circle fa-fw" aria-hidden="true"></i>Author</a></span>&nbsp;<span class="post-category">included in <a href="georgesims21.github.io/categories/theory/"><i class="far fa-folder fa-fw" aria-hidden="true"></i>Theory</a></span></div>
+            <div class="post-meta-line"><i class="far fa-calendar-alt fa-fw" aria-hidden="true"></i>&nbsp;<time datetime="Monday, January 1, 0001">Monday, January 1, 0001</time>&nbsp;<i class="fas fa-pencil-alt fa-fw" aria-hidden="true"></i>&nbsp;528 words&nbsp;
                 <i class="far fa-clock fa-fw" aria-hidden="true"></i>&nbsp;3 minutes&nbsp;</div>
         </div><div class="details toc" id="toc-static"  data-kept="">
                 <div class="details-summary toc-title">
@@ -84,7 +84,7 @@ The top layer shows applications which use networking to transfer/collect data. 
             </div><div class="content" id="content"><p>TCP (Transmission Control Protocol)/IP (Internet Protocol) is the backbone of the internet. There are 2 versions: IPv4 (32-bit addresses) and IPv6 (64-bit). The figure below shows the TCP/IP layers:</p>
 <p><img
         class="lazyload"
-        src="/svg/loading.min.svg"
+        src="/georgesims21.github.io/svg/loading.min.svg"
         data-src="/networking-basics/networking-layers.jpg"
         data-srcset="/networking-basics/networking-layers.jpg, /networking-basics/networking-layers.jpg 1.5x, /networking-basics/networking-layers.jpg 2x"
         data-sizes="auto"
@@ -93,7 +93,7 @@ The top layer shows applications which use networking to transfer/collect data. 
 <p>The top layer shows applications which use networking to transfer/collect data. They either use TCP or UDP (mentioned later). Data transfer at this level is only logical, the real transferring takes place at the bottom two layers (Internet and Link layers). This is where the data packets are divided into data frames for transmission over physical networks. This is represented in the data flow diagram below:</p>
 <p><img
         class="lazyload"
-        src="/svg/loading.min.svg"
+        src="/georgesims21.github.io/svg/loading.min.svg"
         data-src="/networking-basics/networking-flow-path.jpg"
         data-srcset="/networking-basics/networking-flow-path.jpg, /networking-basics/networking-flow-path.jpg 1.5x, /networking-basics/networking-flow-path.jpg 2x"
         data-sizes="auto"
@@ -103,7 +103,7 @@ The top layer shows applications which use networking to transfer/collect data. 
 <p>An IP packet consists of an IP header, sender and receiver IP addreses, an IP header looks like this:</p>
 <p><img
         class="lazyload"
-        src="/svg/loading.min.svg"
+        src="/georgesims21.github.io/svg/loading.min.svg"
         data-src="/networking-basics/networking-IP-header.jpg"
         data-srcset="/networking-basics/networking-IP-header.jpg, /networking-basics/networking-IP-header.jpg 1.5x, /networking-basics/networking-IP-header.jpg 2x"
         data-sizes="auto"
@@ -116,7 +116,7 @@ The top layer shows applications which use networking to transfer/collect data. 
 </span></span></code></pre></div><p>Where PortNumber is a unique unsigned short integer. In TCP applications the first 1024 ports are reserved:</p>
 <p><img
         class="lazyload"
-        src="/svg/loading.min.svg"
+        src="/georgesims21.github.io/svg/loading.min.svg"
         data-src="/networking-basics/reserved-port-numbers-TCP.jpg"
         data-srcset="/networking-basics/reserved-port-numbers-TCP.jpg, /networking-basics/reserved-port-numbers-TCP.jpg 1.5x, /networking-basics/reserved-port-numbers-TCP.jpg 2x"
         data-sizes="auto"
@@ -125,7 +125,7 @@ The top layer shows applications which use networking to transfer/collect data. 
 <p>The dataflow in TCP/IP networks looks like this:</p>
 <p><img
         class="lazyload"
-        src="/svg/loading.min.svg"
+        src="/georgesims21.github.io/svg/loading.min.svg"
         data-src="/networking-basics/data-format-tcpip.jpg"
         data-srcset="/networking-basics/data-format-tcpip.jpg, /networking-basics/data-format-tcpip.jpg 1.5x, /networking-basics/data-format-tcpip.jpg 2x"
         data-sizes="auto"
@@ -136,30 +136,30 @@ The top layer shows applications which use networking to transfer/collect data. 
     <div class="post-info">
         <div class="post-info-line">
             <div class="post-info-mod">
-                <span>Updated on 0001-01-01</span>
+                <span>Updated on Monday, January 1, 0001</span>
             </div></div>
         <div class="post-info-line">
             <div class="post-info-md"></div>
             <div class="post-info-share">
-                <span><a href="javascript:void(0);" title="Share on Twitter" data-sharer="twitter" data-url="http://example.org/posts/networking_basics/" data-title="Networking basics" data-hashtags="C,Systems Programming,Networking"><i class="fab fa-twitter fa-fw" aria-hidden="true"></i></a><a href="javascript:void(0);" title="Share on Facebook" data-sharer="facebook" data-url="http://example.org/posts/networking_basics/" data-hashtag="C"><i class="fab fa-facebook-square fa-fw" aria-hidden="true"></i></a><a href="javascript:void(0);" title="Share on Hacker News" data-sharer="hackernews" data-url="http://example.org/posts/networking_basics/" data-title="Networking basics"><i class="fab fa-hacker-news fa-fw" aria-hidden="true"></i></a><a href="javascript:void(0);" title="Share on Line" data-sharer="line" data-url="http://example.org/posts/networking_basics/" data-title="Networking basics"><i data-svg-src="https://cdn.jsdelivr.net/npm/simple-icons@7.0.0/icons/line.svg" aria-hidden="true"></i></a><a href="javascript:void(0);" title="Share on 微博" data-sharer="weibo" data-url="http://example.org/posts/networking_basics/" data-title="Networking basics"><i class="fab fa-weibo fa-fw" aria-hidden="true"></i></a></span>
+                <span><a href="javascript:void(0);" title="Share on Twitter" data-sharer="twitter" data-url="georgesims21.github.io/posts/networking_basics/" data-title="Networking basics" data-hashtags="C,Systems Programming,Networking"><i class="fab fa-twitter fa-fw" aria-hidden="true"></i></a><a href="javascript:void(0);" title="Share on Facebook" data-sharer="facebook" data-url="georgesims21.github.io/posts/networking_basics/" data-hashtag="C"><i class="fab fa-facebook-square fa-fw" aria-hidden="true"></i></a><a href="javascript:void(0);" title="Share on Hacker News" data-sharer="hackernews" data-url="georgesims21.github.io/posts/networking_basics/" data-title="Networking basics"><i class="fab fa-hacker-news fa-fw" aria-hidden="true"></i></a><a href="javascript:void(0);" title="Share on Line" data-sharer="line" data-url="georgesims21.github.io/posts/networking_basics/" data-title="Networking basics"><i data-svg-src="https://cdn.jsdelivr.net/npm/simple-icons@7.0.0/icons/line.svg" aria-hidden="true"></i></a><a href="javascript:void(0);" title="Share on 微博" data-sharer="weibo" data-url="georgesims21.github.io/posts/networking_basics/" data-title="Networking basics"><i class="fab fa-weibo fa-fw" aria-hidden="true"></i></a></span>
             </div>
         </div>
     </div>
 
     <div class="post-info-more">
-        <section class="post-tags"><i class="fas fa-tags fa-fw" aria-hidden="true"></i>&nbsp;<a href="/tags/c/">C</a>,&nbsp;<a href="/tags/systems-programming/">Systems Programming</a>,&nbsp;<a href="/tags/networking/">Networking</a></section>
+        <section class="post-tags"><i class="fas fa-tags fa-fw" aria-hidden="true"></i>&nbsp;<a href="georgesims21.github.io/tags/c/">C</a>,&nbsp;<a href="georgesims21.github.io/tags/systems-programming/">Systems Programming</a>,&nbsp;<a href="georgesims21.github.io/tags/networking/">Networking</a></section>
         <section>
-            <span><a href="javascript:void(0);" onclick="window.history.back();">Back</a></span>&nbsp;|&nbsp;<span><a href="/">Home</a></span>
+            <span><a href="javascript:void(0);" onclick="window.history.back();">Back</a></span>&nbsp;|&nbsp;<span><a href="georgesims21.github.io/">Home</a></span>
         </section>
     </div>
 
-    <div class="post-nav"><a href="/posts/procfs/" class="prev" rel="prev" title="procfs/sysfs"><i class="fas fa-angle-left fa-fw" aria-hidden="true"></i>procfs/sysfs</a>
-            <a href="/posts/hugo-basics/" class="next" rel="next" title="Hugo basics">Hugo basics<i class="fas fa-angle-right fa-fw" aria-hidden="true"></i></a></div>
+    <div class="post-nav"><a href="georgesims21.github.io/posts/procfs/" class="prev" rel="prev" title="procfs/sysfs"><i class="fas fa-angle-left fa-fw" aria-hidden="true"></i>procfs/sysfs</a>
+            <a href="georgesims21.github.io/posts/hugo-basics/" class="next" rel="next" title="Hugo basics">Hugo basics<i class="fas fa-angle-right fa-fw" aria-hidden="true"></i></a></div>
 </div>
 </article></div>
             </main><footer class="footer">
         <div class="footer-container"><div class="footer-line">Powered by <a href="https://gohugo.io/" target="_blank" rel="noopener noreffer" title="Hugo 0.101.0">Hugo</a> | Theme - <a href="https://github.com/dillonzq/LoveIt" target="_blank" rel="noopener noreffer" title="LoveIt 0.2.11"><i class="far fa-kiss-wink-heart fa-fw" aria-hidden="true"></i> LoveIt</a>
-                </div><div class="footer-line" itemscope itemtype="http://schema.org/CreativeWork"><i class="far fa-copyright fa-fw" aria-hidden="true"></i><span itemprop="copyrightYear">2022</span><span class="author" itemprop="copyrightHolder">&nbsp;<a href="/" target="_blank">xxxx</a></span></div>
+                </div><div class="footer-line" itemscope itemtype="http://schema.org/CreativeWork"><i class="far fa-copyright fa-fw" aria-hidden="true"></i><span itemprop="copyrightYear">2022</span><span class="author" itemprop="copyrightHolder">&nbsp;<a href="georgesims21.github.io/" target="_blank"></a></span></div>
         </div>
     </footer></div>
 
@@ -168,5 +168,5 @@ The top layer shows applications which use networking to transfer/collect data. 
             </a><a href="#" id="view-comments" class="fixed-button" title="View Comments">
                 <i class="fas fa-comment fa-fw" aria-hidden="true"></i>
             </a>
-        </div><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/lazysizes@5.3.2/lazysizes.min.js"></script><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/clipboard@2.0.11/dist/clipboard.min.js"></script><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/sharer.js@0.5.1/sharer.min.js"></script><script type="text/javascript">window.config={"code":{"copyTitle":"Copy to clipboard","maxShownLines":50},"comment":{}};</script><script type="text/javascript" src="/js/theme.min.js"></script></body>
+        </div><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/lazysizes@5.3.2/lazysizes.min.js"></script><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/clipboard@2.0.11/dist/clipboard.min.js"></script><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/sharer.js@0.5.1/sharer.min.js"></script><script type="text/javascript">window.config={"code":{"copyTitle":"Copy to clipboard","maxShownLines":50},"comment":{}};</script><script type="text/javascript" src="/georgesims21.github.io/js/theme.min.js"></script></body>
 </html>
