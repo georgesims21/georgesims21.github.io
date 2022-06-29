@@ -3,11 +3,11 @@
         <title>Tutorial - Category - George&#39;s Blog</title>
         <link>https://georgesims21.github.io/categories/tutorial/</link>
         <description>Tutorial - Category - George&#39;s Blog</description>
-        <generator>Hugo -- gohugo.io</generator><language>zh-cn</language><copyright>©2019 Notepadium.</copyright><atom:link href="https://georgesims21.github.io/categories/tutorial/" rel="self" type="application/rss+xml" /><item>
+        <generator>Hugo -- gohugo.io</generator><language>en</language><copyright>©2019 Notepadium.</copyright><atom:link href="https://georgesims21.github.io/categories/tutorial/" rel="self" type="application/rss+xml" /><item>
     <title>Hugo basics</title>
     <link>https://georgesims21.github.io/posts/hugo-basics/</link>
     <pubDate>Mon, 01 Jan 0001 00:00:00 &#43;0000</pubDate>
-    <author>Author</author>
+    <author>xxxx</author>
     <guid>https://georgesims21.github.io/posts/hugo-basics/</guid>
     <description><![CDATA[Create a new site in a directory &lt;site_name&gt; hugo new site &lt;site_name&gt; Running the server locally (-D flag is to render pages marked as drafts) hugo server -D Github This repo has the alternate stream set to &lsquo;development&rsquo;. So pushing master to here will not effect the site itself.
 Deploying ./deploy.sh This script deploys the website to the repo georgesims21.github.io as a proper site. It will not render files marked as drafts, so it should look exactly the same as locally if you run:]]></description>
@@ -16,7 +16,7 @@ Deploying ./deploy.sh This script deploys the website to the repo georgesims21.g
     <title>pthreads in C</title>
     <link>https://georgesims21.github.io/posts/pthreads/</link>
     <pubDate>Mon, 01 Jan 0001 00:00:00 &#43;0000</pubDate>
-    <author>Author</author>
+    <author>xxxx</author>
     <guid>https://georgesims21.github.io/posts/pthreads/</guid>
     <description><![CDATA[This tutorial assumes you know the basic concepts of multithreading. It is based on this short video series by Dr. Brian Fraser
 Creating single threads The pthread library (POSTIX thread) allows C programmers to use multithreading capabilities. First you must define the &lt;pthread.h&gt; header, and link -pthread when compiling the program. The function to create a thread is the pthread_create():
@@ -26,7 +26,7 @@ Creating single threads The pthread library (POSTIX thread) allows C programmers
     <title>strace</title>
     <link>https://georgesims21.github.io/posts/strace/</link>
     <pubDate>Mon, 01 Jan 0001 00:00:00 &#43;0000</pubDate>
-    <author>Author</author>
+    <author>xxxx</author>
     <guid>https://georgesims21.github.io/posts/strace/</guid>
     <description><![CDATA[Strace is a command used to view the system calls made by an executable program during runtime, it is especially helpful when trying to debug a systems program.
 Basic strace commands:

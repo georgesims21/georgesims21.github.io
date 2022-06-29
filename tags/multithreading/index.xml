@@ -3,11 +3,11 @@
         <title>Multithreading - Tag - George&#39;s Blog</title>
         <link>https://georgesims21.github.io/tags/multithreading/</link>
         <description>Multithreading - Tag - George&#39;s Blog</description>
-        <generator>Hugo -- gohugo.io</generator><language>zh-cn</language><copyright>©2019 Notepadium.</copyright><atom:link href="https://georgesims21.github.io/tags/multithreading/" rel="self" type="application/rss+xml" /><item>
+        <generator>Hugo -- gohugo.io</generator><language>en</language><copyright>©2019 Notepadium.</copyright><atom:link href="https://georgesims21.github.io/tags/multithreading/" rel="self" type="application/rss+xml" /><item>
     <title>pthreads in C</title>
     <link>https://georgesims21.github.io/posts/pthreads/</link>
     <pubDate>Mon, 01 Jan 0001 00:00:00 &#43;0000</pubDate>
-    <author>Author</author>
+    <author>xxxx</author>
     <guid>https://georgesims21.github.io/posts/pthreads/</guid>
     <description><![CDATA[This tutorial assumes you know the basic concepts of multithreading. It is based on this short video series by Dr. Brian Fraser
 Creating single threads The pthread library (POSTIX thread) allows C programmers to use multithreading capabilities. First you must define the &lt;pthread.h&gt; header, and link -pthread when compiling the program. The function to create a thread is the pthread_create():

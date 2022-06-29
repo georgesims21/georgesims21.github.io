@@ -3,11 +3,11 @@
         <title>Assembly - Tag - George&#39;s Blog</title>
         <link>https://georgesims21.github.io/tags/assembly/</link>
         <description>Assembly - Tag - George&#39;s Blog</description>
-        <generator>Hugo -- gohugo.io</generator><language>zh-cn</language><copyright>©2019 Notepadium.</copyright><atom:link href="https://georgesims21.github.io/tags/assembly/" rel="self" type="application/rss+xml" /><item>
+        <generator>Hugo -- gohugo.io</generator><language>en</language><copyright>©2019 Notepadium.</copyright><atom:link href="https://georgesims21.github.io/tags/assembly/" rel="self" type="application/rss+xml" /><item>
     <title>64-bit-GCC Runtime Stack Usage</title>
     <link>https://georgesims21.github.io/posts/64-bit-gcc_runtime_stack_usage/</link>
     <pubDate>Mon, 01 Jan 0001 00:00:00 &#43;0000</pubDate>
-    <author>Author</author>
+    <author>xxxx</author>
     <guid>https://georgesims21.github.io/posts/64-bit-gcc_runtime_stack_usage/</guid>
     <description><![CDATA[CPU registers in 64-bit mode * rax * rbx * rbp * rsp first * rdi &lt;--+ * rsi | in 64-bit mode the first 6 parameters are placed in * rdx | these registers from rdi to r9 when calling a function, * rcx | any extra params are passed through the stack like in * r8 | 32-bit mode * r9 &lt;--+ last * r10-r15 Simple C program in assembly #include &lt;stdio.]]></description>
 </item>
@@ -15,7 +15,7 @@
     <title>C function calls (32-bit)</title>
     <link>https://georgesims21.github.io/posts/c_function_calls/</link>
     <pubDate>Mon, 01 Jan 0001 00:00:00 &#43;0000</pubDate>
-    <author>Author</author>
+    <author>xxxx</author>
     <guid>https://georgesims21.github.io/posts/c_function_calls/</guid>
     <description><![CDATA[Each CPU has the following registers (64-bit in parantheses):
 PC (IP): Instruction pointer - Points to next instruction for the CPU to execute SP (SP): Stack pointer - Points to the top of the stack FP (BP): Base pointer - Points to the stack frame of the current active function RVR (AX): Return value - Points to the function return value main() | int sub(int x, int y) { | { int a, b, c; | int u, v; a = 1; b = 2; c = 3; | u = 4; v = 5; c = sub(a, b); | return x+y+u+v; printf(&#34;c=%d\n&#34;, c); | } } | When a C program is envoked, the return address (current PC) is pushed onto the stack and then the value stored in the PC register is replaced with the function we wish the CPU to execute.]]></description>
